@@ -188,12 +188,15 @@ function pf_include_view($pf_controller, $pf_view) {
   require($pf_view);
 }
 
-
 function __autoload($class) {
   if(substr($class, -10) === 'Controller') {
     $controller = pfController::str_to_controller(substr($class, 0, -10));
     require_once('application/controller/'.$controller.'/'.$controller.'.php');    
   }
 }
+
+$application = new Application();
+$application->run();
+$application = NULL;
 
 ?>
