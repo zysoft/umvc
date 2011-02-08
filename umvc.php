@@ -191,7 +191,7 @@ function uf_include_view($uf_controller, $uf_view) {
 function __autoload($class) {
   if(substr($class, -10) === 'Controller') {
     $controller = ufController::str_to_controller(substr($class, 0, -10));
-    require_once('application/controller/'.$controller.'/'.$controller.'.php');    
+    require_once('application/controller/'.$controller.'/controller.php');    
   }
 }
 
