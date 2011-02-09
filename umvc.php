@@ -49,12 +49,13 @@ class ufHTTPRequest extends ufRequest {
 }
 class ufResponse {
   private $_attributes;
-  private $_content_type;
+  private $_headers;
   private $_data;
   
   public function __construct() {
     $this->_attributes = array();
-    $this->content_type('text/html');
+    $this->_headers = array();
+    $this->header('Content-Type', 'text/html');
     $this->_data = '';
   }
 
@@ -66,13 +67,16 @@ class ufResponse {
     }
   }
 
-  
-  public function content_type($type = NULL) {
-    if($type !== NULL) {
-      $this->_content_type = $type;      
+  public function header($name, $value = NULL) {
+    if($value !== NULL) {
+      $this->_headers[$name] = $value;
     } else {
-      return $this->_content_type;
+      return array_key_exists($name, $this->_headers) ? $this->_headers[$name] : $value;
     }
+  }
+
+  public function headers() {
+    return $this->_headers;
   }
   
   public function data($data = NULL) {
@@ -176,7 +180,8 @@ class ufController {
   }
 
   public function error404() {
-    echo '404';
+    //$this->raw_header($_SERVER["SERVER_PROTOCOL"].' 404 Not Found');
+    $this->header('Status', '404 Not Found');
     return FALSE;
   }
   
