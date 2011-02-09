@@ -53,7 +53,7 @@ class ufResponse {
   private $_data;
   
   public function __construct() {
-    $this->_attributes = array();
+    $this->_attributes = array('template' => 'default');
     $this->_headers = array();
     $this->header('Content-Type', 'text/html');
     $this->_data = '';
@@ -76,14 +76,14 @@ class ufResponse {
   }
   
   public function header404() {
-    $this->header('HTTP/', $_SERVER["SERVER_PROTOCOL"].' 404 Not Found');
+    $this->header('#HTTP/', $_SERVER["SERVER_PROTOCOL"].' 404 Not Found');
     $this->header('Status', '404 Not Found');
   }
 
   public function headers() {
     $headers = array();
     foreach($this->_headers as $name => $value) {
-      if($name == 'HTTP/') {
+      if($name == '#HTTP/') {
         // Special header for 404 errors
         $headers[] = $value;
       } else {
@@ -105,11 +105,8 @@ class ufResponse {
 
 class ufController {
   private $_buffer_ref_count;
+  private $_call_stack;
 
-  private $_request;
-  private $_response;
-  private $_options;
-  
   private function _load_view($view) {
     $controller = ufController::str_to_controller(substr(get_class($this), 0, -10));
 
@@ -117,7 +114,21 @@ class ufController {
     uf_include_view($this, 'application/controller/'.$controller.'/view/'.$view.'.php');
   }
 
+  private function _push_call_stack_frame($request, $response, $options) {
+    array_push(
+      $this->_call_stack,
+      array(
+        'request' => $request,
+        'response' => $response,
+        'options' => $options));    
+  }
+
+  private function _pop_call_stack_frame() {
+    array_pop($this->_call_stack);    
+  }
+
   public function __construct() {
+    $this->_call_stack = array();
     $this->_buffer_ref_count = 0;
   }
 
@@ -128,11 +139,11 @@ class ufController {
   }
 
   public function request() {
-    return $this->_request;
+    return $this->_call_stack[count($this->_call_stack) - 1]['request'];
   }
   
   public function response() {
-    return $this->_response;
+    return $this->_call_stack[count($this->_call_stack) - 1]['response'];
   }
 
   public function start_buffering() {
@@ -147,13 +158,16 @@ class ufController {
   }
   
   public function option($name, $default_value = NULL) {
-    return array_key_exists($name, $this->_options) ? $this->_options[$name] : $default_value;
+    return array_key_exists($name, $this->_call_stack[count($this->_call_stack) - 1]['options']) ? $this->_call_stack[count($this->_call_stack) - 1]['options'] : $default_value;
   }
 
   public function execute_action($action, $request, $response, $options = NULL) {
-    $this->_options = $options !== NULL ? $options : array();
-    $this->_response = $response;
-    $this->_request = $request;
+    // 404 action?
+    if(!method_exists($this, $action)) {
+      return FALSE;
+    }
+
+    $this->_push_call_stack_frame($request, $response, $options !== NULL ? $options : array());
 
     // start buffering?
     if($this->option('enable_buffering')) {
@@ -163,11 +177,6 @@ class ufController {
     // default action?
     if(empty($action)) {
       $action = 'index';
-    }
-
-    // 404 action?
-    if(!method_exists($this, $action)) {
-      $action = 'error404';
     }
     
     $action = ufController::str_to_controller($action);
@@ -189,6 +198,10 @@ class ufController {
     if($this->option('enable_buffering')) {
       $this->end_buffering();
     }
+
+    $this->_pop_call_stack_frame();
+
+    return TRUE;
   }
 
   public function index() {
@@ -196,7 +209,7 @@ class ufController {
 
   public function error404() {
     $this->response()->header404();
-    echo '404';
+    $this->response()->data('Error 404 - Page not found');
     return FALSE;
   }
   
@@ -210,17 +223,18 @@ class ufController {
 
 class Application {
   public function run() {
-    // cleanup
-    //unset($input['_controller']);
-    //unset($input['_action']);
-    //unset($_GET);
-    //unset($_POST);
-    //die(print_r($_GET,1));
     $request = new ufHTTPRequest;
     $response = new ufResponse;
 
     $front_controller = new frontController;
-    $front_controller->execute_action('index', $request, $response, array('enable_buffering' => FALSE));
+    $front_controller->execute_action('index', $request, $response, array('enable_buffering' => TRUE));
+
+    // Send headers
+    foreach($response->headers() as $header) {
+      header($header);
+    }
+
+    // Send data
     echo $response->data();
     
     $response = NULL;
@@ -239,7 +253,7 @@ function uf_include_view($uf_controller, $uf_view) {
 function __autoload($class) {
   if(substr($class, -10) === 'Controller') {
     $controller = ufController::str_to_controller(substr($class, 0, -10));
-    require_once('application/controller/'.$controller.'/controller.php');    
+    @include_once('application/controller/'.$controller.'/controller.php');    
   }
 }
 
