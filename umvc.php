@@ -2,20 +2,51 @@
 
 class ufRequest {
   private $_parameters;
-
-  public function parameters($parameters = NULL) {
+  
+  protected function parameters($parameters = NULL) {
     if($parameters !== NULL) {
       $this->_parameters = $parameters;
     } else {
       return $this->_parameters;
     }
   }
-  
+
   public function parameter($name, $default_value = NULL) {
     return array_key_exists($name, $this->_parameters) ? $this->_parameters[$name] : $default_value;
   }
+
+  public function controller() {
+    return $this->parameter('_controller', 'default');
+  }
+
+  public function action() {
+    return $this->parameter('_action', 'index');
+  }
 }
 
+class ufHTTPRequest extends ufRequest {
+  private $_segments;
+  
+  public function __construct() {
+    $uri = $_SERVER['REQUEST_URI'];
+    $pos = strpos($uri, '?');
+    if($pos !== FALSE) {
+      $uri = substr($uri, 0, $pos);
+    }
+    $this->_segments = explode('/', $uri);
+    array_shift($this->_segments);
+    $input = array_merge($_GET, $_POST);
+    $this->parameters($input);
+  }
+  
+  public function controller() {
+    return isset($this->_segments[0]) && !empty($this->_segments[0]) ? $this->_segments[0] : parent::controller();
+  }
+
+  public function action() {
+    return isset($this->_segments[1]) ? $this->_segments[1] : parent::action();
+  }  
+}
 class ufResponse {
   private $_attributes;
   private $_content_type;
@@ -159,16 +190,13 @@ class ufController {
 
 class Application {
   public function run() {
-    $input = array_merge($_GET, $_POST);
-
     // cleanup
     //unset($input['_controller']);
     //unset($input['_action']);
-    unset($_GET);
-    unset($_POST);
-
-    $request = new ufRequest;
-    $request->parameters($input);
+    //unset($_GET);
+    //unset($_POST);
+    //die(print_r($_GET,1));
+    $request = new ufHTTPRequest;
     $response = new ufResponse;
 
     $front_controller = new frontController;
