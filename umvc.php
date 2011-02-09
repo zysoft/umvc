@@ -74,9 +74,24 @@ class ufResponse {
       return array_key_exists($name, $this->_headers) ? $this->_headers[$name] : $value;
     }
   }
+  
+  public function header404() {
+    $this->header('HTTP/', $_SERVER["SERVER_PROTOCOL"].' 404 Not Found');
+    $this->header('Status', '404 Not Found');
+  }
 
   public function headers() {
-    return $this->_headers;
+    $headers = array();
+    foreach($this->_headers as $name => $value) {
+      if($name == 'HTTP/') {
+        // Special header for 404 errors
+        $headers[] = $value;
+      } else {
+        // Normal header
+        $headers[] = $name.': '.$value;
+      }
+    }
+    return $headers;
   }
   
   public function data($data = NULL) {
@@ -180,8 +195,8 @@ class ufController {
   }
 
   public function error404() {
-    //$this->raw_header($_SERVER["SERVER_PROTOCOL"].' 404 Not Found');
-    $this->header('Status', '404 Not Found');
+    $this->response()->header404();
+    echo '404';
     return FALSE;
   }
   
