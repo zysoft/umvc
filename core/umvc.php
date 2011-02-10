@@ -16,7 +16,7 @@ class ufRequest {
   }
 
   public function controller() {
-    return $this->parameter('_controller', 'default');
+    return $this->parameter('_controller', 'index');
   }
 
   public function action() {
@@ -54,7 +54,7 @@ class ufResponse {
   private $_data;
   
   public function __construct() {
-    $this->_attributes = array('template' => 'default');
+    $this->_attributes = array('template' => 'index');
     $this->_headers = array();
     $this->header('Content-Type', 'text/html');
     $this->_data = '';
@@ -77,7 +77,7 @@ class ufResponse {
   }
   
   public function header404() {
-    $this->header('#HTTP/', $_SERVER["SERVER_PROTOCOL"].' 404 Not Found');
+    $this->header('#HTTP/', $_SERVER["SERVER_PROTOCOL"].' 404 Not Found'); // Special header for 404 errors
     $this->header('Status', '404 Not Found');
   }
 
@@ -85,11 +85,9 @@ class ufResponse {
     $headers = array();
     foreach($this->_headers as $name => $value) {
       if($name == '#HTTP/') {
-        // Special header for 404 errors
-        $headers[] = $value;
+        $headers[] = $value; // Special header for 404 errors
       } else {
-        // Normal header
-        $headers[] = $name.': '.$value;
+        $headers[] = $name.': '.$value; // Normal header
       }
     }
     return $headers;
@@ -112,7 +110,7 @@ class ufController {
     $controller = ufController::str_to_controller(substr(get_class($this), 0, -10));
 
     // include the view
-    uf_include_view($this, UF_BASE.'app/modules/'.$controller.'/view/'.$view.'.php');
+    uf_include_view($this, UF_BASE.'/app/modules/'.$controller.'/view/'.$view.'.php');
   }
 
   private function _push_call_stack_frame($request, $response, $options) {
@@ -254,7 +252,7 @@ function uf_include_view($uf_controller, $uf_view) {
 function __autoload($class) {
   if(substr($class, -10) === 'Controller') {
     $controller = ufController::str_to_controller(substr($class, 0, -10));
-    @include_once(UF_BASE.'app/modules/'.$controller.'/controller.php');
+    @include_once(UF_BASE.'/app/modules/'.$controller.'/'.$controller.'.php');
   }
 }
 
