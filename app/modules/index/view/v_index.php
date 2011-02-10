@@ -1,0 +1,1 @@
+hej2 value is= <?=$value?>

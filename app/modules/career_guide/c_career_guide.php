@@ -1,7 +1,8 @@
 <?php
 
 class career_guideController extends ufController {
-  public function index() {
+  public function index(&$caller) {
+    $caller->mainmenu = '';
   }
 }
 
