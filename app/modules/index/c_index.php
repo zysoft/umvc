@@ -12,13 +12,14 @@ class indexController extends ufController
     $this->response()->attribute('mainmenu', 'home');
   }
 
-  // 404 error handler
-  // remove this to get the default error404 handler
-  /*public function error($caller)
+  // local 404 error handler
+  // to select local views for handling local errors
+  // i.e. /index/foo
+  public function error($caller)
   {
     $this->value = 'error handler';
-    return 'index';
-  }*/
+    return 'local_error_404';
+  }
 }
 
 ?>

@@ -1,3 +1,3 @@
 Default error 404 view<br/>
 <br/>
-I am: <?=__FILE__?>
+Current view: <?=__FILE__?>
