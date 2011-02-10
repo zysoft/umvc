@@ -47,6 +47,7 @@ class ufHTTPRequest extends ufRequest {
     return isset($this->_segments[1]) ? $this->_segments[1] : parent::action();
   }  
 }
+
 class ufResponse {
   private $_attributes;
   private $_headers;
@@ -111,7 +112,7 @@ class ufController {
     $controller = ufController::str_to_controller(substr(get_class($this), 0, -10));
 
     // include the view
-    uf_include_view($this, 'application/controller/'.$controller.'/view/'.$view.'.php');
+    uf_include_view($this, UF_BASE.'app/modules/'.$controller.'/view/'.$view.'.php');
   }
 
   private function _push_call_stack_frame($request, $response, $options) {
@@ -253,7 +254,7 @@ function uf_include_view($uf_controller, $uf_view) {
 function __autoload($class) {
   if(substr($class, -10) === 'Controller') {
     $controller = ufController::str_to_controller(substr($class, 0, -10));
-    @include_once('application/controller/'.$controller.'/controller.php');    
+    @include_once(UF_BASE.'app/modules/'.$controller.'/controller.php');
   }
 }
 
