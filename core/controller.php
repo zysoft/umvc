@@ -25,10 +25,11 @@ class ufController {
     ufController::include_view($this, UF_BASE.'/app/front/'.$view.'.php');
   }
 
-  private function _push_call_stack_frame($request, $response, $options) {
+  private function _push_call_stack_frame($caller, $request, $response, $options) {
     array_push(
       $this->_call_stack,
       array(
+        'caller' => $caller,
         'request' => $request,
         'response' => $response,
         'options' => $options
@@ -63,6 +64,11 @@ class ufController {
     }
   }
 
+  public function caller() {
+    if (!count($this->_call_stack)) return NULL;
+    return $this->_call_stack[count($this->_call_stack) - 1]['caller'];
+  }
+
   public function request() {
     if (!count($this->_call_stack)) return NULL;
     return $this->_call_stack[count($this->_call_stack) - 1]['request'];
@@ -90,7 +96,7 @@ class ufController {
 
   public function execute_front($action, $request, $response, $options = NULL)
   {
-    $this->_push_call_stack_frame($request, $response, $options !== NULL ? $options : array());
+    $this->_push_call_stack_frame($this, $request, $response, $options !== NULL ? $options : array());
     $controller = ufController::str_to_controller($request->controller());
     $action     = ufController::str_to_controller($request->action());
 
@@ -108,12 +114,17 @@ class ufController {
     }
 
     $this->content = $response->data();
+
+    // Send headers
+    foreach($response->headers() as $header) {
+      header($header);
+    }
     
     $this->_load_front($response->attribute('template'));
     $this->_pop_call_stack_frame();
   }
 
-  public function execute_action($caller,$action, $request, &$response, $options = NULL) {
+  public function execute_action($caller,$action,$request,&$response,$options = NULL) {
     // 404 action?
     // handle  www.foo.com/index/
     if ($action == '') $action = 'index';
@@ -129,7 +140,7 @@ class ufController {
       }
     }
 
-    $this->_push_call_stack_frame($request, $response, $options !== NULL ? $options : array());
+    $this->_push_call_stack_frame($caller, $request, $response, $options !== NULL ? $options : array());
 
     // start buffering?
     if($this->option('enable_buffering')) {
@@ -145,7 +156,7 @@ class ufController {
 
     // execute action
 
-    $view = call_user_func(array($this, $action),$caller);
+    $view = call_user_func(array($this, $action));
 
     // default view?
     if($view === NULL) {
