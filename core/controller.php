@@ -41,9 +41,12 @@ class ufController {
     array_pop($this->_call_stack);
   }
 
+  // PROTECTED METHODS
+  
+  protected function before_action() {}
+  protected function after_action() {}
 
   // PUBLIC METHODS
-
 
   static public function str_to_controller($str) {
     $f = array('ö','å','ä','ø','æ','ñ','ü','.',',',';','-','–','/',' ');
@@ -155,8 +158,9 @@ class ufController {
     $action = ufController::str_to_controller($action);
 
     // execute action
-
+    $this->before_action();
     $view = call_user_func(array($this, $action));
+    $this->after_action();
 
     // default view?
     if($view === NULL) {
