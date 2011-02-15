@@ -14,10 +14,7 @@
       <li<?php if(@$mainmenu === 'my_pages') echo ' class="selected"'; ?>><a href="/my-pages">My pages</a></li>
       <li<?php if(@$mainmenu === 'career_guide') echo ' class="selected"'; ?>><a href="/career-guide">Career guide</a></li>
     </ul>
-    <div id="plate" class="rcol12"></div>
-    <div id="content" class="rcol12"></div>
     <?=$content;?>
-    </div>
   </div>
 </body>
 </html>
