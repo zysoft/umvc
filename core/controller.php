@@ -128,6 +128,7 @@ class ufController {
     // 404 action?
     // handle  www.foo.com/index/
     if ($action == '') $action = 'index';
+        echo 'xxx'.$action;
 
     // handle nonexistent controller functions
     if(!method_exists($this, $action)) {

@@ -4,6 +4,7 @@ class indexController extends ufController
 {
   public function index()
   {
+    echo 'uu';
     $this->foo = 'bar';
     $this->caller()->mainmenu = '';
     $this->caller()->mupp = 'mupp';
