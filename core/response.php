@@ -1,5 +1,5 @@
 <?
-class ufResponse {
+class uf_response {
   private $_attributes;
   private $_headers;
   private $_data;

@@ -1,6 +1,6 @@
 <?
 
-class ufController {
+class uf_controller {
   // PRIVATE DATA
   private $_buffer_ref_count;
   private $_call_stack;
@@ -15,14 +15,14 @@ class ufController {
   }
 
   private function _load_view($view) {
-    $controller = ufController::str_to_controller(substr(get_class($this), 0, -10));
+    $controller = uf_controller::str_to_controller(substr(get_class($this), 0, -11));
     // include the view
-    ufController::include_view($this, UF_BASE.'/app/modules/'.$controller.'/view/v_'.$view.'.php');
+    uf_controller::include_view($this, UF_BASE.'/app/modules/'.$controller.'/view/v_'.$view.'.php');
   }
   private function _load_front($view) {
-    $controller = ufController::str_to_controller(substr(get_class($this), 0, -10));
+    $controller = uf_controller::str_to_controller(substr(get_class($this), 0, -11));
     // include the view
-    ufController::include_view($this, UF_BASE.'/app/front/'.$view.'.php');
+    uf_controller::include_view($this, UF_BASE.'/app/front/'.$view.'.php');
   }
 
   private function _push_call_stack_frame($caller, $request, $response, $options) {
@@ -100,22 +100,24 @@ class ufController {
   public function execute_front($action, $request, $response, $options = NULL)
   {
     $this->_push_call_stack_frame($this, $request, $response, $options !== NULL ? $options : array());
-    $controller = ufController::str_to_controller($request->controller());
-    $action     = ufController::str_to_controller($request->action());
+    $controller = uf_controller::str_to_controller($request->controller());
+    $action     = uf_controller::str_to_controller($request->action());
 
-    $controller_class = $controller.'Controller';
+    $controller_class = $controller.'_controller';
+    
 
     if(class_exists($controller_class)) {
       $controller = new $controller_class;
       if($controller->execute_action($this, $action, $request, $response, array('enable_buffering' => TRUE)) === FALSE)
       {
+        echo 'e1';
         $this->_error(404);
       }
       $controller = NULL;
     } else {
+        echo 'e2';
       $this->_error(404);
     }
-
     $this->content = $response->data();
 
     // Send headers
@@ -131,7 +133,6 @@ class ufController {
     // 404 action?
     // handle  www.foo.com/index/
     if ($action == '') $action = 'index';
-        echo 'xxx'.$action;
 
     // handle nonexistent controller functions
     if(!method_exists($this, $action)) {
@@ -156,7 +157,7 @@ class ufController {
       $action = 'index';
     }
 
-    $action = ufController::str_to_controller($action);
+    $action = uf_controller::str_to_controller($action);
 
     // execute action
     $this->before_action();
@@ -188,11 +189,18 @@ class ufController {
   public function _error($code)
   {
     ob_start();
-      ufController::include_view($this, UF_BASE.'/app/error/'.$code.'.php');
+      uf_controller::include_view($this, UF_BASE.'/app/error/'.$code.'.php');
       $this->response()->data(ob_get_contents());
     ob_end_clean();
     $this->response()->header404();
     return FALSE;
   }
+  public static function autoload_controller($class) {
+    if(substr($class, -10) === 'controller') {
+      $controller = uf_controller::str_to_controller(substr($class, 0, -11));
+      //echo 'trying to include: '.UF_BASE.'/app/modules/'.$controller.'/c_'.$controller.'.php';
+      @include_once(UF_BASE.'/app/modules/'.$controller.'/c_'.$controller.'.php');
+    }
+  }  
 }
 

@@ -1,6 +1,6 @@
 <?php
 
-class my_pagesController extends ufController {
+class my_pages_controller extends uf_controller {
   // this action uses view: "index"
   public function index() {
     $this->foo = 'bar';

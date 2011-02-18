@@ -1,5 +1,5 @@
 <?
-class ufHTTPRequest extends ufRequest {
+class uf_http_request extends uf_request {
   private $_segments;
 
   public function __construct() {

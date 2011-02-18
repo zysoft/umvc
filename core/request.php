@@ -1,5 +1,5 @@
 <?
-class ufRequest {
+class uf_request {
   private $_parameters;
 
   protected function parameters($parameters = NULL) {

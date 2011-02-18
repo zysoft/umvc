@@ -15,15 +15,11 @@ Propel::init(UF_BASE."/app/data/build/conf/umvc-conf.php");
 // Add the generated 'classes' directory to the include path
 set_include_path("/path/to/bookstore/build/classes" . PATH_SEPARATOR . get_include_path());
 
+# register our controller factory
+spl_autoload_register('uf_controller::autoload_controller');
 
-function __autoload($class) {
-  if(substr($class, -10) === 'Controller') {
-    $controller = ufController::str_to_controller(substr($class, 0, -10));
-    @include_once(UF_BASE.'/app/modules/'.$controller.'/c_'.$controller.'.php');
-  }
-}
 
-$application = new Application();
+$application = new uf_application();
 $application->run();
 $application = NULL;
 
