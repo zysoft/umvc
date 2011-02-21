@@ -3,6 +3,7 @@
 class uf_baker
 {
   private static $_files;
+ 
   private static function _scan_dir_recursive($dir)
   {
     $a = scandir($dir);
@@ -30,7 +31,8 @@ class uf_baker
 
   public static function bake($type)
   {
-    if(!is_array(self::$_files)) {
+    if(!is_array(self::$_files))
+    {
       self::$_files = self::_scan_dir_recursive(UF_BASE.'/app');
     }
 
@@ -50,6 +52,12 @@ class uf_baker
     file_put_contents(UF_BASE.'/cache/baked.'.$type,$output);
 
     return $output;
+  }
+
+  public static function bake_all() {
+    self::bake('js');
+    self::bake('css');
+    self::bake('php');
   }
 }
 
