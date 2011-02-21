@@ -29,18 +29,18 @@ class uf_baker
 
   protected static function bake_file($out_file, $source_files)
   {
-    echo 'baking '.$out_file."\n";
+    //echo 'baking '.$out_file."\n";
     $output = '';
     if(is_array($source_files))
     {
       foreach($source_files as $source_file) {
-        echo '  source file: '.substr(strrchr($source_file, '/'),1).'.'."\n";
+        //echo '  source file: '.substr(strrchr($source_file, '/'),1).'.'."\n";
         $output .= '(function(){'."\n".file_get_contents($source_file)."\n".'})();'."\n";
       }
     }
     else
     {
-      echo '  no ingredients found.'."\n";
+      //echo '  no ingredients found.'."\n";
     }
     file_put_contents(UF_BASE.'/cache/'.$out_file,$output);
   }

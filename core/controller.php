@@ -22,7 +22,7 @@ class uf_controller {
   private function _load_front($view) {
     $controller = uf_controller::str_to_controller(substr(get_class($this), 0, -11));
     // include the view
-    uf_controller::include_view($this, UF_BASE.'/app/front/'.$view.'.php');
+    uf_controller::include_view($this, UF_BASE.'/app/front/v_'.$view.'.php');
   }
 
   private function _push_call_stack_frame($caller, $request, $response, $options) {
@@ -110,12 +110,12 @@ class uf_controller {
       $controller = new $controller_class;
       if($controller->execute_action($this, $action, $request, $response, array('enable_buffering' => TRUE)) === FALSE)
       {
-        echo 'e1';
+        //echo 'e1';
         $this->_error(404);
       }
       $controller = NULL;
     } else {
-        echo 'e2';
+      //echo 'e2';
       $this->_error(404);
     }
     $this->content = $response->data();
@@ -189,7 +189,7 @@ class uf_controller {
   public function _error($code)
   {
     ob_start();
-      uf_controller::include_view($this, UF_BASE.'/app/error/'.$code.'.php');
+      uf_controller::include_view($this, UF_BASE.'/app/error/v_'.$code.'.php');
       $this->response()->data(ob_get_contents());
     ob_end_clean();
     $this->response()->header404();

@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="sv">
 <head>
   <title>HR North</title>	
-  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.php" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css.php" />
+  <script src="/js/main.js.php" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
   <div id="center">
