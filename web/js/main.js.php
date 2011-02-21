@@ -7,7 +7,10 @@ $js_file = UF_BASE.'/cache/baked.js';
 if($uf_config['always_bake'] || !file_exists($js_file))
 {
   require_once(UF_BASE.'/core/baker.php');
-  uf_baker::bake();
+  echo uf_baker::bake('js');
 }
-echo file_get_contents($js_file);  
+else
+{
+  echo file_get_contents($js_file);  
+}
 ?>

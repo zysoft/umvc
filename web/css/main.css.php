@@ -7,7 +7,10 @@ $css_file = UF_BASE.'/cache/baked.css';
 if($uf_config['always_bake'] || !file_exists($css_file))
 {
   require_once(UF_BASE.'/core/baker.php');
-  uf_baker::bake();
+  uf_baker::bake('css');
 }
-echo file_get_contents($css_file);  
+else
+{
+  echo file_get_contents($css_file);  
+}
 ?>

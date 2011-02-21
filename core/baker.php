@@ -2,6 +2,7 @@
 
 class uf_baker
 {
+  private static $_files;
   private static function _scan_dir_recursive($dir)
   {
     $a = scandir($dir);
@@ -27,13 +28,17 @@ class uf_baker
     return $out;
   }
 
-  protected static function bake_file($out_file, $source_files)
+  public static function bake($type)
   {
+    if(!is_array(self::$_files)) {
+      self::$_files = self::_scan_dir_recursive(UF_BASE.'/app');
+    }
+
     //echo 'baking '.$out_file."\n";
     $output = '';
-    if(is_array($source_files))
+    if(is_array(self::$_files[$type]))
     {
-      foreach($source_files as $source_file) {
+      foreach(self::$_files[$type] as $source_file) {
         //echo '  source file: '.substr(strrchr($source_file, '/'),1).'.'."\n";
         $output .= '(function(){'."\n".file_get_contents($source_file)."\n".'})();'."\n";
       }
@@ -42,14 +47,9 @@ class uf_baker
     {
       //echo '  no ingredients found.'."\n";
     }
-    file_put_contents(UF_BASE.'/cache/'.$out_file,$output);
-  }
-  
-  public static function bake()
-  {
-    $files = self::_scan_dir_recursive(UF_BASE.'/app');
-    self::bake_file('baked.js',$files['js']);
-    self::bake_file('baked.css',$files['css']);
+    file_put_contents(UF_BASE.'/cache/baked.'.$type,$output);
+
+    return $output;
   }
 }
 
