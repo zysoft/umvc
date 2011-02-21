@@ -5,24 +5,15 @@ class uf_controller {
   private $_buffer_ref_count;
   private $_call_stack;
 
-  // PRIVATE METHODS
-  static private function include_view($uf_controller, $uf_view) {
-    // view variables
-    $uf_request  = $uf_controller->request();
-    $uf_response = $uf_controller->response();
-    extract(get_object_vars($uf_controller));
-    require($uf_view);
-  }
-
   private function _load_view($view) {
     $controller = uf_controller::str_to_controller(substr(get_class($this), 0, -11));
     // include the view
-    uf_controller::include_view($this, UF_BASE.'/app/modules/'.$controller.'/view/v_'.$view.'.php');
+    uf_include_view($this, UF_BASE.'/app/modules/'.$controller.'/view/v_'.$view.'.php');
   }
   private function _load_front($view) {
     $controller = uf_controller::str_to_controller(substr(get_class($this), 0, -11));
     // include the view
-    uf_controller::include_view($this, UF_BASE.'/app/front/v_'.$view.'.php');
+    uf_include_view($this, UF_BASE.'/app/front/v_'.$view.'.php');
   }
 
   private function _push_call_stack_frame($caller, $request, $response, $options) {
@@ -189,7 +180,7 @@ class uf_controller {
   public function _error($code)
   {
     ob_start();
-      uf_controller::include_view($this, UF_BASE.'/app/error/v_'.$code.'.php');
+      uf_include_view($this, UF_BASE.'/app/error/v_'.$code.'.php');
       $this->response()->data(ob_get_contents());
     ob_end_clean();
     $this->response()->header404();
@@ -204,3 +195,10 @@ class uf_controller {
   }  
 }
 
+function uf_include_view($uf_controller, $uf_view) {
+  // view variables
+  $uf_request  = $uf_controller->request();
+  $uf_response = $uf_controller->response();
+  extract(get_object_vars($uf_controller));
+  require($uf_view);
+}
