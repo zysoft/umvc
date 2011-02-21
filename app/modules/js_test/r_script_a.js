@@ -1,1 +1,1 @@
-alert('a');
+document.title = '[A] ' + document.title;
