@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="umvc" defaultIdMethod="native">
+  <table name="test_table" phpName="test_table">
+    <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+    <column name="level" type="integer" />
+    <column name="title" type="varchar" size="256" />
+    <column name="created_at" type="timestamp" />
+    <index name="test_table_level_index">
+      <index-column name="level" />
+    </index>
+  </table>
+
+  <table name="test2_table" phpName="test2_table">
+    <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+    <column name="test_id" type="integer" />
+    <column name="title" type="varchar" size="256" />
+    <index name="test2_table_title_index">
+      <index-column name="title" />
+    </index>
+    <foreign-key foreignTable="test_table" onDelete="cascade">
+      <reference local="test_id" foreign="id" />
+    </foreign-key>
+  </table>
+</database>

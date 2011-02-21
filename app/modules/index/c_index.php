@@ -1,9 +1,10 @@
 <?
 
-class indexController extends ufController
+class index_controller extends uf_controller
 {
   public function index()
   {
+    echo 'uu';
     $this->foo = 'bar';
     $this->caller()->mainmenu = '';
     $this->caller()->mupp = 'mupp';

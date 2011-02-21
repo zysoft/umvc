@@ -7,15 +7,19 @@ include('httprequest.php');
 include('controller.php');
 include('application.php');
 
+require_once UF_BASE.'/propel/propel-1.5.6/runtime/lib/Propel.php';
 
-function __autoload($class) {
-  if(substr($class, -10) === 'Controller') {
-    $controller = ufController::str_to_controller(substr($class, 0, -10));
-    @include_once(UF_BASE.'/app/modules/'.$controller.'/c_'.$controller.'.php');
-  }
-}
+// Initialize Propel with the runtime configuration
+Propel::init(UF_BASE."/app/data/build/conf/umvc-conf.php");
 
-$application = new Application();
+// Add the generated 'classes' directory to the include path
+set_include_path("/path/to/bookstore/build/classes" . PATH_SEPARATOR . get_include_path());
+
+# register our controller factory
+spl_autoload_register('uf_controller::autoload_controller');
+
+
+$application = new uf_application();
 $application->run();
 $application = NULL;
 
