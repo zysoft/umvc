@@ -1,4 +1,5 @@
-<?
+<?php
+
 class uf_response {
   private $_attributes;
   private $_headers;
@@ -52,3 +53,5 @@ class uf_response {
     }
   }
 }
+
+?>

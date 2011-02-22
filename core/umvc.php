@@ -1,4 +1,5 @@
-<?
+<?php
+
 error_reporting(E_ALL);
 
 include('response.php');
@@ -6,6 +7,7 @@ include('request.php');
 include('httprequest.php');
 include('controller.php');
 include('application.php');
+include('baker.php');
 
 require_once UF_BASE.'/propel/propel-1.5.6/runtime/lib/Propel.php';
 

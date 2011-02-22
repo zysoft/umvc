@@ -1,4 +1,4 @@
-<?
+<?php
 
 class uf_controller {
   // PRIVATE DATA
@@ -202,3 +202,5 @@ function uf_include_view($uf_controller, $uf_view) {
   extract(get_object_vars($uf_controller));
   require($uf_view);
 }
+
+?>

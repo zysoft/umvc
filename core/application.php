@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once(UF_BASE.'/config/config.php');
 
@@ -42,3 +42,5 @@ class uf_application
     return $routing_function($uri);
   }
 }
+
+?>

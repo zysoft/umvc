@@ -1,4 +1,5 @@
-<?
+<?php
+
 class uf_request {
   private $_parameters;
 
@@ -23,3 +24,4 @@ class uf_request {
   }
 }
 
+?>

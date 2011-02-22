@@ -1,4 +1,5 @@
-<?
+<?php
+
 class uf_http_request extends uf_request {
   private $_segments;
 
@@ -22,3 +23,5 @@ class uf_http_request extends uf_request {
     return isset($this->_segments[1]) ? $this->_segments[1] : parent::action();
   }
 }
+
+?>

@@ -1,5 +1,5 @@
 <?php
-require_once(UF_BASE.'/core/application.php');
+
 class uf_baker
 {
   private static $_files;
@@ -70,6 +70,7 @@ class uf_baker
     }
     return $output;
   }
+
   private static function _bake_routing($files) {
     $output = '<?php uf_application::_set_routing_function(function($uri) { ?>'."\n";
     if(is_array($files))
@@ -82,6 +83,19 @@ class uf_baker
     }
     $output .= "\n".'<?php }); ?>'."\n";
     $output = str_replace('?><?php','',$output);
+    return $output;
+  }
+
+  private static function _bake_default($files) {
+    $output = '';
+    if(is_array($files))
+    {
+      foreach($files as $file)
+      {
+        $data = file_get_contents($file);
+        $output .= $data."\n";
+      }
+    }
     return $output;
   }
   
@@ -100,7 +114,7 @@ class uf_baker
         $output .= self::_bake_routing(self::$_files[$type]);
         break;
       default:
-        $output .= $data;
+        $output .= self::_bake_default(self::$_files[$type]);
     }
     file_put_contents(UF_BASE.'/cache/baked.'.($type == 'routing' ? 'routing.php' : $type),$output);
     return $output;
