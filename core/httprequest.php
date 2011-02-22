@@ -3,7 +3,7 @@ class uf_http_request extends uf_request {
   private $_segments;
 
   public function __construct() {
-    $uri = $_SERVER['REQUEST_URI'];
+    $uri = uf_application::apply_routing($_SERVER['REQUEST_URI']);
     $pos = strpos($uri, '?');
     if($pos !== FALSE) {
       $uri = substr($uri, 0, $pos);

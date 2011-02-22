@@ -1,5 +1,5 @@
 <?php
-
+require_once(UF_BASE.'/core/application.php');
 class uf_baker
 {
   private static $_files;
@@ -19,38 +19,83 @@ class uf_baker
       } 
       else
       {
-        if(substr($f,0,2) == 'r_')
+        $is_recursive = substr($f,0,2) == 'r_';
+        $is_route     = substr($f,0,8) == 'routing_';
+        if($is_recursive || $is_route)
         {
           $ext = substr(strrchr($f, '.'),1);
-          $out[$ext][] = $fp;
+          $out[$is_route ? 'routing' : $ext][] = $fp;
         }
       }
     }
     return $out;
   }
-
-  public static function bake($type)
-  {
+  
+  private static function _scan_dir() {
     if(!is_array(self::$_files))
     {
       self::$_files = self::_scan_dir_recursive(UF_BASE.'/app');
-    }
+    }    
+  }
 
-    //echo 'baking '.$out_file."\n";
+  private static function _bake_js($files) {
     $output = '';
-    if(is_array(self::$_files[$type]))
+    if(is_array($files))
     {
-      foreach(self::$_files[$type] as $source_file) {
-        //echo '  source file: '.substr(strrchr($source_file, '/'),1).'.'."\n";
-        $output .= '(function(){'."\n".file_get_contents($source_file)."\n".'})();'."\n";
+      foreach($files as $file)
+      {
+        $data = file_get_contents($file);
+        $output .= '(function(){'."\n".$data."\n".'})();'."\n";
       }
     }
-    else
-    {
-      //echo '  no ingredients found.'."\n";
-    }
-    file_put_contents(UF_BASE.'/cache/baked.'.$type,$output);
+    return $output;
+  }
 
+  private static function _bake_css($files) {
+    $output = '';
+    if(is_array($files))
+    {
+      foreach($files as $file)
+      {
+        $data = file_get_contents($file);
+        $output .= $data."\n";
+      }
+    }
+    return $output;
+  }
+  private static function _bake_route($files) {
+    $output = '<?php uf_application::_set_routing_function(function($uri) { ?>'."\n";
+    if(is_array($files))
+    {
+      foreach($files as $file)
+      {
+        $data = file_get_contents($file);
+        $output .= trim($data);
+      }
+    }
+    $output .= "\n".'<?php }); ?>'."\n";
+    $output = str_replace('?><?php','',$output);
+    return $output;
+  }
+  
+  public static function bake($type)
+  {
+    self::_scan_dir();
+    $output = '';
+    switch($type) {
+      case 'js':
+        $output .= self::_bake_js(self::$_files[$type]);
+        break;
+      case 'css':
+        $output .= self::_bake_css(self::$_files[$type]);
+        break;
+      case 'routing':
+        $output .= self::_bake_route(self::$_files[$type]);
+        break;
+      default:
+        $output .= $data;
+    }
+    file_put_contents(UF_BASE.'/cache/baked.'.($type == 'routing' ? 'routing.php' : $type),$output);
     return $output;
   }
 
@@ -58,6 +103,7 @@ class uf_baker
     self::bake('js');
     self::bake('css');
     self::bake('php');
+    self::bake('routing');
   }
 }
 

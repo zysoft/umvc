@@ -18,8 +18,6 @@ set_include_path("/path/to/bookstore/build/classes" . PATH_SEPARATOR . get_inclu
 # register our controller factory
 spl_autoload_register('uf_controller::autoload_controller');
 
-$application = new uf_application();
-$application->run();
-$application = NULL;
+uf_application::run();
 
 ?>
