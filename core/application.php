@@ -8,7 +8,7 @@ class uf_application
 
   public static function run()
   {    
-    // routing
+    // ROUTING
     global $uf_config;
     $routing_file = UF_BASE.'/cache/baked.routing.php';
     if($uf_config['always_bake'] || !file_exists($routing_file))

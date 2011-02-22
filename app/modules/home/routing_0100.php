@@ -1,6 +1,6 @@
 <?php
-//0000
-if($uri == '/available-jobs')
+//0100
+if($uri == '/poop')
 {
   return '/career-guide';    
 }

@@ -35,6 +35,13 @@ class uf_baker
     if(!is_array(self::$_files))
     {
       self::$_files = self::_scan_dir_recursive(UF_BASE.'/app');
+      usort(
+        self::$_files['routing'], 
+        function($a, $b)
+        {
+          return strrchr($a, '/') >= strrchr($b, '/');
+        }
+      );
     }    
   }
 
@@ -63,7 +70,7 @@ class uf_baker
     }
     return $output;
   }
-  private static function _bake_route($files) {
+  private static function _bake_routing($files) {
     $output = '<?php uf_application::_set_routing_function(function($uri) { ?>'."\n";
     if(is_array($files))
     {
@@ -90,7 +97,7 @@ class uf_baker
         $output .= self::_bake_css(self::$_files[$type]);
         break;
       case 'routing':
-        $output .= self::_bake_route(self::$_files[$type]);
+        $output .= self::_bake_routing(self::$_files[$type]);
         break;
       default:
         $output .= $data;
