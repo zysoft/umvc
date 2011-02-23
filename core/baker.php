@@ -4,6 +4,11 @@ class uf_baker
 {
   private static $_files;
  
+  static function _sort_routes($a, $b)
+  {
+    return strrchr($a, '/') >= strrchr($b, '/');
+  }
+  
   private static function _scan_dir_recursive($dir)
   {
     $a = scandir($dir);
@@ -37,11 +42,7 @@ class uf_baker
       self::$_files = self::_scan_dir_recursive(UF_BASE.'/app');
       usort(
         self::$_files['routing'], 
-        function($a, $b)
-        {
-          return strrchr($a, '/') >= strrchr($b, '/');
-        }
-      );
+        array('uf_baker', '_sort_routes'));
     }    
   }
 
