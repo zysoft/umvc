@@ -5,6 +5,7 @@
 <p>Here are some sub pages:</p>
 
 <ul>
+<li><a href="/routing-example-using-special-url">Routing</a></li>
 <li><a href="/examples/todo-list">Todo list</a></li>
 <li><a href="/examples/debug">Debug</a></li>
 <li><a href="/examples/noview">No view</a></li>

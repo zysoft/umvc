@@ -83,7 +83,7 @@ class uf_baker
         $output .= trim($data);
       }
     }
-    $output .= "\n".'<?php } uf_application::_set_routing_function(\'uf_internal_routing_function\'); ?>'."\n";
+    $output .= "\n".'<?php return $uri; } uf_application::_set_routing_function(\'uf_internal_routing_function\'); ?>'."\n";
     $output = str_replace('?><?php','',$output);
     return $output;
   }

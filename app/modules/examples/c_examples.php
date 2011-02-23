@@ -1,14 +1,18 @@
 <?php
 
 class examples_controller extends uf_controller {
+  // This method is called before all actions
+  protected function before_action() {
+    $this->caller()->mainmenu = 'examples';    
+  }
+
   // this action uses view: "index"
   public function index() {
-    $this->caller()->mainmenu = 'examples';
     $this->foo = 'bar';
   }
 
+  // this action uses view: "todo_list"
   public function todo_list() {
-    $this->caller()->mainmenu = 'examples';
     $this->todos = array(
       'Routing functions',
       'Clean urls',
@@ -17,21 +21,22 @@ class examples_controller extends uf_controller {
 
   // this action uses view: "debug"
   public function debug() {
-    $this->caller()->mainmenu = 'examples';
     $this->foo = 'bar';
+  }
+
+  // this action uses view: "routing"
+  public function routing() {
   }
 
   // this action has no view
   public function noview() {
-    $this->caller()->mainmenu = 'examples';
     echo 'This text comes directly from the controller.';
     $this->foo = 'bar';
     return FALSE;
   }
 
-  // this action uses view: "test"
+  // this action uses view: "debug"
   public function otherview() {
-    $this->caller()->mainmenu = 'examples';
     $this->foo = 'bar';
     return 'debug';
   }
