@@ -14,9 +14,10 @@ class examples_controller extends uf_controller {
   // this action uses view: "todo_list"
   public function todo_list() {
     $this->todos = array(
-      'Routing functions',
-      'Clean urls',
-      'Template engine');
+      'Buy coffee',
+      'Watch TV',
+      'Walk the dog',
+      'Code PHP');
   }
 
   // this action uses view: "debug"
@@ -29,15 +30,13 @@ class examples_controller extends uf_controller {
   }
 
   // this action has no view
-  public function noview() {
-    echo 'This text comes directly from the controller.';
-    $this->foo = 'bar';
+  public function no_view() {
+    echo '<p>This text comes directly from the controller.</p>';
     return FALSE;
   }
 
   // this action uses view: "debug"
-  public function otherview() {
-    $this->foo = 'bar';
+  public function other_view() {
     return 'debug';
   }
 }

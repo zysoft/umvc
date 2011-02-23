@@ -8,8 +8,8 @@
 <li><a href="/routing-example-using-special-url">Routing</a></li>
 <li><a href="/examples/todo-list">Todo list</a></li>
 <li><a href="/examples/debug">Debug</a></li>
-<li><a href="/examples/noview">No view</a></li>
-<li><a href="/examples/otherview">Other view</a></li>
+<li><a href="/examples/no-view">No view</a></li>
+<li><a href="/examples/other-view">Other view</a></li>
 </ul>
 
 <p>Foo: <?php echo $foo; ?></p>

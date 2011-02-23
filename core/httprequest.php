@@ -5,6 +5,7 @@ class uf_http_request extends uf_request {
 
   public function __construct() {
     $uri = uf_application::apply_routing($_SERVER['REQUEST_URI']);
+    $this->uri($uri);
     $pos = strpos($uri, '?');
     if($pos !== FALSE) {
       $uri = substr($uri, 0, $pos);

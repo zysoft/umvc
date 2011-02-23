@@ -9,6 +9,7 @@
 </head>
 <body>
   <div id="center">
+    <img src="/images/umvc.gif" alt="UMVC php web framework" />
     <ul id="menu">
       <li<?php if(@$mainmenu === 'start') echo ' class="selected"'; ?>><a href="/">Start</a></li>
     <li<?php if(@$mainmenu === 'examples') echo ' class="selected"'; ?>><a href="/examples">Examples</a></li>

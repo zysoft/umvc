@@ -2,7 +2,17 @@
 
 class uf_request {
   private $_parameters;
-
+  private $_uri;
+  
+  public function uri($uri = NULL) {
+    if($uri !== NULL) {
+      $this->_uri = $uri;
+    } else {
+      return $this->_uri;
+    }
+    
+  }
+  
   protected function parameters($parameters = NULL) {
     if($parameters !== NULL) {
       $this->_parameters = $parameters;

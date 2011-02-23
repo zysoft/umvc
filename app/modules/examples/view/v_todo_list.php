@@ -1,6 +1,6 @@
-<h1>Examples: todo</h1>
+<h1>Examples: todo-list</h1>
 
-<p>Features to be implemented:</p>
+<p>Todo-list of items from an array:</p>
 <ul>
   <?php
   foreach($todos as $todo) {
