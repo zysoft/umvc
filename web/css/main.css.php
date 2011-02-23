@@ -1,5 +1,5 @@
-<?php
-define(UF_BASE, realpath(dirname(__FILE__).'/../..'));
+<?
+define(UF_BASE,realpath(dirname(__FILE__).'/../..'));
 header('Content-Type: text/css');
 require_once('default.css.php');
 require_once(UF_BASE.'/config/config.php');

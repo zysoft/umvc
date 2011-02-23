@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="sv">
 <head>
   <title>HR North</title>	
+  <link rel="alternate" type="application/rss+xml" title="" href="/rss" />
   <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css.php" />
   <script src="/js/main.js.php" type="text/javascript" charset="utf-8"></script>
 </head>
@@ -11,10 +12,10 @@
   <div id="center">
     <div id="header"><a href="/"><img src="/images/umvc.gif" alt="UMVC php web framework" /></a></div>
     <ul id="menu">
-      <li<?php if(@$mainmenu === 'start') echo ' class="selected"'; ?>><a href="/">Start</a></li>
-    <li<?php if(@$mainmenu === 'examples') echo ' class="selected"'; ?>><a href="/examples">Examples</a></li>
-      <li<?php if(@$mainmenu === 'aout') echo ' class="selected"'; ?>><a href="/about">About</a></li>
-      <li<?php if(@$mainmenu === 'contact') echo ' class="selected"'; ?>><a href="/contact">Contact</a></li>
+      <li<? if(@$mainmenu === 'start') echo ' class="selected"'; ?>><a href="/">Start</a></li>
+      <li<? if(@$mainmenu === 'examples') echo ' class="selected"'; ?>><a href="/examples">Examples</a></li>
+      <li<? if(@$mainmenu === 'aout') echo ' class="selected"'; ?>><a href="/about">About</a></li>
+      <li<? if(@$mainmenu === 'contact') echo ' class="selected"'; ?>><a href="/contact">Contact</a></li>
     </ul>
     <div id="content">
       <?=$content;?>

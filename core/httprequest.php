@@ -1,26 +1,31 @@
-<?php
+<?
 
-class uf_http_request extends uf_request {
+class uf_http_request extends uf_request
+{
   private $_segments;
 
-  public function __construct() {
+  public function __construct()
+  {
     $uri = uf_application::apply_routing($_SERVER['REQUEST_URI']);
     $this->uri($uri);
-    $pos = strpos($uri, '?');
-    if($pos !== FALSE) {
-      $uri = substr($uri, 0, $pos);
+    $pos = strpos($uri,'?');
+    if($pos !== FALSE)
+    {
+      $uri = substr($uri,0,$pos);
     }
-    $this->_segments = explode('/', $uri);
+    $this->_segments = explode('/',$uri);
     array_shift($this->_segments);
-    $input = array_merge($_GET, $_POST);
+    $input = array_merge($_GET,$_POST);
     $this->parameters($input);
   }
 
-  public function controller() {
+  public function controller()
+  {
     return isset($this->_segments[0]) && !empty($this->_segments[0]) ? $this->_segments[0] : parent::controller();
   }
 
-  public function action() {
+  public function action()
+  {
     return isset($this->_segments[1]) ? $this->_segments[1] : parent::action();
   }
 }

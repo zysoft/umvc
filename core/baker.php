@@ -1,4 +1,4 @@
-<?php
+<?
 
 class uf_baker
 {
@@ -36,7 +36,8 @@ class uf_baker
     return $out;
   }
   
-  private static function _scan_dir() {
+  private static function _scan_dir()
+  {
     if(!is_array(self::$_files))
     {
       self::$_files = self::_scan_dir_recursive(UF_BASE.'/app');
@@ -47,7 +48,8 @@ class uf_baker
     }    
   }
 
-  private static function _bake_js($files) {
+  private static function _bake_js($files)
+  {
     $output = '';
     if(is_array($files))
     {
@@ -60,7 +62,8 @@ class uf_baker
     return $output;
   }
 
-  private static function _bake_css($files) {
+  private static function _bake_css($files)
+  {
     $output = '';
     if(is_array($files))
     {
@@ -73,8 +76,9 @@ class uf_baker
     return $output;
   }
 
-  private static function _bake_routing($files) {
-    $output = '<?php function uf_internal_routing_function($uri) { ?>'."\n";
+  private static function _bake_routing($files)
+  {
+    $output = '<? function uf_internal_routing_function($uri) { ?>'."\n";
     if(is_array($files))
     {
       foreach($files as $file)
@@ -83,12 +87,13 @@ class uf_baker
         $output .= trim($data);
       }
     }
-    $output .= "\n".'<?php return $uri; } uf_application::_set_routing_function(\'uf_internal_routing_function\'); ?>'."\n";
-    $output = str_replace('?><?php','',$output);
+    $output .= "\n".'<? return $uri; } uf_application::_set_routing_function(\'uf_internal_routing_function\'); ?>'."\n";
+    $output = str_replace('?><?','',$output);
     return $output;
   }
 
-  private static function _bake_default($files) {
+  private static function _bake_default($files)
+  {
     $output = '';
     if(is_array($files))
     {
@@ -108,7 +113,8 @@ class uf_baker
     
     if(isset(self::$_files[$type]))
     {
-      switch($type) {
+      switch($type)
+      {
         case 'js':
           $output .= self::_bake_js(self::$_files[$type]);
           break;
@@ -126,7 +132,8 @@ class uf_baker
     return $output;
   }
 
-  public static function bake_all() {
+  public static function bake_all()
+  {
     self::bake('js');
     self::bake('css');
     self::bake('php');

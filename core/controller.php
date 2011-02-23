@@ -1,22 +1,26 @@
-<?php
+<?
 
-class uf_controller {
+class uf_controller
+{
   // PRIVATE DATA
   private $_buffer_ref_count;
   private $_call_stack;
 
-  private function _load_view($view) {
-    $controller = uf_controller::str_to_controller(substr(get_class($this), 0, -11));
+  private function _load_view($view)
+  {
+    $controller = uf_controller::str_to_controller(substr(get_class($this),0,-11));
     // include the view
-    uf_include_view($this, UF_BASE.'/app/modules/'.$controller.'/view/v_'.$view.'.php');
+    uf_include_view($this,UF_BASE.'/app/modules/'.$controller.'/view/v_'.$view.'.php');
   }
-  private function _load_front($view) {
-    $controller = uf_controller::str_to_controller(substr(get_class($this), 0, -11));
+  private function _load_front($view)
+  {
+    $controller = uf_controller::str_to_controller(substr(get_class($this),0,-11));
     // include the view
-    uf_include_view($this, UF_BASE.'/app/front/v_'.$view.'.php');
+    uf_include_view($this,UF_BASE.'/app/front/v_'.$view.'.php');
   }
 
-  private function _push_call_stack_frame($caller, $request, $response, $options) {
+  private function _push_call_stack_frame($caller,$request,$response,$options)
+  {
     array_push(
       $this->_call_stack,
       array(
@@ -28,7 +32,8 @@ class uf_controller {
     );
   }
 
-  private function _pop_call_stack_frame() {
+  private function _pop_call_stack_frame()
+  {
     array_pop($this->_call_stack);
   }
 
@@ -39,67 +44,78 @@ class uf_controller {
 
   // PUBLIC METHODS
 
-  static public function str_to_controller($str) {
+  static public function str_to_controller($str)
+  {
     $f = array('ö','å','ä','ø','æ','ñ','ü','.',',',';','-','–','/',' ');
     $t = array('o','a','a','o','a','n','u','_','_','_','_','_','_','_');
-    $result = preg_replace('/[^\d\w_-]/', '', str_replace($f, $t, $str));
-    return preg_replace('/_+/', '_', $result);
+    $result = preg_replace('/[^\d\w_-]/','',str_replace($f,$t,$str));
+    return preg_replace('/_+/','_',$result);
   }
 
 
-  public function __construct() {
+  public function __construct()
+  {
     $this->_call_stack = array();
     $this->_buffer_ref_count = 0;
   }
 
-  public function __destruct() {
-    while($this->_buffer_ref_count) {
+  public function __destruct()
+  {
+    while($this->_buffer_ref_count)
+    {
       $this->end_buffering();
     }
   }
 
-  public function caller() {
+  public function caller()
+  {
     if (!count($this->_call_stack)) return NULL;
     return $this->_call_stack[count($this->_call_stack) - 1]['caller'];
   }
 
-  public function request() {
+  public function request()
+  {
     if (!count($this->_call_stack)) return NULL;
     return $this->_call_stack[count($this->_call_stack) - 1]['request'];
   }
 
-  public function response() {
+  public function response()
+  {
     if (!count($this->_call_stack)) return NULL;
     return $this->_call_stack[count($this->_call_stack) - 1]['response'];
   }
 
-  public function start_buffering() {
+  public function start_buffering()
+  {
     $this->_buffer_ref_count++;
     ob_start();
   }
 
-  public function end_buffering() {
+  public function end_buffering()
+  {
     $this->_buffer_ref_count--;
     $this->response()->data(ob_get_contents());
     ob_end_clean();
   }
 
-  public function option($name, $default_value = NULL) {
-    return array_key_exists($name, $this->_call_stack[count($this->_call_stack) - 1]['options']) ? $this->_call_stack[count($this->_call_stack) - 1]['options'] : $default_value;
+  public function option($name,$default_value = NULL)
+  {
+    return array_key_exists($name,$this->_call_stack[count($this->_call_stack) - 1]['options']) ? $this->_call_stack[count($this->_call_stack) - 1]['options'] : $default_value;
   }
 
-  public function execute_front($action, $request, $response, $options = NULL)
+  public function execute_front($action,$request,$response,$options = NULL)
   {
-    $this->_push_call_stack_frame($this, $request, $response, $options !== NULL ? $options : array());
+    $this->_push_call_stack_frame($this,$request,$response,$options !== NULL ? $options : array());
     $controller = uf_controller::str_to_controller($request->controller());
     $action     = uf_controller::str_to_controller($request->action());
 
     $controller_class = $controller.'_controller';
     
 
-    if(class_exists($controller_class)) {
+    if(class_exists($controller_class))
+    {
       $controller = new $controller_class;
-      if($controller->execute_action($this, $action, $request, $response, array('enable_buffering' => TRUE)) === FALSE)
+      if($controller->execute_action($this,$action,$request,$response,array('enable_buffering' => TRUE)) === FALSE)
       {
         //echo 'e1';
         $this->_error(404);
@@ -112,7 +128,8 @@ class uf_controller {
     $this->content = $response->data();
 
     // Send headers
-    foreach($response->headers() as $header) {
+    foreach($response->headers() as $header)
+    {
       header($header);
     }
     
@@ -120,13 +137,15 @@ class uf_controller {
     $this->_pop_call_stack_frame();
   }
 
-  public function execute_action($caller,$action,$request,&$response,$options = NULL) {
+  public function execute_action($caller,$action,$request,&$response,$options = NULL)
+  {
     // 404 action?
     // handle  www.foo.com/index/
     if ($action == '') $action = 'index';
 
     // handle nonexistent controller functions
-    if(!method_exists($this, $action)) {
+    if(!method_exists($this,$action))
+    {
       if (!method_exists($this,'error'))
       {
         return FALSE;
@@ -136,15 +155,17 @@ class uf_controller {
       }
     }
 
-    $this->_push_call_stack_frame($caller, $request, $response, $options !== NULL ? $options : array());
+    $this->_push_call_stack_frame($caller,$request,$response,$options !== NULL ? $options : array());
 
     // start buffering?
-    if($this->option('enable_buffering')) {
+    if($this->option('enable_buffering'))
+    {
       $this->start_buffering();
     }
 
     // default action?
-    if(empty($action)) {
+    if(empty($action))
+    {
       $action = 'index';
     }
 
@@ -152,21 +173,24 @@ class uf_controller {
 
     // execute action
     $this->before_action();
-    $view = call_user_func(array($this, $action));
+    $view = call_user_func(array($this,$action));
     $this->after_action();
 
     // default view?
-    if($view === NULL) {
+    if($view === NULL)
+    {
       $view = $action;
     }
 
     // no view?
-    if($view !== FALSE) {
+    if($view !== FALSE)
+    {
       $this->_load_view($view);
     }
 
     // stop buffering?
-    if($this->option('enable_buffering')) {
+    if($this->option('enable_buffering'))
+    {
       $this->end_buffering();
     }
 
@@ -180,22 +204,25 @@ class uf_controller {
   public function _error($code)
   {
     ob_start();
-      uf_include_view($this, UF_BASE.'/app/error/v_'.$code.'.php');
+      uf_include_view($this,UF_BASE.'/app/error/v_'.$code.'.php');
       $this->response()->data(ob_get_contents());
     ob_end_clean();
     $this->response()->header404();
     return FALSE;
   }
-  public static function autoload_controller($class) {
-    if(substr($class, -10) === 'controller') {
-      $controller = uf_controller::str_to_controller(substr($class, 0, -11));
+  public static function autoload_controller($class)
+  {
+    if(substr($class,-10) === 'controller')
+    {
+      $controller = uf_controller::str_to_controller(substr($class,0,-11));
       //echo 'trying to include: '.UF_BASE.'/app/modules/'.$controller.'/c_'.$controller.'.php';
       @include_once(UF_BASE.'/app/modules/'.$controller.'/c_'.$controller.'.php');
     }
   }  
 }
 
-function uf_include_view($uf_controller, $uf_view) {
+function uf_include_view($uf_controller,$uf_view)
+{
   // view variables
   $uf_request  = $uf_controller->request();
   $uf_response = $uf_controller->response();

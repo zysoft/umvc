@@ -12,4 +12,4 @@
 <li><a href="/examples/other-view">Other view</a></li>
 </ul>
 
-<p>Foo: <?php echo $foo; ?></p>
+<p>Foo: <?=$foo?></p>

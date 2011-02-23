@@ -1,8 +1,10 @@
-<?php
+<?
 
-class rssController extends ufController {
-  public function index() {
-    $this->response()->attribute('template', 'blank');
+class rss_controller extends uf_controller
+{
+  public function index()
+  {
+    $this->response()->attribute('template','blank');
     $this->response()->header('Content-type','text/xml');
     $this->items = array(
       array(

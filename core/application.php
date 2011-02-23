@@ -1,4 +1,4 @@
-<?php
+<?
 
 require_once(UF_BASE.'/config/config.php');
 
@@ -33,11 +33,13 @@ class uf_application
     $request  = NULL;
   }
   
-  private static function _set_routing_function($routing_function) {
+  private static function _set_routing_function($routing_function)
+  {
     self::$_routing_function = $routing_function;
   }
   
-  public static function apply_routing($uri) {
+  public static function apply_routing($uri)
+  {
     $routing_function = self::$_routing_function;
     return $routing_function !== NULL ? $routing_function($uri) : $uri;
   }
