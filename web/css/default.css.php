@@ -1,3 +1,12 @@
+a img {
+  border-style: none;
+}
+
+#center {
+  min-weight: 640px;
+  max-weight: 800px;
+  margin: 0 auto 0 auto;
+}
 #menu {
   display: block;
   height: 26px;
@@ -8,10 +17,12 @@
   color: #fff;
   text-transform: uppercase;
 }
+
 #menu li {
   display: block;
   float: left;
 }
+
 #menu li a {
   display: block;
   height: 26px;
@@ -22,13 +33,16 @@
   outline: none;
   text-decoration: none;
 }
+
 #menu li a:hover {
   background-color: #f90;
 }
+
 #menu li.selected {
   background-color: #f90;
   color: #000;
 }
+
 #menu li.selected a {
   color: #000;
 }
