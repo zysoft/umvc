@@ -73,7 +73,7 @@ class uf_baker
   }
 
   private static function _bake_routing($files) {
-    $output = '<?php uf_application::_set_routing_function(function($uri) { ?>'."\n";
+    $output = '<?php function uf_internal_routing_function($uri) { ?>'."\n";
     if(is_array($files))
     {
       foreach($files as $file)
@@ -82,7 +82,7 @@ class uf_baker
         $output .= trim($data);
       }
     }
-    $output .= "\n".'<?php }); ?>'."\n";
+    $output .= "\n".'<?php } uf_application::_set_routing_function(\'uf_internal_routing_function\'); ?>'."\n";
     $output = str_replace('?><?php','',$output);
     return $output;
   }
