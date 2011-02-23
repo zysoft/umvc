@@ -9,14 +9,17 @@
 </head>
 <body>
   <div id="center">
-    <a href="/"><img src="/images/umvc.gif" alt="UMVC php web framework" /></a>
+    <div id="header"><a href="/"><img src="/images/umvc.gif" alt="UMVC php web framework" /></a></div>
     <ul id="menu">
       <li<?php if(@$mainmenu === 'start') echo ' class="selected"'; ?>><a href="/">Start</a></li>
     <li<?php if(@$mainmenu === 'examples') echo ' class="selected"'; ?>><a href="/examples">Examples</a></li>
       <li<?php if(@$mainmenu === 'aout') echo ' class="selected"'; ?>><a href="/about">About</a></li>
       <li<?php if(@$mainmenu === 'contact') echo ' class="selected"'; ?>><a href="/contact">Contact</a></li>
     </ul>
-    <?=$content;?>
+    <div id="content">
+      <?=$content;?>
+    </div>
+    <div id="footer">Yoyo!</div>
   </div>
 </body>
 </html>

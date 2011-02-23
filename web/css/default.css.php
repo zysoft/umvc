@@ -1,21 +1,42 @@
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #eee;
+}
+
 a img {
   border-style: none;
 }
 
 #center {
-  min-weight: 640px;
-  max-weight: 800px;
+  width: 740px;
   margin: 0 auto 0 auto;
+  background: #eee url('/images/background.gif') repeat-y left top;
+}
+#header {
+  padding: 20px 40px 0 40px;
+}
+#content {
+  padding: 10px 40px 0 40px;
+}
+#footer {
+  padding: 5px 20px 0 20px;
+  height: 19px;
+  background: #eee url('/images/footer.gif') repeat-y left top;
+  text-align: right;
+  color: #666;
+  font-size: 10px;
 }
 #menu {
   display: block;
   height: 26px;
-  margin: 0;
+  margin: 0 20px 0 20px;
   padding: 0;
   list-style-type: none;
   background-color: #000;
   color: #fff;
   text-transform: uppercase;
+  border-bottom: 4px solid #f90;
 }
 
 #menu li {
