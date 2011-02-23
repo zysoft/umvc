@@ -10,10 +10,10 @@
 <body>
   <div id="center">
     <ul id="menu">
-      <li<?php if(@$mainmenu === 'home') echo ' class="selected"'; ?>><a href="/">Home</a></li>
-      <li<?php if(@$mainmenu === 'available_jobs') echo ' class="selected"'; ?>><a href="/available-jobs">Available jobs</a></li>
-      <li<?php if(@$mainmenu === 'my_pages') echo ' class="selected"'; ?>><a href="/my-pages">My pages</a></li>
-      <li<?php if(@$mainmenu === 'career_guide') echo ' class="selected"'; ?>><a href="/career-guide">Career guide</a></li>
+      <li<?php if(@$mainmenu === 'start') echo ' class="selected"'; ?>><a href="/">Start</a></li>
+    <li<?php if(@$mainmenu === 'examples') echo ' class="selected"'; ?>><a href="/examples">Examples</a></li>
+      <li<?php if(@$mainmenu === 'aout') echo ' class="selected"'; ?>><a href="/about">About</a></li>
+      <li<?php if(@$mainmenu === 'contact') echo ' class="selected"'; ?>><a href="/contact">Contact</a></li>
     </ul>
     <?=$content;?>
   </div>

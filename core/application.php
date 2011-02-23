@@ -39,7 +39,7 @@ class uf_application
   
   public static function apply_routing($uri) {
     $routing_function = self::$_routing_function;
-    return $routing_function($uri);
+    return $routing_function ? $routing_function($uri) : $uri;
   }
 }
 

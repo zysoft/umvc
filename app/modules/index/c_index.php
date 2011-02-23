@@ -4,13 +4,8 @@ class index_controller extends uf_controller
 {
   public function index()
   {
-    echo 'uu';
+    $this->caller()->mainmenu = 'start';
     $this->foo = 'bar';
-    $this->caller()->mainmenu = '';
-    $this->caller()->mupp = 'mupp';
-    //$this->response()->attribute('template', 'blank');
-    $this->value = 'index';
-    $this->response()->attribute('mainmenu', 'home');
   }
 
   // local 404 error handler

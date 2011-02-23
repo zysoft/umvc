@@ -4,9 +4,9 @@ class uf_baker
 {
   private static $_files;
  
-  static function _sort_routes($a, $b)
+  static function _sort_routes($a,$b)
   {
-    return strrchr($a, '/') >= strrchr($b, '/');
+    return strrchr($a,'/') >= strrchr($b,'/');
   }
   
   private static function _scan_dir_recursive($dir)
@@ -28,7 +28,7 @@ class uf_baker
         $is_route     = substr($f,0,8) == 'routing_';
         if($is_recursive || $is_route)
         {
-          $ext = substr(strrchr($f, '.'),1);
+          $ext = substr(strrchr($f,'.'),1);
           $out[$is_route ? 'routing' : $ext][] = $fp;
         }
       }
@@ -40,9 +40,10 @@ class uf_baker
     if(!is_array(self::$_files))
     {
       self::$_files = self::_scan_dir_recursive(UF_BASE.'/app');
-      usort(
-        self::$_files['routing'], 
-        array('uf_baker', '_sort_routes'));
+      if(isset(self::$_files['routing']))
+      {
+        usort(self::$_files['routing'],array('uf_baker','_sort_routes'));        
+      }
     }    
   }
 
@@ -104,18 +105,22 @@ class uf_baker
   {
     self::_scan_dir();
     $output = '';
-    switch($type) {
-      case 'js':
-        $output .= self::_bake_js(self::$_files[$type]);
-        break;
-      case 'css':
-        $output .= self::_bake_css(self::$_files[$type]);
-        break;
-      case 'routing':
-        $output .= self::_bake_routing(self::$_files[$type]);
-        break;
-      default:
-        $output .= self::_bake_default(self::$_files[$type]);
+    
+    if(isset(self::$_files[$type]))
+    {
+      switch($type) {
+        case 'js':
+          $output .= self::_bake_js(self::$_files[$type]);
+          break;
+        case 'css':
+          $output .= self::_bake_css(self::$_files[$type]);
+          break;
+        case 'routing':
+          $output .= self::_bake_routing(self::$_files[$type]);
+          break;
+        default:
+          $output .= self::_bake_default(self::$_files[$type]);
+      }      
     }
     file_put_contents(UF_BASE.'/cache/baked.'.($type == 'routing' ? 'routing.php' : $type),$output);
     return $output;

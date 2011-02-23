@@ -1,0 +1,14 @@
+<h1>Examples</h1>
+
+<p>This is the index page of the examples section.</p>
+
+<p>Here are some sub pages:</p>
+
+<ul>
+<li><a href="/examples/todo-list">Todo list</a></li>
+<li><a href="/examples/debug">Debug</a></li>
+<li><a href="/examples/noview">No view</a></li>
+<li><a href="/examples/otherview">Other view</a></li>
+</ul>
+
+<p>Foo: <?php echo $foo; ?></p>
