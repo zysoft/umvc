@@ -16,7 +16,7 @@
     <ul id="menu">
       <li<? if(@$mainmenu === 'start') echo ' class="selected"'; ?>><a href="/">Start</a></li>
       <li<? if(@$mainmenu === 'examples') echo ' class="selected"'; ?>><a href="/examples">Examples</a></li>
-      <li<? if(@$mainmenu === 'aout') echo ' class="selected"'; ?>><a href="/about">About</a></li>
+      <li<? if(@$mainmenu === 'about') echo ' class="selected"'; ?>><a href="/about">About</a></li>
       <li<? if(@$mainmenu === 'contact') echo ' class="selected"'; ?>><a href="/contact">Contact</a></li>
     </ul>
     <div id="content">
