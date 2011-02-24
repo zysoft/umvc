@@ -40,7 +40,7 @@ class uf_baker
   {
     if(!is_array(self::$_files))
     {
-      self::$_files = self::_scan_dir_recursive(UF_BASE.'/app');
+      self::$_files = self::_scan_dir_recursive(UF_BASE.uf_application::config('app_dir'));
       if(isset(self::$_files['routing']))
       {
         usort(self::$_files['routing'],array('uf_baker','_sort_routes'));        

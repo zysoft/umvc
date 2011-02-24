@@ -10,13 +10,13 @@ class uf_controller
   {
     $controller = uf_controller::str_to_controller(substr(get_class($this),0,-11));
     // include the view
-    uf_include_view($this,UF_BASE.'/app/modules/'.$controller.'/view/v_'.$view.'.php');
+    uf_include_view($this,UF_BASE.uf_application::config('app_dir').'/modules/'.$controller.'/view/v_'.$view.'.php');
   }
   private function _load_front($view)
   {
     $controller = uf_controller::str_to_controller(substr(get_class($this),0,-11));
     // include the view
-    uf_include_view($this,UF_BASE.'/app/front/v_'.$view.'.php');
+    uf_include_view($this,UF_BASE.uf_application::config('app_dir').'/front/v_'.$view.'.php');
   }
 
   private function _push_call_stack_frame($caller,$request,$response,$options)
@@ -204,7 +204,7 @@ class uf_controller
   public function _error($code)
   {
     ob_start();
-      uf_include_view($this,UF_BASE.'/app/error/v_'.$code.'.php');
+      uf_include_view($this,UF_BASE.uf_application::config('app_dir').'/error/v_'.$code.'.php');
       $this->response()->data(ob_get_contents());
     ob_end_clean();
     $this->response()->header404();
@@ -215,8 +215,8 @@ class uf_controller
     if(substr($class,-10) === 'controller')
     {
       $controller = uf_controller::str_to_controller(substr($class,0,-11));
-      //echo 'trying to include: '.UF_BASE.'/app/modules/'.$controller.'/c_'.$controller.'.php';
-      @include_once(UF_BASE.'/app/modules/'.$controller.'/c_'.$controller.'.php');
+      //echo 'trying to include: '.UF_BASE.uf_application::config('app_dir').'/modules/'.$controller.'/c_'.$controller.'.php';
+      @include_once(UF_BASE.uf_application::config('app_dir').'/modules/'.$controller.'/c_'.$controller.'.php');
     }
   }  
 }

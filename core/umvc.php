@@ -10,15 +10,15 @@ require_once('controller.php');
 require_once('application.php');
 require_once('baker.php');
 
-if($uf_config['load_propel'])
+if(uf_application::config('load_propel'))
 {
   // Initialize Propel with the runtime configuration
   require_once UF_BASE.'/propel/propel-1.5.6/runtime/lib/Propel.php';
 
-  Propel::init(UF_BASE."/app/data/build/conf/umvc-conf.php"); // temporary removed, because i'm to lazy to config propel /David
+  Propel::init(UF_BASE.uf_application::config('app_dir').'/data/build/conf/umvc-conf.php');
 
   // Add the generated 'classes' directory to the include path
-  set_include_path("/path/to/bookstore/build/classes" . PATH_SEPARATOR . get_include_path());  
+  set_include_path('/path/to/bookstore/build/classes'.PATH_SEPARATOR.get_include_path());  
 }
 
 # register our controller factory

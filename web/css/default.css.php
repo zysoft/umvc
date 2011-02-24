@@ -2,6 +2,9 @@ body {
   padding: 0;
   margin: 0;
   background-color: #eee;
+  font-family: arial, sans-serif;
+  font-size: 12px;
+  line-height: 20px;
 }
 
 a img {
@@ -13,12 +16,15 @@ a img {
   margin: 0 auto 0 auto;
   background: #eee url('/images/background.gif') repeat-y left top;
 }
+
 #header {
   padding: 20px 40px 0 40px;
 }
+
 #content {
   padding: 10px 40px 0 40px;
 }
+
 #footer {
   padding: 5px 20px 0 20px;
   height: 19px;
@@ -27,6 +33,7 @@ a img {
   color: #666;
   font-size: 10px;
 }
+
 #menu {
   display: block;
   height: 26px;
