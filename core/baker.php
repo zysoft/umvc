@@ -45,7 +45,7 @@ class uf_baker
       {
         usort(self::$_files['routing'],array('uf_baker','_sort_routes'));        
       }
-    }    
+    }  
   }
 
   private static function _bake_js($files)
@@ -76,18 +76,36 @@ class uf_baker
     return $output;
   }
 
-  private static function _bake_routing($files)
+  private static function _bake_routing($files,$prefix='')
   {
-    $output = '<? function uf_internal_routing_function($uri) { ?>'."\n";
+    $prefix2 = $prefix.($prefix != '' ? '_' : '');
+    $output = '<? function uf_internal_'.$prefix2.'routing_function($uri) { ?>'."\n";
     if(is_array($files))
     {
       foreach($files as $file)
       {
-        $data = file_get_contents($file);
-        $output .= trim($data);
+        $f = substr(strrchr($file,'/'),1);
+        if($prefix != '')
+        {
+          // Only prefixed files
+          if(strpos($f, 'routing_'.$prefix.'_') === 0)
+          {
+            $data = file_get_contents($file);
+            $output .= trim($data);                      
+          }
+        }
+        else
+        {
+          // Only unprefixed files
+          if(strpos($f,'routing_pre_') !== 0 && strpos($f,'routing_post_') !== 0)
+          {
+            $data = file_get_contents($file);
+            $output .= trim($data);
+          }
+        }
       }
     }
-    $output .= "\n".'<? return $uri; } uf_application::_set_routing_function(\'uf_internal_routing_function\'); ?>'."\n";
+    $output .= "\n".'<? return $uri; } ?>'."\n";
     $output = str_replace('?><?','',$output);
     return $output;
   }
@@ -108,9 +126,21 @@ class uf_baker
   
   public static function bake($type)
   {
+    $info = explode('_',$type);
+    if(count($info) > 1)
+    {
+      $prefix = $info[0];
+      $type = $info[1];
+    }
+    else
+    {
+      $prefix = '';
+      $type = $info[0];
+    }
+    
     self::_scan_dir();
     $output = '';
-    
+
     if(isset(self::$_files[$type]))
     {
       switch($type)
@@ -122,22 +152,25 @@ class uf_baker
           $output .= self::_bake_css(self::$_files[$type]);
           break;
         case 'routing':
-          $output .= self::_bake_routing(self::$_files[$type]);
+          $output .= self::_bake_routing(self::$_files[$type],$prefix);
           break;
         default:
           $output .= self::_bake_default(self::$_files[$type]);
       }      
     }
-    file_put_contents(UF_BASE.'/cache/baked.'.($type == 'routing' ? 'routing.php' : $type),$output);
+    file_put_contents(UF_BASE.'/cache/baked.'.($prefix!='' ? $prefix.'.' : '').($type == 'routing' ? 'routing.php' : $type),$output);
     return $output;
   }
 
   public static function bake_all()
   {
+  
     self::bake('js');
     self::bake('css');
     self::bake('php');
+    self::bake('pre_routing');
     self::bake('routing');
+    self::bake('post_routing');
   }
 }
 

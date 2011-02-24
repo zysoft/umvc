@@ -11,16 +11,29 @@ class uf_application
     // ROUTING
     global $uf_config;
     $routing_file = UF_BASE.'/cache/baked.routing.php';
+    $pre_routing_file = UF_BASE.'/cache/baked.pre.routing.php';
+    $post_routing_file = UF_BASE.'/cache/baked.post.routing.php';
+
     if($uf_config['always_bake'] || !file_exists($routing_file))
     {
       require_once(UF_BASE.'/core/baker.php');
       uf_baker::bake('routing');
-      require_once($routing_file);
     }
-    else
+    require_once($routing_file);
+
+    if($uf_config['always_bake'] || !file_exists($pre_routing_file))
     {
-      require_once($routing_file);
+      require_once(UF_BASE.'/core/baker.php');
+      uf_baker::bake('pre_routing');
     }
+    require_once($pre_routing_file);
+
+    if($uf_config['always_bake'] || !file_exists($post_routing_file))
+    {
+      require_once(UF_BASE.'/core/baker.php');
+      uf_baker::bake('post_routing');
+    }
+    require_once($post_routing_file);
 
     $request  = new uf_http_request;
     $response = new uf_response;
@@ -33,15 +46,12 @@ class uf_application
     $request  = NULL;
   }
   
-  private static function _set_routing_function($routing_function)
-  {
-    self::$_routing_function = $routing_function;
-  }
-  
   public static function apply_routing($uri)
   {
-    $routing_function = self::$_routing_function;
-    return $routing_function !== NULL ? $routing_function($uri) : $uri;
+    $uri = uf_internal_pre_routing_function($uri);
+    $uri = uf_internal_routing_function($uri);
+    $uri = uf_internal_post_routing_function($uri);
+    return $uri;
   }
 }
 
