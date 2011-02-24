@@ -9,7 +9,6 @@ require_once('default.css.php');
 $css_file = UF_BASE.'/cache/baked.css';
 if(uf_application::config('always_bake') || !file_exists($css_file))
 {
-  require_once(UF_BASE.'/core/baker.php');
   echo uf_baker::bake('css');
 }
 else

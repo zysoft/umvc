@@ -47,7 +47,7 @@ class uf_baker
       {
         usort(self::$_files['routing'],array('uf_baker','_sort_routes'));        
       }
-    }  
+    }
   }
 
   private static function _bake_js($files)
