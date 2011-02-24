@@ -50,38 +50,10 @@ class uf_baker
     }
   }
 
-  private static function _bake_js($files)
-  {
-    $output = '';
-    if(is_array($files))
-    {
-      foreach($files as $file)
-      {
-        $data = file_get_contents($file);
-        $output .= '(function(){'."\n".$data."\n".'})();'."\n";
-      }
-    }
-    return $output;
-  }
-
-  private static function _bake_css($files)
-  {
-    $output = '';
-    if(is_array($files))
-    {
-      foreach($files as $file)
-      {
-        $data = file_get_contents($file);
-        $output .= $data."\n";
-      }
-    }
-    return $output;
-  }
-
   private static function _bake_routing($files,$prefix='')
   {
     $prefix2 = $prefix.($prefix != '' ? '_' : '');
-    $output = '<? function uf_internal_'.$prefix2.'routing_function($uri) { ?>'."\n";
+    $output = '<? function uf_internal_'.$prefix2.'routing_function(&$uri) { ?>'."\n";
     if(is_array($files))
     {
       foreach($files as $file)
@@ -147,12 +119,6 @@ class uf_baker
     {
       switch($type)
       {
-        case 'js':
-          $output .= self::_bake_js(self::$_files[$type]);
-          break;
-        case 'css':
-          $output .= self::_bake_css(self::$_files[$type]);
-          break;
         case 'routing':
           $output .= self::_bake_routing(self::$_files[$type],$prefix);
           break;
