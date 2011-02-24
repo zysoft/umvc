@@ -1,5 +1,7 @@
 <?
 
+require_once(UF_BASE.'/core/umvc.php');
+
 class uf_baker
 {
   private static $_files;
@@ -172,6 +174,11 @@ class uf_baker
     self::bake('routing');
     self::bake('post_routing');
   }
+}
+
+if(uf_application::config('always_bake'))
+{
+  uf_baker::bake_all();  
 }
 
 ?>

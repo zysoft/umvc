@@ -24,6 +24,4 @@ if(uf_application::config('load_propel'))
 # register our controller factory
 spl_autoload_register('uf_controller::autoload_controller');
 
-uf_application::run();
-
 ?>
