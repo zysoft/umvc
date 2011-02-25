@@ -28,6 +28,7 @@ class examples_controller extends base_controller
   // this action uses view: "debug"
   public function debug()
   {
+    $this->response()->attribute('template','blank');
     $this->foo = 'bar';
   }
 

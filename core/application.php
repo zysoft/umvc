@@ -42,8 +42,7 @@ class uf_application
     $response = new uf_response;
 
     /// BASE CONTROLLER
-    $controller = new uf_controller();
-    $controller->execute_base('index',$request,$response,array('enable_buffering' => TRUE));
+    uf_controller::execute_base($request,$response,array('enable_buffering' => TRUE));
 
     $response = NULL;
     $request  = NULL;

@@ -102,9 +102,8 @@ class uf_controller
     return array_key_exists($name,$this->_call_stack[count($this->_call_stack) - 1]['options']) ? $this->_call_stack[count($this->_call_stack) - 1]['options'] : $default_value;
   }
 
-  public function execute_base($action,$request,$response,$options = NULL)
+  static public function execute_base($request,$response,$options = NULL)
   {
-    $this->_push_call_stack_frame($this,$request,$response,$options !== NULL ? $options : array());
     $controller = uf_controller::str_to_controller($request->controller());
     $action     = uf_controller::str_to_controller($request->action());
 
@@ -113,26 +112,28 @@ class uf_controller
     if(class_exists($controller_class))
     {
       $controller = new $controller_class;
-      if($controller->execute_action($this,$action,$request,$response,array('enable_buffering' => TRUE)) === FALSE)
+      if($controller->execute_action($controller,$action,$request,$response,array('enable_buffering' => TRUE)) === FALSE)
       {
-        $this->_error(404);
+        $controller->_error(404);
       }
-      $controller = NULL;
     }
     else
     {
-      $this->_error(404);
+      $controller->_error(404);
     }
-    $this->content = $response->data();
+    $controller->content = $response->data();
 
     // Send headers
     foreach($response->headers() as $header)
     {
       header($header);
     }
-    
-    $this->_load_base($response->attribute('template'));
-    $this->_pop_call_stack_frame();
+
+    uf_include_view($controller,UF_BASE.uf_application::config('app_dir').'/base/view/v_'.$response->attribute('template').'.php');
+    if(class_exists($controller_class))
+    {
+      $controller = NULL;      
+    }
   }
 
   public function execute_action($caller,$action,$request,&$response,$options = NULL)
@@ -203,6 +204,7 @@ class uf_controller
     $this->response()->header404();
     return FALSE;
   }
+  
   public static function autoload_controller($class)
   {
     if(substr($class,-10) === 'controller')
