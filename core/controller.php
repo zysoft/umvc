@@ -104,7 +104,7 @@ class uf_controller
 
   public function execute_base($action,$request,$response,$options = NULL)
   {
-    //$this->_push_call_stack_frame($this,$request,$response,$options !== NULL ? $options : array());
+    $this->_push_call_stack_frame($this,$request,$response,$options !== NULL ? $options : array());
     $controller = uf_controller::str_to_controller($request->controller());
     $action     = uf_controller::str_to_controller($request->action());
 
@@ -132,7 +132,7 @@ class uf_controller
     }
     
     $this->_load_base($response->attribute('template'));
-    //$this->_pop_call_stack_frame();
+    $this->_pop_call_stack_frame();
   }
 
   public function execute_action($caller,$action,$request,&$response,$options = NULL)
@@ -162,13 +162,7 @@ class uf_controller
       $this->start_buffering();
     }
 
-    // default action?
-    if(empty($action))
-    {
-      $action = 'index';
-    }
-
-    $action = uf_controller::str_to_controller($action);
+    $action = empty($action) ? 'index' : uf_controller::str_to_controller($action);
 
     // execute action
     $this->before_action();
