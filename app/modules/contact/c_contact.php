@@ -1,6 +1,6 @@
 <?
 
-class contact_controller extends uf_controller
+class contact_controller extends base_controller
 {
   public function index()
   {

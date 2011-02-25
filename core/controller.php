@@ -12,11 +12,10 @@ class uf_controller
     // include the view
     uf_include_view($this,UF_BASE.uf_application::config('app_dir').'/modules/'.$controller.'/view/v_'.$view.'.php');
   }
-  private function _load_front($view)
+  private function _load_base($view)
   {
-    $controller = uf_controller::str_to_controller(substr(get_class($this),0,-11));
     // include the view
-    uf_include_view($this,UF_BASE.uf_application::config('app_dir').'/front/v_'.$view.'.php');
+    uf_include_view($this,UF_BASE.uf_application::config('app_dir').'/base/view/v_'.$view.'.php');
   }
 
   private function _push_call_stack_frame($caller,$request,$response,$options)
@@ -39,8 +38,8 @@ class uf_controller
 
   // PROTECTED METHODS
   
-  protected function before_action() {}
-  protected function after_action() {}
+  public function before_action() {}
+  public function after_action() {}
 
   // PUBLIC METHODS
 
@@ -103,26 +102,25 @@ class uf_controller
     return array_key_exists($name,$this->_call_stack[count($this->_call_stack) - 1]['options']) ? $this->_call_stack[count($this->_call_stack) - 1]['options'] : $default_value;
   }
 
-  public function execute_front($action,$request,$response,$options = NULL)
+  public function execute_base($action,$request,$response,$options = NULL)
   {
-    $this->_push_call_stack_frame($this,$request,$response,$options !== NULL ? $options : array());
+    //$this->_push_call_stack_frame($this,$request,$response,$options !== NULL ? $options : array());
     $controller = uf_controller::str_to_controller($request->controller());
     $action     = uf_controller::str_to_controller($request->action());
 
     $controller_class = $controller.'_controller';
-    
 
     if(class_exists($controller_class))
     {
       $controller = new $controller_class;
       if($controller->execute_action($this,$action,$request,$response,array('enable_buffering' => TRUE)) === FALSE)
       {
-        //echo 'e1';
         $this->_error(404);
       }
       $controller = NULL;
-    } else {
-      //echo 'e2';
+    }
+    else
+    {
       $this->_error(404);
     }
     $this->content = $response->data();
@@ -133,8 +131,8 @@ class uf_controller
       header($header);
     }
     
-    $this->_load_front($response->attribute('template'));
-    $this->_pop_call_stack_frame();
+    $this->_load_base($response->attribute('template'));
+    //$this->_pop_call_stack_frame();
   }
 
   public function execute_action($caller,$action,$request,&$response,$options = NULL)
@@ -149,7 +147,8 @@ class uf_controller
       if (!method_exists($this,'error'))
       {
         return FALSE;
-      } else
+      }
+      else
       {
         $action = 'error';
       }
@@ -215,8 +214,9 @@ class uf_controller
     if(substr($class,-10) === 'controller')
     {
       $controller = uf_controller::str_to_controller(substr($class,0,-11));
-      //echo 'trying to include: '.UF_BASE.uf_application::config('app_dir').'/modules/'.$controller.'/c_'.$controller.'.php';
-      @include_once(UF_BASE.uf_application::config('app_dir').'/modules/'.$controller.'/c_'.$controller.'.php');
+      $file = UF_BASE.uf_application::config('app_dir').($controller == 'base' ? '' : '/modules').'/'.$controller.'/c_'.$controller.'.php';
+      //echo 'trying to include: '.$file.'<br />';
+      require_once($file);
     }
   }  
 }

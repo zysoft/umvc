@@ -1,14 +1,13 @@
 <?
-
 error_reporting(E_ALL);
 
 require_once(UF_BASE.'/config/config.php');
-require_once('response.php');
-require_once('request.php');
-require_once('httprequest.php');
-require_once('controller.php');
-require_once('application.php');
-require_once('baker.php');
+require_once(UF_BASE.'/core/application.php');
+require_once(UF_BASE.'/core/response.php');
+require_once(UF_BASE.'/core/request.php');
+require_once(UF_BASE.'/core/httprequest.php');
+require_once(UF_BASE.'/core/controller.php');
+require_once(UF_BASE.'/core/baker.php');
 
 if(uf_application::config('load_propel'))
 {

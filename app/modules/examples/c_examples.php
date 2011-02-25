@@ -1,14 +1,15 @@
 <?
 
-class examples_controller extends uf_controller
+class examples_controller extends base_controller
 {
   // This method is called before all actions
-  protected function before_action()
+  public function before_action()
   {
+    parent::before_action();
     $this->caller()->mainmenu = 'examples';    
   }
 
-  // this action uses view: "index"
+  // This action uses view: "index"
   public function index()
   {
     $this->foo = 'bar';

@@ -4,10 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="sv">
 <head>
   <title>HR North</title>	
-  <link rel="alternate" type="application/rss+xml" title="" href="/rss" />
-  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css.php" />
   <meta name="description" content="<?=@$meta_description?>" />
   <meta name="keywords" content="<?=@$meta_keywords?>" />
+  <link rel="alternate" type="application/rss+xml" title="" href="/rss" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css.php" />
   <script src="/js/main.js.php" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>

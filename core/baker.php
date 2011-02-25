@@ -126,16 +126,21 @@ class uf_baker
           $output .= self::_bake_default(self::$_files[$type]);
       }      
     }
-    file_put_contents(UF_BASE.'/cache/baked.'.($prefix!='' ? $prefix.'.' : '').($type == 'routing' ? 'routing.php' : $type),$output);
+    
+    $type2 = $type == 'routing' ? 'routing.php' : $type;
+    $bake_base = UF_BASE.'/'.(strrchr($type2,'.') == '.php' ? 'cache' : 'web/data');
+    $dir = $bake_base.uf_application::config('app_dir').'/baker/'.$type;
+    if(!is_dir($dir)) {
+      mkdir($dir,0777,TRUE);
+    }
+    file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type2,$output);
     return $output;
   }
 
   public static function bake_all()
   {
-  
     self::bake('js');
     self::bake('css');
-    self::bake('php');
     self::bake('pre_routing');
     self::bake('routing');
     self::bake('post_routing');

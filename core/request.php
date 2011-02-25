@@ -10,7 +10,9 @@ class uf_request
     if($uri !== NULL)
     {
       $this->_uri = $uri;
-    } else {
+    }
+    else
+    {
       return $this->_uri;
     }
     
@@ -21,7 +23,9 @@ class uf_request
     if($parameters !== NULL)
     {
       $this->_parameters = $parameters;
-    } else {
+    }
+    else
+    {
       return $this->_parameters;
     }
   }

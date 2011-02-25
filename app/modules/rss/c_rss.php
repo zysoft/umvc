@@ -1,6 +1,6 @@
 <?
 
-class rss_controller extends uf_controller
+class rss_controller extends base_controller
 {
   public function index()
   {

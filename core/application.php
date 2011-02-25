@@ -9,9 +9,13 @@ class uf_application
   public static function run()
   {    
     // ROUTING
-    $routing_file = UF_BASE.'/cache/baked.routing.php';
-    $pre_routing_file = UF_BASE.'/cache/baked.pre.routing.php';
-    $post_routing_file = UF_BASE.'/cache/baked.post.routing.php';
+    if(!is_dir(UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/routing'))
+    {
+      mkdir(UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/routing',0777,TRUE);
+    }
+    $routing_file = UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/routing/baked.routing.php';
+    $pre_routing_file = UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/routing/baked.pre.routing.php';
+    $post_routing_file = UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/routing/baked.post.routing.php';
 
     // PRE ROUTING
     if(uf_application::config('always_bake') || !file_exists($routing_file))
@@ -37,9 +41,9 @@ class uf_application
     $request  = new uf_http_request;
     $response = new uf_response;
 
-    /// FRONT CONTROLLER
+    /// BASE CONTROLLER
     $controller = new uf_controller();
-    $controller->execute_front('index',$request,$response,array('enable_buffering' => TRUE));
+    $controller->execute_base('index',$request,$response,array('enable_buffering' => TRUE));
 
     $response = NULL;
     $request  = NULL;

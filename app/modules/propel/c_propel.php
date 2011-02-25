@@ -1,6 +1,6 @@
 <?
 
-class propel_controller extends uf_controller
+class propel_controller extends base_controller
 {
   public function index()
   {
