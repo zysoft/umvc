@@ -1,1 +1,1 @@
-document.title += ' [B]';
+document.title += ' [<?='bar'?>]';

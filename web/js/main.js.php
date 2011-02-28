@@ -12,10 +12,8 @@ if(!is_dir($dir))
 $js_file = $dir.'/baked.js';
 if(uf_application::config('always_bake') || !file_exists($js_file))
 {
-  echo uf_baker::bake('js');
+  uf_baker::bake('js');
 }
-else
-{
-  echo file_get_contents($js_file);  
-}
+echo file_get_contents($js_file)."\n";
+@include_once(UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/js/baked.js.php');
 ?>

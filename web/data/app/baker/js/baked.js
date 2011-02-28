@@ -1,1 +1,1 @@
-document.title = '[A] ' + document.title;
+document.title = '[foo] ' + document.title;

@@ -31,7 +31,15 @@ class uf_baker
         if($is_recursive || $is_route)
         {
           $ext = substr(strrchr($f,'.'),1);
-          $out[$is_route ? 'routing' : $ext][] = $fp;
+
+          // Get the right ext for php files (routing files excluded)
+          $is_dynamic = $ext == 'php';
+          if($is_dynamic)
+          {
+            $ext = substr(strrchr(substr($f,0,strpos($f,'.php')),'.'),1);
+          }
+          
+          $out[$is_dynamic ? 'dynamic' : 'static'][$is_route ? 'routing' : $ext][] = $fp;
         }
       }
     }
@@ -43,9 +51,13 @@ class uf_baker
     if(!is_array(self::$_files))
     {
       self::$_files = self::_scan_dir_recursive(UF_BASE.uf_application::config('app_dir'));
-      if(isset(self::$_files['routing']))
+      if(isset(self::$_files['static']['routing']))
       {
-        usort(self::$_files['routing'],array('uf_baker','_sort_routes'));        
+        usort(self::$_files['static']['routing'],array('uf_baker','_sort_routes'));        
+      }
+      if(isset(self::$_files['dynamic']['routing']))
+      {
+        usort(self::$_files['dynamic']['routing'],array('uf_baker','_sort_routes'));        
       }
     }
   }
@@ -113,28 +125,34 @@ class uf_baker
     }
     
     self::_scan_dir();
-    $output = '';
 
-    if(isset(self::$_files[$type]))
+    for($i = 0; $i < 2; $i++)
     {
-      switch($type)
+      $place = $i == 0 ? 'static' : 'dynamic';
+      $output = '';
+      if(isset(self::$_files[$place][$type]))
       {
-        case 'routing':
-          $output .= self::_bake_routing(self::$_files[$type],$prefix);
-          break;
-        default:
-          $output .= self::_bake_default(self::$_files[$type]);
-      }      
+        switch($type)
+        {
+          case 'routing':
+            $output .= self::_bake_routing(self::$_files[$place][$type],$prefix);
+            break;
+          default:
+            $output .= self::_bake_default(self::$_files[$place][$type]);
+        }      
+      }
+
+      $bake_base = UF_BASE.'/'.($place == 'dynamic' ? 'cache' : 'web/data');
+      $dir = $bake_base.uf_application::config('app_dir').'/baker/'.$type;
+      if(!($type == 'routing' && $place == 'static') && !is_dir($dir))
+      {
+        mkdir($dir,0777,TRUE);
+      }
+      if($output != '')
+      {
+        file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type.($place == 'dynamic' ? '.php' : ''),$output);        
+      }
     }
-    
-    $type2 = $type == 'routing' ? 'routing.php' : $type;
-    $bake_base = UF_BASE.'/'.(strrchr($type2,'.') == '.php' ? 'cache' : 'web/data');
-    $dir = $bake_base.uf_application::config('app_dir').'/baker/'.$type;
-    if(!is_dir($dir)) {
-      mkdir($dir,0777,TRUE);
-    }
-    file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type2,$output);
-    return $output;
   }
 
   public static function bake_all()
