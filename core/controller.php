@@ -114,12 +114,17 @@ class uf_controller
       $controller = new $controller_class;
       if($controller->execute_action($controller,$action,$request,$response,array('enable_buffering' => TRUE)) === FALSE)
       {
+        $controller->_push_call_stack_frame($controller,$request,$response,$options !== NULL ? $options : array());
         $controller->_error(404);
+        $controller->_pop_call_stack_frame();
       }
     }
     else
     {
+      $controller = new base_controller;
+      $controller->_push_call_stack_frame($controller,$request,$response,$options !== NULL ? $options : array());
       $controller->_error(404);
+      $controller->_pop_call_stack_frame();
     }
     $controller->content = $response->data();
 
@@ -212,7 +217,7 @@ class uf_controller
       $controller = uf_controller::str_to_controller(substr($class,0,-11));
       $file = UF_BASE.uf_application::config('app_dir').($controller == 'base' ? '' : '/modules').'/'.$controller.'/c_'.$controller.'.php';
       //echo 'trying to include: '.$file.'<br />';
-      require_once($file);
+      @include_once($file);
     }
   }  
 }
