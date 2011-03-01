@@ -22,21 +22,21 @@ class uf_application
     {
       uf_baker::bake('routing');
     }
-    require_once($routing_file);
+    @include_once($routing_file);
 
     // NORMAL ROUTING
     if(uf_application::config('always_bake') || !file_exists($pre_routing_file))
     {
       uf_baker::bake('pre_routing');
     }
-    require_once($pre_routing_file);
+    @include_once($pre_routing_file);
 
     // POST ROUTING
     if(uf_application::config('always_bake') || !file_exists($post_routing_file))
     {
       uf_baker::bake('post_routing');
     }
-    require_once($post_routing_file);
+    @include_once($post_routing_file);
 
     $request  = new uf_http_request;
     $response = new uf_response;
@@ -56,9 +56,18 @@ class uf_application
   
   public static function apply_routing($uri)
   {
-    $uri = uf_internal_pre_routing_function($uri);
-    $uri = uf_internal_routing_function($uri);
-    $uri = uf_internal_post_routing_function($uri);
+    if(function_exists('uf_internal_pre_routing_function'))
+    {
+      $uri = uf_internal_pre_routing_function($uri);      
+    }
+    if(function_exists('uf_internal_routing_function'))
+    {
+      $uri = uf_internal_routing_function($uri);
+    }
+    if(function_exists('uf_internal_post_routing_function'))
+    {
+      $uri = uf_internal_post_routing_function($uri);
+    }
     return $uri;
   }
 }

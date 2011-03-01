@@ -4,7 +4,7 @@ class index_controller extends base_controller
 {
   public function index()
   {
-    $this->caller()->mainmenu = 'start';
+    $this->mainmenu = 'start';
     $this->foo = 'bar';
   }
 

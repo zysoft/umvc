@@ -6,9 +6,18 @@ class uf_baker
 {
   private static $_files;
  
-  static function _sort_routes($a,$b)
+  static function _sort_files($a,$b)
   {
-    return strrchr($a,'/') >= strrchr($b,'/');
+    $c = strrchr($a,'_');
+    $d = strrchr($b,'_');
+    if($c == '' || $d == '')
+    {
+      return strrchr($a,'/') >= strrchr($b,'/');
+    }
+    else
+    {
+      return $c >= $d;
+    }
   }
   
   private static function _scan_dir_recursive($dir)
@@ -36,6 +45,7 @@ class uf_baker
           $is_dynamic = $ext == 'php';
           if($is_dynamic)
           {
+            // skip last .php and extract file type, ie file.js.php will return js
             $ext = substr(strrchr(substr($f,0,strpos($f,'.php')),'.'),1);
           }
           
@@ -51,13 +61,19 @@ class uf_baker
     if(!is_array(self::$_files))
     {
       self::$_files = self::_scan_dir_recursive(UF_BASE.uf_application::config('app_dir'));
-      if(isset(self::$_files['static']['routing']))
+      if(isset(self::$_files['static']))
       {
-        usort(self::$_files['static']['routing'],array('uf_baker','_sort_routes'));        
+        foreach(self::$_files['static'] as &$type)
+        {
+          usort($type,array('uf_baker','_sort_files'));
+        }        
       }
-      if(isset(self::$_files['dynamic']['routing']))
+      if(isset(self::$_files['dynamic']))
       {
-        usort(self::$_files['dynamic']['routing'],array('uf_baker','_sort_routes'));        
+        foreach(self::$_files['dynamic'] as &$type)
+        {
+          usort($type,array('uf_baker','_sort_files'));
+        }
       }
     }
   }
