@@ -86,7 +86,6 @@ class uf_baker
         }
       }
     }
-    die('<pre>'.print_r(self::$_files,1).'</pre>');
   }
 
   private static function _bake_routing($files,$prefix='')
