@@ -1,8 +1,7 @@
-<h1>Examples</h1>
+<h1><?=$language['base']['menu']['examples']?></h1>
 
-<p>This is the index page of the examples section.</p>
-
-<p>Here are some sub pages:</p>
+<p><?=$language['examples']['text1']?></p>
+<p><?=$language['examples']['text2']?></p>
 
 <ul>
 <li><a href="/routing-example-using-special-url">Routing</a></li>

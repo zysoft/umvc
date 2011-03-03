@@ -55,7 +55,7 @@ class uf_controller
   public function __construct()
   {
     $this->_call_stack = array();
-    $this->_buffer_ref_count = 0;
+    $this->_buffer_ref_count = 0;    
   }
 
   public function __destruct()
@@ -104,15 +104,16 @@ class uf_controller
 
   static public function execute_base($request,$response,$options = NULL)
   {
-    $controller = uf_controller::str_to_controller($request->controller());
-    $action     = uf_controller::str_to_controller($request->action());
+    $controller_name = uf_controller::str_to_controller($request->controller());
+    $action_name     = uf_controller::str_to_controller($request->action());
 
-    $controller_class = $controller.'_controller';
+    $controller_class = $controller_name.'_controller';
 
     if(class_exists($controller_class))
     {
       $controller = new $controller_class;
-      if($controller->execute_action($controller,$action,$request,$response,array('enable_buffering' => TRUE)) === FALSE)
+
+      if($controller->execute_action($controller,$action_name,$request,$response,array('enable_buffering' => TRUE)) === FALSE)
       {
         $controller->_push_call_stack_frame($controller,$request,$response,$options !== NULL ? $options : array());
         $controller->_error(404);
@@ -142,7 +143,12 @@ class uf_controller
   }
 
   public function execute_action($caller,$action,$request,&$response,$options = NULL)
-  {
+  {    
+    // load language files
+    @include_once(UF_BASE.uf_application::config('app_dir').'/base/language/l_base.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
+    $controller = substr(get_class($this),0,-11);
+    @include_once(UF_BASE.uf_application::config('app_dir').'/modules/'.$controller.'/language/l_'.$controller.'.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
+
     // 404 action?
     // handle  www.foo.com/index/
     if ($action == '') $action = 'index';

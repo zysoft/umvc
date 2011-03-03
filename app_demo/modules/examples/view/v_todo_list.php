@@ -1,4 +1,4 @@
-<h1>Examples: todo-list</h1>
+<h1><?=$language['base']['menu']['examples']?>: todo-list</h1>
 
 <p>Todo-list of items from an array:</p>
 <ul>

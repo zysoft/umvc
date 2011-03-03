@@ -3,7 +3,7 @@
   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="sv">
 <head>
-  <title>UMVC</title>	
+  <title><?=@$title?></title>	
   <meta name="description" content="<?=@$meta_description?>" />
   <meta name="keywords" content="<?=@$meta_keywords?>" />
   <link rel="alternate" type="application/rss+xml" title="" href="/rss" />
@@ -14,15 +14,17 @@
   <div id="center">
     <div id="header"><a href="/"><img src="/images/umvc.gif" alt="UMVC php web framework" /></a></div>
     <ul id="menu">
-      <li<? if(@$mainmenu === 'start') echo ' class="selected"'; ?>><a href="/">Start</a></li>
-      <li<? if(@$mainmenu === 'examples') echo ' class="selected"'; ?>><a href="/examples">Examples</a></li>
-      <li<? if(@$mainmenu === 'about') echo ' class="selected"'; ?>><a href="/about">About</a></li>
-      <li<? if(@$mainmenu === 'contact') echo ' class="selected"'; ?>><a href="/contact">Contact</a></li>
+      <li<? if(@$mainmenu === 'start') echo ' class="selected"'; ?>><a href="/"><?=$language['base']['menu']['start']?></a></li>
+      <li<? if(@$mainmenu === 'examples') echo ' class="selected"'; ?>><a href="/examples"><?=$language['base']['menu']['examples']?></a></li>
+      <li<? if(@$mainmenu === 'about') echo ' class="selected"'; ?>><a href="/about"><?=$language['base']['menu']['about']?></a></li>
+      <li<? if(@$mainmenu === 'contact') echo ' class="selected"'; ?>><a href="/contact"><?=$language['base']['menu']['contact']?></a></li>
+      <li<? if(@$mainmenu === 'language') echo ' class="selected"'; ?>><a href="/language"><?=$language['base']['menu']['language']?></a></li>
     </ul>
     <div id="content">
       <?=$content;?>
     </div>
-    <div id="footer">Yoyo!</div>
+    <div id="footer"><?print_r($_SESSION)?>
+    Yoyo!</div>
   </div>
 </body>
 </html>

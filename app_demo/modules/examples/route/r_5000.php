@@ -1,1 +1,1 @@
-<? if($uri == '/routing-example-using-special-url') return '/examples/routing'; // normal 500 ?>
+<? if($uri == '/routing-example-using-special-url') return '/examples/routing'; ?>

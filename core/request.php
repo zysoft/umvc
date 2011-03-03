@@ -18,7 +18,7 @@ class uf_request
     
   }
   
-  protected function parameters($parameters = NULL)
+  public function parameters($parameters = NULL)
   {
     if($parameters !== NULL)
     {

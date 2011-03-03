@@ -118,7 +118,7 @@ class uf_baker
       }
     }
     $output .= "\n".'<? return $uri; } ?>'."\n";
-    $output = str_replace('?><?','',$output);
+    /*$output = str_replace('?><?','',$output);*/
     return $output;
   }
 

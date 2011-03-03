@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 
 require_once(UF_BASE.'/config/config.php');
+require_once(UF_BASE.'/core/session.php');
 require_once(UF_BASE.'/core/application.php');
 require_once(UF_BASE.'/core/response.php');
 require_once(UF_BASE.'/core/request.php');
