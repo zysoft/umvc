@@ -18,7 +18,7 @@
       <li<? if(@$mainmenu === 'examples') echo ' class="selected"'; ?>><a href="/examples"><?=$language['base']['menu']['examples']?></a></li>
       <li<? if(@$mainmenu === 'about') echo ' class="selected"'; ?>><a href="/about"><?=$language['base']['menu']['about']?></a></li>
       <li<? if(@$mainmenu === 'contact') echo ' class="selected"'; ?>><a href="/contact"><?=$language['base']['menu']['contact']?></a></li>
-      <li<? if(@$mainmenu === 'language') echo ' class="selected"'; ?>><a href="/language"><?=$language['base']['menu']['language']?></a></li>
+      <li<? if(@$mainmenu === 'language') echo ' class="selected"'; ?> style="float:right"><a href="/language"><?=$language['base']['menu']['language']?></a></li>
     </ul>
     <div id="content">
       <?=$content;?>
