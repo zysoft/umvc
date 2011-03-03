@@ -91,7 +91,7 @@ class uf_baker
   private static function _bake_routing($files,$prefix='')
   {
     $prefix2 = $prefix.($prefix != '' ? '_' : '');
-    $output = '<? function uf_internal_'.$prefix2.'routing_function(&$uri) { ?>'."\n";
+    $output = '<? function uf_internal_'.$prefix2.'routing_function(&$uri) { ?>';
     if(is_array($files))
     {
       foreach($files as $file)

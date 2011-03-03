@@ -4,4 +4,4 @@
 /config/config.php
 /cache
 /propel/propel-1.5.6/
-
+.DS_Store
