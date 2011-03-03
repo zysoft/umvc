@@ -45,8 +45,8 @@ class uf_baker
       } 
       else
       {
-        $is_recursive = substr($f,0,2) == 'r_';
-        $is_route     = substr($f,0,8) == 'routing_';
+        $is_recursive = substr($f,0,2) == 'b_';
+        $is_route     = substr($f,0,2) == 'r_';
         if($is_recursive || $is_route)
         {
           $ext = substr(strrchr($f,'.'),1);
