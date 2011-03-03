@@ -3,7 +3,7 @@
   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="sv">
 <head>
-  <title>HR North</title>	
+  <title>UMVC</title>	
   <meta name="description" content="<?=@$meta_description?>" />
   <meta name="keywords" content="<?=@$meta_keywords?>" />
   <link rel="alternate" type="application/rss+xml" title="" href="/rss" />

@@ -14,6 +14,6 @@ if(uf_application::config('always_bake') || !file_exists($js_file))
 {
   uf_baker::bake('js');
 }
-echo file_get_contents($js_file)."\n";
+echo @file_get_contents($js_file)."\n";
 @include_once(UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/js/baked.js.php');
 ?>

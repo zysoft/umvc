@@ -8,9 +8,19 @@ class uf_baker
  
   static function _sort_files($a,$b)
   {
-    $c = strrchr($a,'_');
-    $d = strrchr($b,'_');
-    if($c == '' || $d == '')
+    $a = strrchr($a,'/');
+    $ap = strpos($a,'_');
+    $cp = strpos($a,'_',$ap + 1);
+    if($cp === FALSE) $cp = strpos($a,'.',$ap + 1);
+    $c = substr($a,$ap + 1,$cp - $ap - 1);
+
+    $b = strrchr($b,'/');
+    $bp = strpos($b,'_');
+    $dp = strpos($b,'_',$bp + 1);
+    if($dp === FALSE) $dp = strpos($b,'.',$bp + 1);
+    $d = substr($b,$bp + 1,$dp - $bp - 1);
+
+    if(is_int($c) || is_int($d))
     {
       return strrchr($a,'/') >= strrchr($b,'/');
     }
@@ -76,6 +86,7 @@ class uf_baker
         }
       }
     }
+    die('<pre>'.print_r(self::$_files,1).'</pre>');
   }
 
   private static function _bake_routing($files,$prefix='')
