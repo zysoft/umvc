@@ -13,9 +13,17 @@ class uf_http_request extends uf_request
     {
       $uri = substr($uri,0,$pos);
     }
+    
     $this->_segments = explode('/',$uri);
     array_shift($this->_segments);
-    $input = array_merge($_GET,$_POST);
+
+    $p = array();
+    for($i = 2; $i < count($this->_segments); $i += 2)
+    {
+      $p[$this->_segments[$i]] = @$this->_segments[$i + 1];
+    }
+
+    $input = array_merge($p,$_GET,$_POST);
     $this->parameters($input);
   }
 

@@ -1,4 +1,1 @@
-<?
-//if($uri == '/language/set?en_US') return '/language/set?lang=en_US';
-//if($uri == '/language/set/sv_SE') return '/language/set?lang=sv_SE';
-?>
+<? $uri = preg_replace('/\/language\/set\/([\w]+)/i', '/language/set/language/$1', $uri); ?>

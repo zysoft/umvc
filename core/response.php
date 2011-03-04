@@ -55,6 +55,16 @@ class uf_response
     return $headers;
   }
 
+  public function redirect($url)
+  {
+    if(strpos($url, '/') === 0)
+    {
+      $url = 'http://'.$_SERVER['SERVER_NAME'].($_SERVER['SERVER_PORT'] == 80 ? '' : ':'.$_SERVER['SERVER_PORT']).$url;
+    } 
+    //header('Location: http://www.google.se');   
+    $this->header('Location',$url);
+  }
+  
   public function data($data = NULL)
   {
     if($data !== NULL)
