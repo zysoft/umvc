@@ -1,3 +1,1 @@
-<?
-$this->language['language']['choose_language'] = 'välj språk';
-?>
+<? $language['language']['choose_language'] = 'välj språk'; ?>

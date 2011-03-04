@@ -1,4 +1,4 @@
 <?
-$this->language['about']['title'] = 'About Us';
-$this->language['about']['text'] = 'UMVC is a MVC (Model/View/Controller) web framework for PHP.';
+$language['about']['title'] = 'About Us';
+$language['about']['text'] = 'UMVC is a MVC (Model/View/Controller) web framework for PHP.';
 ?>

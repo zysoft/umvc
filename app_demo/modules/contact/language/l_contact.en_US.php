@@ -1,3 +1,3 @@
 <?
-$this->language['contact']['title'] = 'Contact Us';
+$language['contact']['title'] = 'Contact Us';
 ?>

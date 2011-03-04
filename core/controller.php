@@ -145,9 +145,9 @@ class uf_controller
   public function execute_action($caller,$action,$request,&$response,$options = NULL)
   {    
     // load language files
-    @include_once(UF_BASE.uf_application::config('app_dir').'/base/language/l_base.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
+    uf_include_language($this,UF_BASE.uf_application::config('app_dir').'/base/language/l_base.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
     $controller = substr(get_class($this),0,-11);
-    @include_once(UF_BASE.uf_application::config('app_dir').'/modules/'.$controller.'/language/l_'.$controller.'.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
+    uf_include_language($this,UF_BASE.uf_application::config('app_dir').'/modules/'.$controller.'/language/l_'.$controller.'.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
 
     // 404 action?
     // handle  www.foo.com/index/
@@ -230,11 +230,17 @@ class uf_controller
 
 function uf_include_view($uf_controller,$uf_view)
 {
-  // view variables
+  // This function is used to create a clean symbol table
   $uf_request  = $uf_controller->request();
   $uf_response = $uf_controller->response();
   extract(get_object_vars($uf_controller));
   require($uf_view);
 }
 
+function uf_include_language($uf_controller,$language_file)
+{
+  // This function is used to create a clean symbol table
+  $language =& $uf_controller->language;
+  @include_once($language_file);
+}
 ?>
