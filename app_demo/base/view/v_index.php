@@ -23,8 +23,7 @@
     <div id="content">
       <?=$content;?>
     </div>
-    <div id="footer"><?print_r($_SESSION)?>
-    Yoyo!</div>
+    <div id="footer">Yoyo!</div>
   </div>
 </body>
 </html>
