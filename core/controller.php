@@ -106,15 +106,15 @@ class uf_controller
   {
     $controller_name = uf_controller::str_to_controller($request->controller());
     $action_name     = uf_controller::str_to_controller($request->action());
-
     $controller_class = $controller_name.'_controller';
 
     if(class_exists($controller_class))
     {
+      // Normal module action
       $controller = new $controller_class;
-
       if($controller->execute_action($controller,$action_name,$request,$response,array('enable_buffering' => TRUE)) === FALSE)
       {
+        // 404 missing action
         $controller->_push_call_stack_frame($controller,$request,$response,$options !== NULL ? $options : array());
         $controller->_error(404);
         $controller->_pop_call_stack_frame();
@@ -122,6 +122,7 @@ class uf_controller
     }
     else
     {
+      // 404 missing module
       $controller = new base_controller;
       $controller->_push_call_stack_frame($controller,$request,$response,$options !== NULL ? $options : array());
       $controller->_error(404);
@@ -243,10 +244,10 @@ class uf_controller
 function uf_include_view($uf_controller,$uf_view)
 {
   // This function is used to create a clean symbol table
+  extract(get_object_vars($uf_controller));
   $uf_request  = $uf_controller->request();
   $uf_response = $uf_controller->response();
-  extract(get_object_vars($uf_controller));
-  require($uf_view);
+  require($uf_view);    
 }
 
 function uf_include_language($uf_controller,$language_file)

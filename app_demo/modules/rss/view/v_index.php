@@ -2,9 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <atom:link href="http://<?=$_SERVER['SERVER_NAME'].$uf_controller->request()->uri()?>" rel="self" type="application/rss+xml" />
-    <title>Jobbexpressen - Lediga jobb</title>
+    <title>UMVC</title>
     <description></description>
-    <link>http://www.jobbexpressen.se</link>
+    <link>http://www.umvc.se</link>
     <? foreach($items as $item) { ?>
     <item>
      <title><?= $item['title']?></title>
