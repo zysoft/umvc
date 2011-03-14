@@ -2,12 +2,25 @@
 
 require_once(UF_BASE.'/config/config.php');
 
+
 class uf_application
 {  
   private static $_routing_function;
+  
 
   public static function run()
-  {    
+  {
+    $n = str_replace('www.','',$_SERVER['SERVER_NAME'],$c);
+    $dirb = UF_BASE.uf_application::config('app_dir').'/sites/hosts/';
+    global $uf_app_sites_host_dir;
+    if (!is_dir($dirb.$n))
+    {
+      $uf_app_sites_host_dir = $dirb.'FALLBACK/';
+    }
+    else
+      $uf_app_sites_host_dir = $dirb.$n.'/';
+    
+    
     // ROUTING
     if(!is_dir(UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/routing'))
     {

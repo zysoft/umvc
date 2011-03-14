@@ -135,17 +135,19 @@ class uf_controller
       header($header);
     }
 
-    uf_include_view($controller,UF_BASE.uf_application::config('app_dir').'/base/view/v_'.$response->attribute('template').'.php');
+    global $uf_app_sites_host_dir;
+    uf_include_view($controller, $uf_app_sites_host_dir.'base/view/v_'.$response->attribute('template').'.php');
     if(class_exists($controller_class))
     {
-      $controller = NULL;      
+      $controller = NULL;
     }
   }
 
   public function execute_action($caller,$action,$request,&$response,$options = NULL)
   {    
     // load language files
-    uf_include_language($this,UF_BASE.uf_application::config('app_dir').'/base/language/l_base.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
+    global $uf_app_sites_host_dir;
+    uf_include_language($this,$uf_app_sites_host_dir.'language/l_base.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
     $controller = substr(get_class($this),0,-11);
     uf_include_language($this,UF_BASE.uf_application::config('app_dir').'/modules/'.$controller.'/language/l_'.$controller.'.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
 
@@ -221,8 +223,18 @@ class uf_controller
     if(substr($class,-10) === 'controller')
     {
       $controller = uf_controller::str_to_controller(substr($class,0,-11));
-      $file = UF_BASE.uf_application::config('app_dir').($controller == 'base' ? '' : '/modules').'/'.$controller.'/c_'.$controller.'.php';
-      //echo 'trying to include: '.$file.'<br />';
+      $file = '';
+      if ($controller[0] == 'b')
+      {
+        if ($controller == 'base')
+        {
+          global $uf_app_sites_host_dir;
+          $file = $uf_app_sites_host_dir.'base/c_base.php';
+        }
+      } else
+      {
+        $file = UF_BASE.uf_application::config('app_dir').($controller == 'base' ? '' : '/modules').'/'.$controller.'/c_'.$controller.'.php';
+      }
       @include_once($file);
     }
   }  
