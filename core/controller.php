@@ -215,7 +215,7 @@ class uf_controller
     ob_start();
       global $uf_app_sites_host_dir;
       uf_include_language($this,$uf_app_sites_host_dir.'language/l_base.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
-      uf_include_view($this,$uf_app_sites_host_dir.'error/v_'.$code.'.php');
+      uf_include_view($this,UF_BASE.uf_application::config('app_dir').'/errors/v_'.$code.'.php');
       $this->response()->data(ob_get_contents());
     ob_end_clean();
     $this->response()->header404();
