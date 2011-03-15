@@ -1,5 +1,5 @@
 <?
-define(UF_BASE,realpath(dirname(__FILE__).'/../..'));
+define('UF_BASE',realpath(dirname(__FILE__).'/../..'));
 require_once(UF_BASE.'/core/umvc.php');
 
 header('Content-Type: text/javascript');
