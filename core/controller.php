@@ -136,7 +136,7 @@ class uf_controller
       header($header);
     }
 
-    uf_include_view($controller, uf_application::app_sites_host_dir().'base/view/v_'.$response->attribute('template').'.php');
+    uf_include_view($controller, uf_application::app_sites_host_dir().'/base/view/v_'.$response->attribute('template').'.php');
     if(class_exists($controller_class))
     {
       $controller = NULL;
@@ -146,7 +146,7 @@ class uf_controller
   public function execute_action($caller,$action,$request,&$response,$options = NULL)
   {    
     // load project/base language files
-    uf_include_language($this,uf_application::app_sites_host_dir().'language/l_base.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
+    uf_include_language($this,uf_application::app_sites_host_dir().'/language/l_base.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
     // load module/controller local language file
     $controller = substr(get_class($this),0,-11);
     uf_include_language($this,UF_BASE.uf_application::config('app_dir').'/modules/'.$controller.'/language/l_'.$controller.'.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
@@ -211,7 +211,7 @@ class uf_controller
   public function _error($code)
   {
     ob_start();
-      uf_include_language($this,uf_application::app_sites_host_dir().'language/l_base.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
+      uf_include_language($this,uf_application::app_sites_host_dir().'/language/l_base.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
       uf_include_view($this,UF_BASE.uf_application::config('app_dir').'/errors/v_'.$code.'.php');
       $this->response()->data(ob_get_contents());
     ob_end_clean();
@@ -229,7 +229,7 @@ class uf_controller
       {
         if ($controller == 'base')
         {
-          $file = uf_application::app_sites_host_dir().'base/c_base.php';
+          $file = uf_application::app_sites_host_dir().'/base/c_base.php';
         }
       } else
       {

@@ -70,7 +70,10 @@ class uf_baker
   {
     if(!is_array(self::$_files))
     {
-      self::$_files = self::_scan_dir_recursive(UF_BASE.uf_application::config('app_dir'));
+      $modules = self::_scan_dir_recursive(UF_BASE.uf_application::config('app_dir').'/modules');
+      $hosts   = self::_scan_dir_recursive(uf_application::app_sites_host_dir());
+      self::$_files = array_merge_recursive($modules,$hosts);
+
       if(isset(self::$_files['static']))
       {
         foreach(self::$_files['static'] as &$type)
@@ -189,11 +192,6 @@ class uf_baker
     self::bake('routing');
     self::bake('post_routing');
   }
-}
-
-if(uf_application::config('always_bake'))
-{
-  uf_baker::bake_all();  
 }
 
 ?>

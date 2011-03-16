@@ -1,22 +1,40 @@
 <?
 
-require_once(UF_BASE.'/config/config.php');
-
 class uf_application
 {  
-  private static $_routing_function;
+  private static $_is_initialized;
+  private static $_app_sites_host_dir;
+  private static $_config;  
+  
+  public static function init()
+  {
+    if(!isset(self::$_is_initialized))
+    {
+      self::$_is_initialized = TRUE;
+      
+      // LOAD CONFIG FILE
+      require_once(UF_BASE.'/config/config.php');
+      self::$_config =& $uf_config;
 
+      $n = str_replace('www.','',$_SERVER['SERVER_NAME'],$c);
+      $dirb = UF_BASE.uf_application::config('app_dir').'/sites/hosts/';
+      if (!is_dir($dirb.$n))
+      {
+        self::$_app_sites_host_dir = $dirb.'FALLBACK';
+      }
+      else
+        self::$_app_sites_host_dir = $dirb.$n;
+
+      if(uf_application::config('always_bake'))
+      {
+        uf_baker::bake_all();
+      }          
+    }
+  }
+  
   public static function run()
   {
-    $n = str_replace('www.','',$_SERVER['SERVER_NAME'],$c);
-    $dirb = UF_BASE.uf_application::config('app_dir').'/sites/hosts/';
-    global $uf_global;
-    if (!is_dir($dirb.$n))
-    {
-      $uf_global['app_sites_host_dir'] = $dirb.'FALLBACK/';
-    }
-    else
-      $uf_global['app_sites_host_dir'] = $dirb.$n.'/';
+    self::init();
     
     // ROUTING
     if(!is_dir(UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/routing'))
@@ -51,23 +69,41 @@ class uf_application
     $request  = new uf_http_request;
     $response = new uf_response;
 
-    /// BASE CONTROLLER
+    /// CREATE AND EXECUTE CONTROLLER
     uf_controller::execute_base($request,$response,array('enable_buffering' => TRUE));
 
     $response = NULL;
     $request  = NULL;
   }
-  
+
+  public static function clear_log()
+  {
+    if(self::config('enable_log'))
+    {
+      file_put_contents(UF_BASE.'/log/log.txt', '');
+    }
+  }
+
+  public static function log($message)
+  {
+    if(self::config('enable_log'))
+    {
+      date_default_timezone_set('UTC'); //temp hack
+      $fp = fopen(UF_BASE.'/log/log.txt', 'a');
+      fwrite($fp, date('Y-m-d h:i:s').' '.$message."\n");
+      fclose($fp);      
+    }
+  }
+
   public static function app_sites_host_dir()
   {
-    global $uf_global;
-    return $uf_global['app_sites_host_dir'];
+    return self::$_app_sites_host_dir;
   }
   
   public static function config($name,$default_value = '')
   {
-    global $uf_config;
-    return isset($uf_config[$name]) ? $uf_config[$name] : $default_value;
+    $config =& self::$_config;
+    return isset($config[$name]) ? $config[$name] : $default_value;
   }
   
   public static function apply_routing($uri)
