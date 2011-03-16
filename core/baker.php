@@ -70,7 +70,7 @@ class uf_baker
   {
     if(!is_array(self::$_files))
     {
-      $modules = self::_scan_dir_recursive(UF_BASE.uf_application::config('app_dir').'/modules');
+      $modules = self::_scan_dir_recursive(uf_application::app_dir().'/modules');
       $hosts   = self::_scan_dir_recursive(uf_application::app_sites_host_dir());
       self::$_files = array_merge_recursive($modules,$hosts);
 
@@ -172,7 +172,7 @@ class uf_baker
       }
 
       $bake_base = UF_BASE.'/'.($place == 'dynamic' ? 'cache' : 'web/data');
-      $dir = $bake_base.uf_application::config('app_dir').'/baker/'.$type;
+      $dir = $bake_base.uf_application::app_dir().'/baker/'.$type;
       if(!($type == 'routing' && $place == 'static') && !is_dir($dir))
       {
         mkdir($dir,0777,TRUE);

@@ -9,13 +9,20 @@ class uf_controller
   private function _load_view($view)
   {
     $controller = uf_controller::str_to_controller(substr(get_class($this),0,-11));
+
     // include the view
-    uf_include_view($this,UF_BASE.uf_application::config('app_dir').'/modules/'.$controller.'/view/v_'.$view.'.php');
+    $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/view/v_'.$controller.'.php';
+    if(!file_exists($file))
+    {
+      $file = uf_application::app_dir().'/modules/'.$controller.'/view/v_'.$controller.'.php';
+    }        
+    uf_include_view($this,$file);
   }
+  
   private function _load_base($view)
   {
     // include the view
-    uf_include_view($this,UF_BASE.uf_application::config('app_dir').'/base/view/v_'.$view.'.php');
+    uf_include_view($this,uf_application::app_dir().'/base/view/v_'.$view.'.php');
   }
 
   private function _push_call_stack_frame($caller,$request,$response,$options)
@@ -112,13 +119,13 @@ class uf_controller
     {
       // Normal module action
       $controller = new $controller_class;
+      $controller->_push_call_stack_frame($controller,$request,$response,$options !== NULL ? $options : array());
       if($controller->execute_action($controller,$action_name,$request,$response,array('enable_buffering' => TRUE)) === FALSE)
       {
         // 404 missing action
-        $controller->_push_call_stack_frame($controller,$request,$response,$options !== NULL ? $options : array());
         $controller->_error(404);
-        $controller->_pop_call_stack_frame();
       }
+      $controller->_pop_call_stack_frame();
     }
     else
     {
@@ -149,7 +156,7 @@ class uf_controller
     uf_include_language($this,uf_application::app_sites_host_dir().'/language/l_base.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
     // load module/controller local language file
     $controller = substr(get_class($this),0,-11);
-    uf_include_language($this,UF_BASE.uf_application::config('app_dir').'/modules/'.$controller.'/language/l_'.$controller.'.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
+    uf_include_language($this,uf_application::app_dir().'/modules/'.$controller.'/language/l_'.$controller.'.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
 
     // 404 action?
     // handle  www.foo.com/index/
@@ -212,7 +219,7 @@ class uf_controller
   {
     ob_start();
       uf_include_language($this,uf_application::app_sites_host_dir().'/language/l_base.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
-      uf_include_view($this,UF_BASE.uf_application::config('app_dir').'/errors/v_'.$code.'.php');
+      uf_include_view($this,uf_application::app_dir().'/errors/v_'.$code.'.php');
       $this->response()->data(ob_get_contents());
     ob_end_clean();
     $this->response()->header404();
@@ -231,10 +238,17 @@ class uf_controller
         {
           $file = uf_application::app_sites_host_dir().'/base/c_base.php';
         }
-      } else
-      {
-        $file = UF_BASE.uf_application::config('app_dir').($controller == 'base' ? '' : '/modules').'/'.$controller.'/c_'.$controller.'.php';
       }
+
+      if($file == '')
+      {
+        $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/c_'.$controller.'.php';
+        if(!file_exists($file))
+        {
+          $file = uf_application::app_dir().'/modules/'.$controller.'/c_'.$controller.'.php';
+        }        
+      }
+      
       @include_once($file);
     }
   }  
@@ -255,4 +269,8 @@ function uf_include_language($uf_controller,$language_file)
   $language =& $uf_controller->language;
   @include_once($language_file);
 }
+
+# register our controller factory
+spl_autoload_register('uf_controller::autoload_controller');
+
 ?>

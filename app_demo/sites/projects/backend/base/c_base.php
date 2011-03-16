@@ -9,9 +9,22 @@ class base_controller extends uf_controller
 {
   public function before_action()
   {
-    $this->title = $this->language['base']['title'];
-    $this->meta_description = 'UMVC';
-    $this->meta_keywords = 'php, mvc, framework, web development';
+    parent::before_action();
+    $this->menu = array(
+      array(
+        'id' => 'index',
+        'uri' => '/',
+        'title' => 'Start'),        
+      array(
+        'id' => 'login',
+        'uri' => '/login',
+        'title' => 'Login'));
+  }
+  
+  public function login()
+  {    
+    echo $this->request()->parameter('username').'/'.$this->request()->parameter('password');
+    return FALSE;
   }
 }
 ?>

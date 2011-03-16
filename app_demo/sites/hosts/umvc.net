@@ -1,1 +1,1 @@
-../projects/demo
+../projects/frontend

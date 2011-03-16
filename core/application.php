@@ -17,7 +17,7 @@ class uf_application
       self::$_config =& $uf_config;
 
       $n = str_replace('www.','',$_SERVER['SERVER_NAME'],$c);
-      $dirb = UF_BASE.uf_application::config('app_dir').'/sites/hosts/';
+      $dirb = uf_application::app_dir().'/sites/hosts/';
       if (!is_dir($dirb.$n))
       {
         self::$_app_sites_host_dir = $dirb.'FALLBACK';
@@ -95,6 +95,15 @@ class uf_application
     }
   }
 
+  public static function language()
+  {
+    return uf_session::get('language',uf_application::config('language','en_US'));
+  }
+  
+  public static function app_dir()
+  {
+    return UF_BASE.self::config('app_dir');
+  }
   public static function app_sites_host_dir()
   {
     return self::$_app_sites_host_dir;
