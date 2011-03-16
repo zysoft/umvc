@@ -102,8 +102,7 @@ class uf_application
   
   public static function config($name,$default_value = '')
   {
-    $config =& self::$_config;
-    return isset($config[$name]) ? $config[$name] : $default_value;
+    return isset(self::$_config[$name]) ? self::$_config[$name] : $default_value;
   }
   
   public static function apply_routing($uri)
