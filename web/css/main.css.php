@@ -8,10 +8,10 @@ header('Content-Type: text/css');
 
 require_once('default.css.php');
 
-$dir = UF_BASE.'/web/data'.uf_application::config('app_dir').'/baker/css';
+$dir = UF_BASE.'/web/data/baker'.uf_application::config('app_dir').'/css';
 if(!is_dir($dir))
 {
-  mkdir($dir,0777,TRUE);
+  //mkdir($dir,0777,TRUE);
 }
 
 $css_file = $dir.'/baked.css';

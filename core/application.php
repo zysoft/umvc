@@ -36,23 +36,16 @@ class uf_application
   {
     self::init();
     
-    // ROUTING
-    if(!is_dir(UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/routing'))
-    {
-      mkdir(UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/routing',0777,TRUE);
-    }
-    $routing_file = UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/routing/baked.routing.php';
-    $pre_routing_file = UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/routing/baked.pre.routing.php';
-    $post_routing_file = UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/routing/baked.post.routing.php';
-
-    // PRE ROUTING
+    // NORMAL ROUTING
+    $routing_file = UF_BASE.'/cache/baker'.uf_application::config('app_dir').'/routing/baked.routing.php';
     if(uf_application::config('always_bake') || !file_exists($routing_file))
     {
       uf_baker::bake('routing');
     }
     @include_once($routing_file);
 
-    // NORMAL ROUTING
+    // PRE ROUTING
+    $pre_routing_file = UF_BASE.'/cache/baker'.uf_application::config('app_dir').'/routing/baked.pre.routing.php';
     if(uf_application::config('always_bake') || !file_exists($pre_routing_file))
     {
       uf_baker::bake('pre_routing');
@@ -60,6 +53,7 @@ class uf_application
     @include_once($pre_routing_file);
 
     // POST ROUTING
+    $post_routing_file = UF_BASE.'/cachebaker/'.uf_application::config('app_dir').'/routing/baked.post.routing.php';
     if(uf_application::config('always_bake') || !file_exists($post_routing_file))
     {
       uf_baker::bake('post_routing');

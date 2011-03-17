@@ -170,16 +170,15 @@ class uf_baker
             $output .= self::_bake_default(self::$_files[$place][$type]);
         }      
       }
-
       $bake_base = UF_BASE.'/'.($place == 'dynamic' ? 'cache' : 'web/data');
-      $dir = $bake_base.uf_application::app_dir().'/baker/'.$type;
-      if(!($type == 'routing' && $place == 'static') && !is_dir($dir))
+      $dir = $bake_base.'/baker'.uf_application::config('app_dir').'/'.$type;
+      if(/*test !($type == 'routing' && $place == 'static') &&*/ !is_dir($dir))
       {
         mkdir($dir,0777,TRUE);
       }
       if($output != '')
       {
-        file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type.($place == 'dynamic' ? '.php' : ''),$output);        
+        file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type.($place == 'dynamic' ? '.php' : ''),$output);
       }
     }
   }
