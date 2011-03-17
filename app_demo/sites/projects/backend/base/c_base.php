@@ -21,11 +21,6 @@ class base_controller extends uf_controller
         'uri' => '/login',
         'title' => 'Login'));
   }
-  
-  public function login()
-  {    
-    echo $this->request()->parameter('username').'/'.$this->request()->parameter('password');
-    return FALSE;
-  }
 }
+
 ?>

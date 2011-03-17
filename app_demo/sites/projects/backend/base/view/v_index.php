@@ -3,7 +3,7 @@
   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="sv">
 <head>
-  <title>UMVC - administrator</title>	
+  <title>UMVC administrator</title>	
   <meta name="description" content="UMVC" />
   <meta name="keywords" content="umvc, php, framework, mvc" />
   <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css.php" />

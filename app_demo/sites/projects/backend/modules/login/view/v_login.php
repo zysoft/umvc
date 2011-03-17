@@ -1,5 +1,2 @@
-<form action="/login/login" method="post">
-  <p>User:<br /><input type="text" name="username" /></p>
-  <p>Pass:<br /><input type="password" name="password" /></p>
-  <p><input type="submit" value="Login" />
-</form>
+Username: <?=$uf_request->parameter('username')?><br />
+Password: <?=$uf_request->parameter('password')?>
