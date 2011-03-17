@@ -231,16 +231,13 @@ class uf_controller
     if(substr($class,-10) === 'controller')
     {
       $controller = uf_controller::str_to_controller(substr($class,0,-11));
-      $file = '';
-      if ($controller[0] == 'b')
+
+      if ($controller == 'base')
       {
-        if ($controller == 'base')
-        {
-          $file = uf_application::app_sites_host_dir().'/base/c_base.php';
-        }
+        $file = uf_application::app_sites_host_dir().'/base/c_base.php';
       }
 
-      if($file == '')
+      else 
       {
         $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/c_'.$controller.'.php';
         if(!file_exists($file))
