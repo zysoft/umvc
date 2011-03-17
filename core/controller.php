@@ -11,12 +11,12 @@ class uf_controller
     $controller = uf_controller::str_to_controller(substr(get_class($this),0,-11));
 
     // include the view
-    $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/view/v_'.$controller.'.php';
-    if(!file_exists($file))
+    $dir = uf_application::app_sites_host_dir().'/modules/'.$controller;
+    if(!is_dir($dir))
     {
-      $file = uf_application::app_dir().'/modules/'.$controller.'/view/v_'.$controller.'.php';
+      $dir = uf_application::app_dir().'/modules/'.$controller;
     }        
-    uf_include_view($this,$file);
+    uf_include_view($this,$dir.'/view/v_'.$view.'.php');
   }
   
   private function _load_base($view)

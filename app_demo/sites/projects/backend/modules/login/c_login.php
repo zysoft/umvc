@@ -5,12 +5,15 @@ class login_controller extends base_controller
   public function before_action()
   {
     parent::before_action();
-    $this->mainmenu = 'login';    
+    $this->mainmenu = 'login';
   }
 
   public function index() 
   {
-    return 'login';
+  }
+
+  public function login() 
+  {
   }
 }
 

@@ -1,7 +1,7 @@
 <?
 error_reporting(E_ALL);
 
-//include_once(UF_BASE.'/core/debug.php');
+include_once(UF_BASE.'/core/debug.php');
 require_once(UF_BASE.'/core/application.php');
 require_once(UF_BASE.'/core/baker.php');
 require_once(UF_BASE.'/core/session.php');
