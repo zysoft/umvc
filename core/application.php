@@ -78,7 +78,7 @@ class uf_application
 
   public static function clear_log()
   {
-    if(self::config('enable_log'))
+    if(self::config('log'))
     {
       file_put_contents(UF_BASE.'/log/log.txt', '');
     }
@@ -86,7 +86,7 @@ class uf_application
 
   public static function log($message)
   {
-    if(self::config('enable_log'))
+    if(self::config('log'))
     {
       date_default_timezone_set('UTC'); //temp hack
       $fp = fopen(UF_BASE.'/log/log.txt', 'a');
