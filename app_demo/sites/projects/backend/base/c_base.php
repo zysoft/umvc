@@ -13,7 +13,7 @@ class base_controller extends uf_controller
     $this->mainmenu = 'start';
     $this->menu = array(
       array(
-        'id' => 'index',
+        'id' => 'start',
         'uri' => '/',
         'title' => 'Start'),        
       array(

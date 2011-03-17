@@ -15,7 +15,8 @@ class uf_controller
     if(!is_dir($dir))
     {
       $dir = uf_application::app_dir().'/modules/'.$controller;
-    }        
+    }
+    echo $dir.'/view/v_'.$view.'.php';
     uf_include_view($this,$dir.'/view/v_'.$view.'.php');
   }
   
