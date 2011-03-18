@@ -28,7 +28,18 @@ class uf_application
       if(self::config('always_bake'))
       {
         uf_baker::bake_all();
-      }          
+      }
+      
+      if(uf_application::config('load_propel'))
+      {
+        // Initialize Propel with the runtime configuration
+        require_once UF_BASE.'/propel/propel-1.5.6/runtime/lib/Propel.php';
+        
+        Propel::init(uf_application::app_dir().'/data/build/conf/umvc-conf.php');
+        
+        // Add the generated 'classes' directory to the include path
+        set_include_path(uf_application::app_dir().'/data/build/classes'.PATH_SEPARATOR.get_include_path());
+      }
     }
   }
   
