@@ -8,7 +8,7 @@ class uf_controller
 
   private function _load_view($view)
   {
-    $controller = uf_controller::str_to_controller(substr(get_class($this),0,-11));
+    $controller = self::str_to_controller(substr(get_class($this),0,-11));
 
     // include the view
     $dir = uf_application::app_sites_host_dir().'/modules/'.$controller;
@@ -111,8 +111,8 @@ class uf_controller
 
   static public function execute_base($request,$response,$options = NULL)
   {
-    $controller_name = uf_controller::str_to_controller($request->controller());
-    $action_name     = uf_controller::str_to_controller($request->action());
+    $controller_name = self::str_to_controller($request->controller());
+    $action_name     = self::str_to_controller($request->action());
     $controller_class = $controller_name.'_controller';
 
     if(class_exists($controller_class))
@@ -183,7 +183,7 @@ class uf_controller
       $this->start_buffering();
     }
 
-    $action = empty($action) ? 'index' : uf_controller::str_to_controller($action);
+    $action = empty($action) ? 'index' : self::str_to_controller($action);
 
     // execute action
     $this->before_action();
@@ -230,7 +230,7 @@ class uf_controller
   {
     if(substr($class,-10) === 'controller')
     {
-      $controller = uf_controller::str_to_controller(substr($class,0,-11));
+      $controller = self::str_to_controller(substr($class,0,-11));
 
       if ($controller == 'base')
       {
@@ -245,8 +245,7 @@ class uf_controller
           $file = uf_application::app_dir().'/modules/'.$controller.'/c_'.$controller.'.php';
         }        
       }
-      
-      @include_once($file);
+      include_once($file);
     }
   }  
 }

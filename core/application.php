@@ -17,7 +17,7 @@ class uf_application
       self::$_config =& $uf_config;
 
       $n = str_replace('www.','',$_SERVER['SERVER_NAME'],$c);
-      $dirb = uf_application::app_dir().'/sites/hosts/';
+      $dirb = self::app_dir().'/sites/hosts/';
       if (!is_dir($dirb.$n))
       {
         self::$_app_sites_host_dir = $dirb.'FALLBACK';
@@ -25,7 +25,7 @@ class uf_application
       else
         self::$_app_sites_host_dir = $dirb.$n;
 
-      if(uf_application::config('always_bake'))
+      if(self::config('always_bake'))
       {
         uf_baker::bake_all();
       }          
@@ -37,24 +37,24 @@ class uf_application
     self::init();
     
     // NORMAL ROUTING
-    $routing_file = UF_BASE.'/cache/baker'.uf_application::config('app_dir').'/routing/baked.routing.php';
-    if(uf_application::config('always_bake') || !file_exists($routing_file))
+    $routing_file = UF_BASE.'/cache/baker'.self::config('app_dir').'/routing/baked.routing.php';
+    if(self::config('always_bake') || !file_exists($routing_file))
     {
       uf_baker::bake('routing');
     }
     @include_once($routing_file);
 
     // PRE ROUTING
-    $pre_routing_file = UF_BASE.'/cache/baker'.uf_application::config('app_dir').'/routing/baked.pre.routing.php';
-    if(uf_application::config('always_bake') || !file_exists($pre_routing_file))
+    $pre_routing_file = UF_BASE.'/cache/baker'.self::config('app_dir').'/routing/baked.pre.routing.php';
+    if(self::config('always_bake') || !file_exists($pre_routing_file))
     {
       uf_baker::bake('pre_routing');
     }
     @include_once($pre_routing_file);
 
     // POST ROUTING
-    $post_routing_file = UF_BASE.'/cachebaker/'.uf_application::config('app_dir').'/routing/baked.post.routing.php';
-    if(uf_application::config('always_bake') || !file_exists($post_routing_file))
+    $post_routing_file = UF_BASE.'/cachebaker/'.self::config('app_dir').'/routing/baked.post.routing.php';
+    if(self::config('always_bake') || !file_exists($post_routing_file))
     {
       uf_baker::bake('post_routing');
     }
@@ -91,7 +91,7 @@ class uf_application
 
   public static function language()
   {
-    return uf_session::get('language',uf_application::config('language','en_US'));
+    return uf_session::get('language',self::config('language','en_US'));
   }
   
   public static function app_dir()

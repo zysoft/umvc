@@ -2,6 +2,7 @@
 function process_error_backtrace($errno, $errstr, $errfile, $errline, $errcontext) {
   if(!(error_reporting() & $errno))
     return;
+
   switch($errno) {
     case E_WARNING      :
     case E_USER_WARNING :
