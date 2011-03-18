@@ -263,7 +263,10 @@ function uf_include_language($uf_controller,$language_file)
 {
   // This function is used to create a clean symbol table
   $language =& $uf_controller->language;
-  @include_once($language_file);
+  if(file_exists($language_file))
+  {
+    include_once($language_file);    
+  }
 }
 
 # register our controller factory
