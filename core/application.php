@@ -47,17 +47,6 @@ class uf_application
   {
     self::init();
     
-    // NORMAL ROUTING
-    $routing_file = UF_BASE.'/cache/baker'.self::config('app_dir').'/routing/baked.routing.php';
-    if(self::config('always_bake') || !file_exists($routing_file))
-    {
-      uf_baker::bake('routing');
-    }
-    if(file_exists($routing_file))
-    {
-      include_once($routing_file);      
-    }
-
     // PRE ROUTING
     $pre_routing_file = UF_BASE.'/cache/baker'.self::config('app_dir').'/routing/baked.pre.routing.php';
     if(self::config('always_bake') || !file_exists($pre_routing_file))
@@ -67,6 +56,17 @@ class uf_application
     if(file_exists($pre_routing_file))
     {
       include_once($pre_routing_file);      
+    }
+
+    // NORMAL ROUTING
+    $routing_file = UF_BASE.'/cache/baker'.self::config('app_dir').'/routing/baked.routing.php';
+    if(self::config('always_bake') || !file_exists($routing_file))
+    {
+      uf_baker::bake('routing');
+    }
+    if(file_exists($routing_file))
+    {
+      include_once($routing_file);
     }
 
     // POST ROUTING
