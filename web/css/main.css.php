@@ -14,5 +14,5 @@ if(uf_application::config('always_bake') || !file_exists($css_file))
 }
 echo @file_get_contents($css_file)."\n";
 
-@include_once(UF_BASE.'/cache'.uf_application::config('app_dir').'/baker/css/baked.css.php');
+@include_once(UF_BASE.'/cache/baker'.uf_application::config('app_dir').'/css/baked.css.php');
 ?>
