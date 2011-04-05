@@ -5,14 +5,14 @@ uf_application::init();
 
 header('Content-Type: text/css');
 
-require_once('default.css.php');
+@include_once('default.css.php');
 
-$css_file = UF_BASE.'/web/data/baker'.uf_application::config('app_dir').'/css/baked.css';
+$css_file = UF_BASE.'/web/data/baker'.uf_application::config('app_dir').'/'.uf_application::host().'/css/baked.css';
 if(uf_application::config('always_bake') || !file_exists($css_file))
 {
   uf_baker::bake('css');
 }
 echo @file_get_contents($css_file)."\n";
 
-@include_once(UF_BASE.'/cache/baker'.uf_application::config('app_dir').'/css/baked.css.php');
+@include_once(UF_BASE.'/cache/baker'.uf_application::config('app_dir').'/'.uf_application::host().'/css/baked.css.php');
 ?>

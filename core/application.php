@@ -122,6 +122,11 @@ class uf_application
   {
     return self::$_app_sites_host_dir;
   }
+
+  public static function host()
+  {
+    return substr(strrchr(self::$_app_sites_host_dir, '/hosts/'),1);
+  }
   
   public static function config($name,$default_value = '')
   {

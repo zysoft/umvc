@@ -171,7 +171,10 @@ class uf_baker
         }      
       }
       $bake_base = UF_BASE.'/'.($place == 'dynamic' ? 'cache' : 'web/data');
-      $dir = $bake_base.'/baker'.uf_application::config('app_dir').'/'.$type;
+
+      $host = uf_application::host();
+      $dir = $bake_base.'/baker'.uf_application::config('app_dir').'/'.$host.'/'.$type;
+
       if(/*test !($type == 'routing' && $place == 'static') &&*/ !is_dir($dir))
       {
         mkdir($dir,0777,TRUE);
