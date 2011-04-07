@@ -1,6 +1,7 @@
-/app/data/build.properties
-/app/data/runtime-config.xml
-/app/data/schema.xml
+/app_demo/data/build.properties
+/app_demo/data/runtime-config.xml
+/app_demo/data/schema.xml
+/app_demo/data/build
 /config/config.php
 /cache
 /propel/propel-1.5.6/
