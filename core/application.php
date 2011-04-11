@@ -34,7 +34,6 @@ class uf_application
       {
         // Initialize Propel with the runtime configuration
         require_once UF_BASE.'/propel/propel-1.5.6/runtime/lib/Propel.php';
-        
         Propel::init(uf_application::app_dir().'/data/build/conf/umvc-conf.php');
         
         // Add the generated 'classes' directory to the include path
