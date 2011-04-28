@@ -33,7 +33,11 @@ class uf_application
       if(uf_application::config('load_propel'))
       {
         // Initialize Propel with the runtime configuration
+        require_once UF_BASE.'/propel/propel-1.5.6/runtime/lib/logger/BasicLogger.php';
+        require_once UF_BASE.'/core/propel_logger.php';
+        $logger = new MyLogger();
         require_once UF_BASE.'/propel/propel-1.5.6/runtime/lib/Propel.php';
+        Propel::setLogger($logger);
         Propel::init(uf_application::app_dir().'/data/build/conf/umvc-conf.php');
         
         // Add the generated 'classes' directory to the include path
@@ -47,7 +51,7 @@ class uf_application
     self::init();
     
     // PRE ROUTING
-    $pre_routing_file = UF_BASE.'/cache/baker'.self::config('app_dir').'/routing/baked.pre.routing.php';
+    $pre_routing_file = UF_BASE.'/cache/baker'.self::config('app_dir').'/'.uf_application::host().'/routing/baked.pre.routing.php';
     if(self::config('always_bake') || !file_exists($pre_routing_file))
     {
       uf_baker::bake('pre_routing');
@@ -58,7 +62,7 @@ class uf_application
     }
 
     // NORMAL ROUTING
-    $routing_file = UF_BASE.'/cache/baker'.self::config('app_dir').'/routing/baked.routing.php';
+    $routing_file = UF_BASE.'/cache/baker'.self::config('app_dir').'/'.uf_application::host().'/routing/baked.routing.php';
     if(self::config('always_bake') || !file_exists($routing_file))
     {
       uf_baker::bake('routing');
@@ -69,7 +73,7 @@ class uf_application
     }
 
     // POST ROUTING
-    $post_routing_file = UF_BASE.'/cachebaker/'.self::config('app_dir').'/routing/baked.post.routing.php';
+    $post_routing_file = UF_BASE.'/cachebaker/'.self::config('app_dir').'/'.uf_application::host().'/routing/baked.post.routing.php';
     if(self::config('always_bake') || !file_exists($post_routing_file))
     {
       uf_baker::bake('post_routing');
