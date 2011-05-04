@@ -38,10 +38,11 @@ class uf_application
         $logger = new MyLogger();
         require_once UF_BASE.'/propel/propel-1.5.6/runtime/lib/Propel.php';
         Propel::setLogger($logger);
-        Propel::init(uf_application::app_dir().'/data/build/conf/umvc-conf.php');
+        
+        Propel::init(uf_application::propel_app_dir().'/data/build/conf/umvc-conf.php');
         
         // Add the generated 'classes' directory to the include path
-        set_include_path(uf_application::app_dir().'/data/build/classes'.PATH_SEPARATOR.get_include_path());
+        set_include_path(uf_application::propel_app_dir().'/data/build/classes'.PATH_SEPARATOR.get_include_path());
       }
     }
   }
@@ -120,6 +121,10 @@ class uf_application
   public static function app_dir()
   {
     return UF_BASE.self::config('app_dir');
+  }
+  public static function propel_app_dir()
+  {
+    return UF_BASE.self::config('propel_app_dir');
   }
   public static function app_sites_host_dir()
   {
