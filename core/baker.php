@@ -70,9 +70,10 @@ class uf_baker
   {
     if(!is_array(self::$_files))
     {
+      $lib = self::_scan_dir_recursive(uf_application::app_dir().'/lib');
       $modules = self::_scan_dir_recursive(uf_application::app_dir().'/modules');
       $hosts   = self::_scan_dir_recursive(uf_application::app_sites_host_dir());
-      self::$_files = array_merge_recursive($modules,$hosts);
+      self::$_files = array_merge_recursive($lib,$modules,$hosts);
 
       if(isset(self::$_files['static']))
       {
