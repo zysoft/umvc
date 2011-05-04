@@ -10,7 +10,7 @@ class uf_response
   {
     $this->_attributes = array('template' => 'index');
     $this->_headers = array();
-    $this->header('Content-Type','text/html');
+    $this->header('Content-Type','text/html; charset=UTF-8');
     $this->_data = '';
   }
 
