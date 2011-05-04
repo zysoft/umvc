@@ -42,7 +42,7 @@ class uf_application
         Propel::init(uf_application::propel_app_dir().'/data/build/conf/umvc-conf.php');
         
         // Add the generated 'classes' directory to the include path
-        set_include_path(uf_application::app_dir().'/data/build/classes'.PATH_SEPARATOR.get_include_path());
+        set_include_path(uf_application::propel_app_dir().'/data/build/classes'.PATH_SEPARATOR.get_include_path());
       }
     }
   }
