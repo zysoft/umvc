@@ -5,8 +5,6 @@ uf_application::init();
 
 header('Content-Type: text/css');
 
-@include_once('default.css.php');
-
 $css_file = UF_BASE.'/web/data/baker'.uf_application::config('app_dir').'/'.uf_application::host().'/css/baked.css';
 if(uf_application::config('always_bake') || !file_exists($css_file))
 {
