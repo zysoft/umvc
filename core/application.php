@@ -38,8 +38,11 @@ class uf_application
         $logger = new MyLogger();
         require_once UF_BASE.'/propel/propel-1.5.6/runtime/lib/Propel.php';
         Propel::setLogger($logger);
-        
-        Propel::init(uf_application::propel_app_dir().'/data/build/conf/umvc-conf.php');
+
+        $propel_initial_conf = include(uf_application::propel_app_dir().'/data/build/conf/umvc-conf.php');
+        $propel_initial_conf['datasources']['umvc']['connection'] = self::config('propel_db');
+        Propel::setConfiguration($propel_initial_conf);
+        Propel::initialize();
         
         // Add the generated 'classes' directory to the include path
         set_include_path(uf_application::propel_app_dir().'/data/build/classes'.PATH_SEPARATOR.get_include_path());
