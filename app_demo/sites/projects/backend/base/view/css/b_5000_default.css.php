@@ -1,1 +1,0 @@
-../../../../frontend/base/view/css/b_5000_default.css.php
