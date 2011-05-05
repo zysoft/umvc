@@ -209,7 +209,7 @@ class uf_baker
       {
         $extra = '';
         if($place == 'dynamic') {
-          $extra = '<?php $uf_lib_dir = \'/data/baker'.uf_application::config('app_dir').'/lib\';?>';
+          $extra = '<?php $uf_dir_web_lib = \'/data/baker'.uf_application::config('app_dir').'/lib\';?>';
         }
         file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type.($place == 'dynamic' ? '.php' : ''),$extra.$output);
       }

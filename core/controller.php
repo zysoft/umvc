@@ -254,7 +254,7 @@ function uf_include_view($uf_controller,$uf_view)
 {
   // This function is used to create a clean symbol table
   extract(get_object_vars($uf_controller));
-  extract(array('uf_lib_dir' => '/data/baker'.uf_application::config('app_dir').'/lib'));
+  extract(array('uf_dir_web_lib' => '/data/baker'.uf_application::config('app_dir').'/lib'));
 
   $uf_request  = $uf_controller->request();
   $uf_response = $uf_controller->response();
