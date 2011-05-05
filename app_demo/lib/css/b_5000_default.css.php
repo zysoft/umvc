@@ -14,7 +14,7 @@ a img {
 #center {
   width: 740px;
   margin: 0 auto 0 auto;
-  background: #eee url('/images/background.gif') repeat-y left top;
+  background: #eee url('<?=$uf_lib_dir?>/images/background.gif') repeat-y left top;
 }
 
 #header {
@@ -28,7 +28,7 @@ a img {
 #footer {
   padding: 5px 20px 0 20px;
   height: 19px;
-  background: #eee url('/images/footer.gif') repeat-y left top;
+  background: #eee url('<?=$uf_lib_dir?>/images/footer.gif') repeat-y left top;
   text-align: right;
   color: #666;
   font-size: 10px;

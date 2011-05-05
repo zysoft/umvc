@@ -12,7 +12,7 @@
 </head>
 <body>
   <div id="center">
-    <div id="header"><a href="/"><img src="/images/umvc.gif" alt="UMVC php web framework" /></a></div>
+    <div id="header"><a href="/"><img src="<?=$uf_lib_dir?>/images/umvc.gif" alt="UMVC php web framework" /></a></div>
     <ul id="menu">
       <li<? if(@$mainmenu === 'start') echo ' class="selected"'; ?>><a href="/"><?=$language['base']['menu']['start']?></a></li>
       <li<? if(@$mainmenu === 'examples') echo ' class="selected"'; ?>><a href="/examples"><?=$language['base']['menu']['examples']?></a></li>

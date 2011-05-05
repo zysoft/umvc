@@ -45,12 +45,17 @@ class uf_baker
       } 
       else
       {
-        $is_recursive = substr($f,0,2) == 'b_';
+        $ext = substr(strrchr($f,'.'),1);
+        $is_image     = in_array($ext, array('gif', 'png', 'jpg', 'jpeg'));
+        $is_recursive = substr($f,0,2) == 'b_' || $is_image;
         $is_route     = substr($f,0,2) == 'r_';
-        if($is_recursive || $is_route)
-        {
-          $ext = substr(strrchr($f,'.'),1);
 
+        if($is_image)
+        {
+          $out['static']['images'][] = $fp;          
+        }
+        else if($is_recursive || $is_route)
+        {
           // Get the right ext for php files (routing files excluded)
           $is_dynamic = $ext == 'php';
           if($is_dynamic)
@@ -89,6 +94,23 @@ class uf_baker
           usort($type,array('uf_baker','_sort_files'));
         }
       }
+    }
+  }
+
+  private static function _bake_images($files)
+  {
+    foreach($files as $source_file)
+    {
+      $bake_base = UF_BASE.'/web/data';
+      $host = uf_application::host();
+      $file = substr(strrchr($source_file, '/'), 1);
+      $dir = substr($source_file, strlen(UF_BASE));
+      $dir = $bake_base.'/baker'.substr($dir, 0, strrpos($dir, '/'));
+      if(!is_dir($dir))
+      {
+        mkdir($dir.'/', 0777, TRUE);
+      }
+      copy($source_file, $dir.'/'.$file);
     }
   }
 
@@ -167,6 +189,9 @@ class uf_baker
           case 'routing':
             $output .= self::_bake_routing(self::$_files[$place][$type],$prefix);
             break;
+          case 'images':
+            $output .= self::_bake_images(self::$_files[$place][$type],$prefix);
+            break;
           default:
             $output .= self::_bake_default(self::$_files[$place][$type]);
         }      
@@ -182,13 +207,18 @@ class uf_baker
       }
       if($output != '')
       {
-        file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type.($place == 'dynamic' ? '.php' : ''),$output);
+        $extra = '';
+        if($place == 'dynamic') {
+          $extra = '<?php $uf_lib_dir = \'/data/baker'.uf_application::config('app_dir').'/lib\';?>';
+        }
+        file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type.($place == 'dynamic' ? '.php' : ''),$extra.$output);
       }
     }
   }
 
   public static function bake_all()
   {
+    self::bake('images');
     self::bake('js');
     self::bake('css');
     self::bake('pre_routing');
