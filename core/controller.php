@@ -154,9 +154,17 @@ class uf_controller
   {    
     // load project/base language files
     uf_include_language($this,uf_application::app_sites_host_dir().'/language/l_base.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
+
     // load module/controller local language file
     $controller = substr(get_class($this),0,-11);
-    uf_include_language($this,uf_application::app_dir().'/modules/'.$controller.'/language/l_'.$controller.'.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');
+    if(uf_application::is_global_controller($controller))
+    {
+      uf_include_language($this,uf_application::app_sites_host_dir().'/modules/'.$controller.'/language/l_'.$controller.'.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');      
+    }
+    else
+    {
+      uf_include_language($this,uf_application::app_dir().'/modules/'.$controller.'/language/l_'.$controller.'.'.uf_session::get('language',uf_application::config('language','en_US')).'.php');      
+    }
 
     // 404 action?
     // handle  www.foo.com/index/

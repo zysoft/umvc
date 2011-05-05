@@ -74,7 +74,7 @@ class uf_application
     }
 
     // POST ROUTING
-    $post_routing_file = UF_BASE.'/cachebaker/'.self::config('app_dir').'/'.uf_application::host().'/routing/baked.post.routing.php';
+    $post_routing_file = UF_BASE.'/cache/baker/'.self::config('app_dir').'/'.uf_application::host().'/routing/baked.post.routing.php';
     if(self::config('always_bake') || !file_exists($post_routing_file))
     {
       uf_baker::bake('post_routing');
@@ -156,6 +156,37 @@ class uf_application
       $uri = uf_internal_post_routing_function($uri);
     }
     return $uri;
+  }
+
+  public static function controller_exists($controller)
+  {
+    $file = 
+      uf_application::app_sites_host_dir().
+      '/modules/'.
+      $controller.
+      '/c_'.$controller.'.php';
+      
+    if(file_exists($file))
+    {
+      return TRUE;
+    }
+    
+    $file = 
+      uf_application::app_dir().
+      '/modules/'.
+      $controller.
+      '/c_'.$controller.'.php';
+      
+    return file_exists($file);
+  }
+
+  public static function is_global_controller($controller)
+  {
+    return file_exists(
+      uf_application::app_sites_host_dir().
+      '/modules/'.
+      $controller.
+      '/c_'.$controller.'.php');
   }
 }
 

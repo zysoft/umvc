@@ -84,7 +84,7 @@ class uf_baker
       {
         foreach(self::$_files['static'] as &$type)
         {
-          usort($type,array('uf_baker','_sort_files'));
+          usort($type,array('uf_baker','_sort_files'));            
         }        
       }
       if(isset(self::$_files['dynamic']))
@@ -95,20 +95,30 @@ class uf_baker
         }
       }
     }
+    //die(nl2br(htmlentities(print_r(self::$_files['static']['images'],1))));
   }
 
   private static function _bake_images($files)
   {
+    sort($files, SORT_STRING);
     foreach($files as $source_file)
     {
       $bake_base = UF_BASE.'/web/data';
       $host = uf_application::host();
       $file = substr(strrchr($source_file, '/'), 1);
-      $dir = substr($source_file, strlen(UF_BASE));
-      $dir = $bake_base.'/baker'.substr($dir, 0, strrpos($dir, '/'));
+      $mp = strpos($source_file, '/modules/');
+
+      $dir = 
+        $mp !== FALSE
+          ? uf_application::config('app_dir').substr($source_file, $mp)
+          : $dir = substr($source_file, strlen(UF_BASE));
+
+      $file = substr($dir, strrpos($dir,'/') + 1);
+      $dir = $bake_base.'/baker'.substr($dir, 0, strrpos($dir,'/'));
+
       if(!is_dir($dir))
       {
-        mkdir($dir.'/', 0777, TRUE);
+        mkdir($dir, 0777, TRUE);
       }
       copy($source_file, $dir.'/'.$file);
     }
@@ -156,6 +166,8 @@ class uf_baker
       foreach($files as $file)
       {
         $data = file_get_contents($file);
+        $data = str_replace('[uf_module]', '/data/baker'.uf_application::config('app_dir').'/modules', $data);
+        $data = str_replace('[uf_lib]', '/data/baker'.uf_application::config('app_dir').'/lib', $data);
         $output .= $data."\n";
       }
     }
@@ -205,13 +217,10 @@ class uf_baker
       {
         mkdir($dir,0777,TRUE);
       }
+
       if($output != '')
       {
-        $extra = '';
-        if($place == 'dynamic') {
-          $extra = '<?php $uf_dir_web_lib = \'/data/baker'.uf_application::config('app_dir').'/lib\';?>';
-        }
-        file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type.($place == 'dynamic' ? '.php' : ''),$extra.$output);
+        file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type.($place == 'dynamic' ? '.php' : ''),$output);
       }
     }
   }

@@ -1,2 +1,2 @@
-<h1>Welcome to UMVC administrator</h1>
+<h1>Welcome to UMVC backend</h1>
 <?=uf_session::get('login') ? 'Logged in': 'Not logged in'?>

@@ -11,7 +11,7 @@ class base_controller extends uf_controller
   {
     parent::before_action();
     $this->title = $this->language['base']['title'];
-    $this->meta_description = 'UMVC';
+    $this->meta_description = 'UMVC frontend';
     $this->meta_keywords = 'php, mvc, framework, web development';
   }
 }
