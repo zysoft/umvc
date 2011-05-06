@@ -95,7 +95,6 @@ class uf_baker
         }
       }
     }
-    //die(nl2br(htmlentities(print_r(self::$_files['static']['images'],1))));
   }
 
   private static function _bake_images($files)
@@ -126,8 +125,8 @@ class uf_baker
 
   private static function _bake_routing($files,$prefix='')
   {
+    $output = '';
     $prefix2 = $prefix.($prefix != '' ? '_' : '');
-    $output = '<? function uf_internal_'.$prefix2.'routing_function(&$uri) { ?>';
     if(is_array($files))
     {
       foreach($files as $file)
@@ -153,7 +152,7 @@ class uf_baker
         }
       }
     }
-    $output .= "\n".'<? return $uri; } ?>'."\n";
+    $output .= '<? return $uri; ?>';
     /*$output = str_replace('?><?','',$output);*/
     return $output;
   }
