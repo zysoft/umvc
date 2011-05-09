@@ -27,12 +27,6 @@ class uf_controller
     }
   }
   
-  private function _load_base($view)
-  {
-    // include the view
-    uf_include_view($this,uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.php');
-  }
-
   private function _push_call_stack_frame($caller,$request,$response,$options)
   {
     array_push(
@@ -273,17 +267,19 @@ class uf_controller
   }  
 }
 
+// This function is used to create a clean symbol table when loading views
 function uf_include_view($uf_controller,$uf_view)
 {
-  // This function is used to create a clean symbol table
   extract(get_object_vars($uf_controller));
   extract(array('uf_dir_web_lib' => '/data/baker'.uf_application::config('app_dir').'/lib'));
 
   $uf_request  = $uf_controller->request();
   $uf_response = $uf_controller->response();
+  
   require($uf_view);    
 }
 
+// This function is used to create a clean symbol table when loading languages
 function uf_include_language($uf_controller,$language_file)
 {
   // This function is used to create a clean symbol table
