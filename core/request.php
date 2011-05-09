@@ -1,8 +1,0 @@
-<?
-
-class uf_request
-{
-
-}
-
-?>

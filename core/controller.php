@@ -26,7 +26,7 @@ class uf_controller
       uf_include_view($this,uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.php');      
     }
   }
-  
+
   private function _push_call_stack_frame($caller,$request,$response,$options)
   {
     array_push(
@@ -47,9 +47,7 @@ class uf_controller
 
   // PROTECTED METHODS
   
-  public function on_post() {
-    $this->response()->javascript('alert("poo")');
-  }
+  public function on_post() {}
   public function before_action() {}
   public function after_action() {}
 
@@ -62,7 +60,6 @@ class uf_controller
     $result = preg_replace('/[^\d\w_-]/','',str_replace($f,$t,$str));
     return preg_replace('/_+/','_',$result);
   }
-
 
   public function __construct()
   {
@@ -111,7 +108,10 @@ class uf_controller
 
   public function option($name,$default_value = NULL)
   {
-    return array_key_exists($name,$this->_call_stack[count($this->_call_stack) - 1]['options']) ? $this->_call_stack[count($this->_call_stack) - 1]['options'] : $default_value;
+    return 
+      array_key_exists($name,$this->_call_stack[count($this->_call_stack) - 1]['options'])
+        ? $this->_call_stack[count($this->_call_stack) - 1]['options']
+        : $default_value;
   }
 
   static public function execute_base($request,$response,$options = NULL)
@@ -130,7 +130,6 @@ class uf_controller
         // 404 missing action
         $controller->_error(404);
       }
-      $controller->_pop_call_stack_frame();
     }
     else
     {
@@ -138,7 +137,6 @@ class uf_controller
       $controller = new base_controller;
       $controller->_push_call_stack_frame($controller,$request,$response,$options !== NULL ? $options : array());
       $controller->_error(404);
-      $controller->_pop_call_stack_frame();
     }
     $controller->content = $response->data();
 
@@ -151,6 +149,7 @@ class uf_controller
     uf_include_view($controller, uf_application::app_sites_host_dir().'/base/view/v_'.$response->attribute('template').'.php');
     if(class_exists($controller_class))
     {
+      $controller->_pop_call_stack_frame();
       $controller = NULL;
     }
   }
@@ -202,6 +201,10 @@ class uf_controller
     if($this->request()->is_post())
     {
       $this->on_post();
+      if(method_exists($this, 'on_post_'.$action))
+      {
+        call_user_func(array($this, 'on_post_'.$action));
+      }
     }
     $this->before_action();
     $view = call_user_func(array($this,$action));
@@ -252,17 +255,19 @@ class uf_controller
       if ($controller == 'base')
       {
         $file = uf_application::app_sites_host_dir().'/base/c_base.php';
-      }
-
-      else 
+        include_once($file);
+      } else 
       {
         $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/c_'.$controller.'.php';
         if(!file_exists($file))
         {
           $file = uf_application::app_dir().'/modules/'.$controller.'/c_'.$controller.'.php';
-        }        
+        }
+        if(file_exists($file))
+        {
+          include_once($file);          
+        }
       }
-      include_once($file);
     }
   }  
 }

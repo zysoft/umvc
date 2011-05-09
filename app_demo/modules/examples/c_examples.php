@@ -15,6 +15,11 @@ class examples_controller extends base_controller
     $this->foo = 'bar';
   }
 
+  public function on_post_form_validation()
+  {
+    $this->response()->javascript('alert("on post")');
+  }
+  
   public function form_validation()
   {
   }

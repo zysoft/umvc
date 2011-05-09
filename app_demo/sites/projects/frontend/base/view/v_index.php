@@ -10,7 +10,7 @@
   <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css.php" />
   <script src="/js/main.js.php" type="text/javascript" charset="utf-8"></script>
   <script type="text/javascript" charset="utf-8">
-    <?=$javascript?>
+    <?=$uf_response->javascript()?>
   </script>
 </head>
 <body>
