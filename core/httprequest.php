@@ -5,6 +5,7 @@ class uf_http_request
   private $_segments;
   private $_parameters;
   private $_uri;
+  private $_is_post;
   
   public function uri($uri = NULL)
   {
@@ -72,8 +73,6 @@ class uf_http_request
       $uri = include_once($post_routing_file);      
     }
 
-
-    //die(print_r(get_defined_vars(),1));
     $this->uri($uri);
     $pos = strpos($uri,'?');
     if($pos !== FALSE)
@@ -89,7 +88,7 @@ class uf_http_request
     {
       $p[$this->_segments[$i]] = @$this->_segments[$i + 1];
     }
-
+    $this->_is_post = count($_POST);
     $input = array_merge($p,$_GET,$_POST);
     $this->set_parameters($input);
   }
@@ -102,6 +101,10 @@ class uf_http_request
   public function action()
   {
     return isset($this->_segments[1]) ? $this->_segments[1] : $this->parameter('_action','index');
+  }
+  
+  public function is_post() {
+    return $this->_is_post;
   }
 }
 

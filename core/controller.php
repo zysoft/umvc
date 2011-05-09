@@ -16,13 +16,21 @@ class uf_controller
     {
       $dir = uf_application::app_dir().'/modules/'.$controller;
     }
-    uf_include_view($this,$dir.'/view/v_'.$view.'.php');
+
+    // try to load view from controller, else fallback to base
+    if(file_exists($dir.'/view/v_'.$view.'.php'))
+    {
+      uf_include_view($this,$dir.'/view/v_'.$view.'.php');      
+    } 
+    else {
+      uf_include_view($this,uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.php');      
+    }
   }
   
   private function _load_base($view)
   {
     // include the view
-    uf_include_view($this,uf_application::app_dir().'/base/view/v_'.$view.'.php');
+    uf_include_view($this,uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.php');
   }
 
   private function _push_call_stack_frame($caller,$request,$response,$options)
@@ -45,6 +53,9 @@ class uf_controller
 
   // PROTECTED METHODS
   
+  public function on_post() {
+    $this->response()->javascript('alert("poo")');
+  }
   public function before_action() {}
   public function after_action() {}
 
@@ -194,6 +205,10 @@ class uf_controller
     $action = empty($action) ? 'index' : self::str_to_controller($action);
 
     // execute action
+    if($this->request()->is_post())
+    {
+      $this->on_post();
+    }
     $this->before_action();
     $view = call_user_func(array($this,$action));
     $this->after_action();

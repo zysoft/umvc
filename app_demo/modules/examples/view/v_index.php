@@ -5,6 +5,7 @@
 
 <ul>
 <li><a href="/routing-example-using-special-url">Routing</a></li>
+<li><a href="/examples/form-validation">Form validation</a></li>
 <li><a href="/examples/todo-list">Todo list</a></li>
 <li><a href="/examples/debug">Debug</a></li>
 <li><a href="/examples/no-view">No view</a></li>

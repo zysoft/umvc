@@ -5,6 +5,8 @@ class uf_response
   private $_attributes;
   private $_headers;
   private $_data;
+  private $_slots;
+  private $_javascript;
 
   public function __construct()
   {
@@ -12,6 +14,8 @@ class uf_response
     $this->_headers = array();
     $this->header('Content-Type','text/html; charset=UTF-8');
     $this->_data = '';
+    $this->_slots = array();
+    $this->_javascript = '';
   }
 
   public function attribute($name,$value = NULL)
@@ -74,6 +78,32 @@ class uf_response
     else
     {
       return $this->_data;
+    }
+  }
+
+  public function javascript($javascript = NULL)
+  {
+    if($javascript !== NULL)
+    {
+      $this->_javascript .= $javascript;
+    }
+    else
+    {
+      return $this->_javascript;
+    }
+  }
+
+  public function slot($name, $data = NULL)
+  {
+    if($data !== NULL)
+    {
+      //isset($this->_slots[$name])
+      //    ? $this->_slots[$name]
+      // .= $data;
+    }
+    else
+    {
+      return $this->_slots[$name];
     }
   }
 }

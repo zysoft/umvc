@@ -15,6 +15,10 @@ class examples_controller extends base_controller
     $this->foo = 'bar';
   }
 
+  public function form_validation()
+  {
+  }
+
   // this action uses view: "todo_list"
   public function todo_list()
   {
