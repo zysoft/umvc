@@ -16,15 +16,13 @@ class uf_controller
     {
       $dir = uf_application::app_dir().'/modules/'.$controller;
     }
-
-    // try to load view from controller, else fallback to base
-    if(file_exists($dir.'/view/v_'.$view.'.php'))
-    {
-      uf_include_view($this,$dir.'/view/v_'.$view.'.php');      
-    } 
-    else {
-      uf_include_view($this,uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.php');      
-    }
+    uf_include_view($this,$dir.'/view/v_'.$view.'.php');
+  }
+  
+  private function _load_base($view)
+  {
+    // include the view
+    uf_include_view($this,uf_application::app_dir().'/base/view/v_'.$view.'.php');
   }
 
   private function _push_call_stack_frame($caller,$request,$response,$options)
@@ -45,11 +43,99 @@ class uf_controller
     array_pop($this->_call_stack);
   }
 
-  // PROTECTED METHODS
+  // BASE METHODS
   
-  public function on_post() {}
   public function before_action() {}
   public function after_action() {}
+
+
+
+  // Language/translation support in UMVC
+  // For how to build language codes, see
+  // See RFC 5646 (http://tools.ietf.org/html/rfc5646)
+
+  // For optimization purpouses, UMVC limits combinations to
+  // the syntax: language-location
+  // i.e. en-GB, en-US, en-AU etc.
+  //
+
+  // backend API
+
+  // parameters coming from the query string for the index action
+  public function index_translate_parameter($in_parameter_name)
+  {
+    switch ($in_parameter_name)
+    {
+      case 'parameter1': return 'param1';
+      case 'myparameter1': return 'param1';
+      case 'parameter2': return 'param2';
+    }
+  }
+
+  // view API
+
+  // input:    english name
+  // returns:  translated name into current language (overridable)
+  public function view_lang_get_module_name($controller, $language = '')
+  {
+    // include the baked file above based on module name
+    //
+    $lang = $language;
+    if ($language == '') $lang = uf_application::get_language();
+
+    $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/ma_'.$controller.'.php';
+    if(!file_exists($file))
+    {
+      $file = uf_application::app_dir().'/modules/'.$controller.'/ma_'.$controller.'.php';
+    }
+    $ret = include($file);
+    if ($ret == '')
+      return $controller;
+    else
+      return $ret;
+  }
+
+
+  // input:    english/code name of action
+  // returns:  current language version
+
+  public function view_lang_get_action_name($action, $controller, $language = '')
+  {
+    $lang = $language;
+    if ($language == '') $lang = uf_application::get_language();
+
+    $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/aa_'.$controller.'.php';
+    if(!file_exists($file))
+    {
+      $file = uf_application::app_dir().'/modules/'.$controller.'/aa_'.$controller.'.php';
+    }
+    $ret = include($file);
+    if ($ret == '')
+      return $action;
+    else
+      return $ret;
+  }
+
+  // input:    english/code name of action
+  // returns:  current language version
+
+  public function view_lang_get_parameter_name($param, $action, $controller, $language = '')
+  {
+    $lang = $language;
+    if ($language == '') $lang = uf_application::get_language();
+
+    $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/ap_'.$controller.'.php';
+    if(!file_exists($file))
+    {
+      $file = uf_application::app_dir().'/modules/'.$controller.'/ap_'.$controller.'.php';
+    }
+    $ret = include($file);
+    if ($ret == '')
+      return $param;
+    else
+      return $ret;
+  }
+  
 
   // PUBLIC METHODS
 
@@ -60,6 +146,7 @@ class uf_controller
     $result = preg_replace('/[^\d\w_-]/','',str_replace($f,$t,$str));
     return preg_replace('/_+/','_',$result);
   }
+
 
   public function __construct()
   {
@@ -108,10 +195,7 @@ class uf_controller
 
   public function option($name,$default_value = NULL)
   {
-    return 
-      array_key_exists($name,$this->_call_stack[count($this->_call_stack) - 1]['options'])
-        ? $this->_call_stack[count($this->_call_stack) - 1]['options']
-        : $default_value;
+    return array_key_exists($name,$this->_call_stack[count($this->_call_stack) - 1]['options']) ? $this->_call_stack[count($this->_call_stack) - 1]['options'] : $default_value;
   }
 
   static public function execute_base($request,$response,$options = NULL)
@@ -125,11 +209,14 @@ class uf_controller
       // Normal module action
       $controller = new $controller_class;
       $controller->_push_call_stack_frame($controller,$request,$response,$options !== NULL ? $options : array());
+
+      
       if($controller->execute_action($controller,$action_name,$request,$response,array('enable_buffering' => TRUE)) === FALSE)
       {
         // 404 missing action
         $controller->_error(404);
       }
+      $controller->_pop_call_stack_frame();
     }
     else
     {
@@ -137,6 +224,7 @@ class uf_controller
       $controller = new base_controller;
       $controller->_push_call_stack_frame($controller,$request,$response,$options !== NULL ? $options : array());
       $controller->_error(404);
+      $controller->_pop_call_stack_frame();
     }
     $controller->content = $response->data();
 
@@ -149,7 +237,6 @@ class uf_controller
     uf_include_view($controller, uf_application::app_sites_host_dir().'/base/view/v_'.$response->attribute('template').'.php');
     if(class_exists($controller_class))
     {
-      $controller->_pop_call_stack_frame();
       $controller = NULL;
     }
   }
@@ -174,6 +261,12 @@ class uf_controller
     // handle  www.foo.com/index/
     if ($action == '') $action = 'index';
 
+    // loop the request parameters and translate them
+    /*if (method_exists($this,$action.'_translate_param'))
+    {
+      call_user_func(array($this,$action.'_translate_param'));
+    }*/
+    
     // handle nonexistent controller functions
     if(!method_exists($this,$action))
     {
@@ -198,14 +291,6 @@ class uf_controller
     $action = empty($action) ? 'index' : self::str_to_controller($action);
 
     // execute action
-    if($this->request()->is_post())
-    {
-      $this->on_post();
-      if(method_exists($this, 'on_post_'.$action))
-      {
-        call_user_func(array($this, 'on_post_'.$action));
-      }
-    }
     $this->before_action();
     $view = call_user_func(array($this,$action));
     $this->after_action();
@@ -255,38 +340,32 @@ class uf_controller
       if ($controller == 'base')
       {
         $file = uf_application::app_sites_host_dir().'/base/c_base.php';
-        include_once($file);
-      } else 
+      }
+
+      else 
       {
         $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/c_'.$controller.'.php';
-        if(file_exists($file))
+        if(!file_exists($file))
         {
-          include_once($file);          
-        } else {
           $file = uf_application::app_dir().'/modules/'.$controller.'/c_'.$controller.'.php';
-          if(file_exists($file))
-          {
-            include_once($file);          
-          }
         }
       }
+      include_once($file);
     }
   }  
 }
 
-// This function is used to create a clean symbol table when loading views
 function uf_include_view($uf_controller,$uf_view)
 {
+  // This function is used to create a clean symbol table
   extract(get_object_vars($uf_controller));
   extract(array('uf_dir_web_lib' => '/data/baker'.uf_application::config('app_dir').'/lib'));
 
   $uf_request  = $uf_controller->request();
   $uf_response = $uf_controller->response();
-  
   require($uf_view);    
 }
 
-// This function is used to create a clean symbol table when loading languages
 function uf_include_language($uf_controller,$language_file)
 {
   // This function is used to create a clean symbol table
