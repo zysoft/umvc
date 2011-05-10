@@ -59,6 +59,11 @@ class examples_controller extends base_controller
   {
     return 'debug';
   }
+
+  public function javascript()
+  {
+  }
+  
 }
 
 ?>

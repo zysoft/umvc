@@ -85,7 +85,7 @@ class uf_response
   {
     if($javascript !== NULL)
     {
-      $this->_javascript .= $javascript;
+      $this->_javascript .= $javascript."\n";
     }
     else
     {

@@ -20,10 +20,18 @@ class uf_controller
     // try to load view from controller, else fallback to base
     if(file_exists($dir.'/view/v_'.$view.'.php'))
     {
-      uf_include_view($this,$dir.'/view/v_'.$view.'.php');      
+      uf_include_view($this,$dir.'/view/v_'.$view.'.php');
+      if(file_exists($dir.'/view/v_'.$view.'.js'))
+      {
+        $this->response()->javascript(file_get_contents($dir.'/view/v_'.$view.'.js'));
+      }      
     } 
     else {
       uf_include_view($this,uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.php');      
+      if(file_exists(uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.js'))
+      {
+        $this->response()->javascript(file_get_contents(uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.js'));
+      }
     }
   }
 
