@@ -22,20 +22,21 @@ class uf_http_request
   
   public function get_parameter_names()
   {
-    reset($_parameters);
+    reset($this->_parameters);
     $res = array();
-    while (list($key,$val) = each($_parameters))
+    while (list($key,$val) = each($this->_parameters))
     {
       array_push($res,$key);
     }
+    return $res;
   }
 
   public function set_parameter_name($old_name, $new_name)
   {
     if ($old_name == $new_name) return;
     
-    $_parameters[$new_name] = $_parameters[$oldname];
-    unset($_parameters[$old_name]);
+    $this->_parameters[$new_name] = $this->_parameters[$old_name];
+    unset($this->_parameters[$old_name]);
   }
 
   public function set_parameters($parameters = NULL)

@@ -77,8 +77,9 @@ class uf_controller
   // backend API
 
   // parameters coming from the query string for the index action
-  public function index_translate_parameter($in_parameter_name)
+  public function debug_translate_param($in_parameter_name)
   {
+    echo 'translate-param';
     switch ($in_parameter_name)
     {
       case 'parameter1': return 'param1';
@@ -277,10 +278,15 @@ class uf_controller
     if ($action == '') $action = 'index';
 
     // loop the request parameters and translate them
-    /*if (method_exists($this,$action.'_translate_param'))
+    if (method_exists($this,$action.'_translate_param'))
     {
-      call_user_func(array($this,$action.'_translate_param'));
-    }*/
+      $param_names = $request->get_parameter_names();
+      foreach ($param_names as $name)
+      {
+        $n_name = call_user_func(array($this,$action.'_translate_param'),$name);
+        $request->set_parameter_name($name, $n_name);
+      }
+    }
     
     // handle nonexistent controller functions
     if(!method_exists($this,$action))
