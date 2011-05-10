@@ -203,11 +203,6 @@ class uf_baker
           case 'images':
             $output .= self::_bake_images(self::$_files[$place][$type],$prefix);
             break;
-          case 'js':
-            if($place === 'static')
-            {
-              $output .= file_get_contents(UF_BASE.'/core/umvc.js')."\n";              
-            }
           default:
             $output .= self::_bake_default(self::$_files[$place][$type]);
         }      

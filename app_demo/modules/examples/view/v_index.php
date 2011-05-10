@@ -10,6 +10,7 @@
 <li><a href="/examples/debug">Debug</a></li>
 <li><a href="/examples/no-view">No view</a></li>
 <li><a href="/examples/other-view">Other view</a></li>
+<li><a href="/examples/javascript">JavaScript</a></li>
 </ul>
 
 <p>Foo: <?=$foo?></p>

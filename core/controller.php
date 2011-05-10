@@ -21,8 +21,23 @@ class uf_controller
   
   private function _load_base($view)
   {
-    // include the view
-    uf_include_view($this,uf_application::app_dir().'/base/view/v_'.$view.'.php');
+
+    // try to load view from controller, else fallback to base
+    if(file_exists($dir.'/view/v_'.$view.'.php'))
+    {
+      uf_include_view($this,$dir.'/view/v_'.$view.'.php');
+      if(file_exists($dir.'/view/v_'.$view.'.js'))
+      {
+        $this->response()->javascript(file_get_contents($dir.'/view/v_'.$view.'.js'));
+      }      
+    } 
+    else {
+      uf_include_view($this,uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.php');      
+      if(file_exists(uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.js'))
+      {
+        $this->response()->javascript(file_get_contents(uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.js'));
+      }
+    }
   }
 
   private function _push_call_stack_frame($caller,$request,$response,$options)

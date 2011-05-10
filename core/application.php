@@ -84,7 +84,7 @@ class uf_application
     }
   }
 
-  public static function language()
+  public static function get_language()
   {
     return uf_session::get('language',self::config('language','en_US'));
   }
@@ -144,4 +144,42 @@ class uf_application
   }
 }
 
+
+/*
+  - om man surfar på ledige stillinger ska den kroka på no_NO internt
+  - no_NO/ledige-stillinger
+  - sv_SE/
+  - get_module_name('/available_jobs//profession/målare/geography/stockholm');
+    - denna laddar in en språkfil för översättning av url:en
+
+  I modulkontext:
+    translate(':a:b');
+    translate_module(':available_jobs',':index',':profession/målare/:geography/stockholm');
+  
+  - modulen ska ha lista med alias för dens namn på olika språk
+    - statisk metod i varje modul som vill ta hand om vad den heter på olika språk
+      - bakaren laddar in alla moduler den hittar och genererar den här översättningstabellen
+      sedan laddas modulens parameteröversättningstabeller in
+
+  Varje modul(controller) behöver alltså två olika metoder:
+   - en för att översätta modulens namn
+     - denna kan bakas
+   - en för att översätta parametrarnas namn åt bägge håll
+
+Vid laddning (från application -> controller)
+ - kör 
+
+Application-API:
+
+
+View-API:
+uf_controller->translate_module
+translate_module('available_jobs');
+translate_action('article');
+translate_parameters('/profession/foo/geography/bar');
+  - denna tar även bort tomma parametrar, till hjälp för view-kodaren
+translate('uuu');
+*/
 ?>
+
+

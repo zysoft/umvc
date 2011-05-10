@@ -76,6 +76,32 @@ class uf_response
       return $this->_data;
     }
   }
+
+  public function javascript($javascript = NULL)
+  {
+    if($javascript !== NULL)
+    {
+      $this->_javascript .= $javascript."\n";
+    }
+    else
+    {
+      return $this->_javascript;
+    }
+  }
+
+  public function slot($name, $data = NULL)
+  {
+    if($data !== NULL)
+    {
+      //isset($this->_slots[$name])
+      //    ? $this->_slots[$name]
+      // .= $data;
+    }
+    else
+    {
+      return $this->_slots[$name];
+    }
+  }
 }
 
 ?>
