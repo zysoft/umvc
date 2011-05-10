@@ -259,13 +259,15 @@ class uf_controller
       } else 
       {
         $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/c_'.$controller.'.php';
-        if(!file_exists($file))
-        {
-          $file = uf_application::app_dir().'/modules/'.$controller.'/c_'.$controller.'.php';
-        }
         if(file_exists($file))
         {
           include_once($file);          
+        } else {
+          $file = uf_application::app_dir().'/modules/'.$controller.'/c_'.$controller.'.php';
+          if(file_exists($file))
+          {
+            include_once($file);          
+          }
         }
       }
     }

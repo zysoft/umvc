@@ -14,9 +14,6 @@ class base_controller extends uf_controller
     $this->meta_description = 'UMVC frontend';
     $this->meta_keywords = 'php, mvc, framework, web development';
   }
-  
-  public function dummy()
-  {
-  }
 }
-?>
+
+/* EOF */

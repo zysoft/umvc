@@ -17,7 +17,8 @@ class examples_controller extends base_controller
 
   public function on_post_form_validation()
   {
-    $this->response()->javascript('alert("on post")');
+    $this->response()->javascript('umvc.add_validator("form", function(){alert("form validator")});');
+    $this->response()->javascript('$(function(){umvc.validate("form");});');
   }
   
   public function form_validation()
