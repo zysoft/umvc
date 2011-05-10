@@ -1,3 +1,4 @@
+<?=$uf_controller->load_view('javascript'); ?>
 <h1><?=$language['base']['menu']['examples']?></h1>
 
 <p><?=$language['examples']['text1']?></p>
