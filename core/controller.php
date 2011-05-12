@@ -6,7 +6,7 @@ class uf_controller
   private $_buffer_ref_count;
   private $_call_stack;
 
-  private function _load_view($view)
+  public function load_view($view)
   {
     $controller = self::str_to_controller(substr(get_class($this),0,-11));
 
@@ -32,7 +32,7 @@ class uf_controller
       }      
     } 
     else {
-      uf_include_view($this,uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.php');      
+      uf_include_view($this,uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.php');
       if(file_exists(uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.js'))
       {
         $this->response()->javascript(file_get_contents(uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.js'));
@@ -357,7 +357,7 @@ class uf_controller
     // no view?
     if($view !== FALSE)
     {
-      $this->_load_view($view);
+      $this->load_view($view);
     }
 
     // stop buffering?
