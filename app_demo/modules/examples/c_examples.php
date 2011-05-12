@@ -89,6 +89,7 @@ class examples_controller extends base_controller
 
   public function javascript()
   {
+    $this->response()->javascript('alert("Hello");');
   }
   
 }

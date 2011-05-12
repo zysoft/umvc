@@ -180,6 +180,5 @@ translate_parameters('/profession/foo/geography/bar');
   - denna tar även bort tomma parametrar, till hjälp för view-kodaren
 translate('uuu');
 */
-?>
 
-
+/* EOF */

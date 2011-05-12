@@ -5,6 +5,7 @@ class uf_response
   private $_attributes;
   private $_headers;
   private $_data;
+  private $_javascript;
 
   public function __construct()
   {
