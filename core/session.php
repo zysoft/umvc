@@ -24,6 +24,7 @@ class uf_session
     return $value;
   }
 
+
   // Value for both saving, getting and checking existence of values in the session.
   // Try to only use strings.
   // How to use:

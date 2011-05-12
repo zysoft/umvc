@@ -5,7 +5,7 @@ class uf_http_request
   private $_segments;
   private $_parameters;
   private $_uri;
-  private $_is_post;
+  private $_lang_tag;
   
   public function uri($uri = NULL)
   {
@@ -17,9 +17,27 @@ class uf_http_request
     {
       return $this->_uri;
     }
-    
   }
   
+  public function get_parameter_names()
+  {
+    reset($this->_parameters);
+    $res = array();
+    while (list($key,$val) = each($this->_parameters))
+    {
+      array_push($res,$key);
+    }
+    return $res;
+  }
+
+  public function set_parameter_name($old_name, $new_name)
+  {
+    if ($old_name == $new_name) return;
+    
+    $this->_parameters[$new_name] = $this->_parameters[$old_name];
+    unset($this->_parameters[$old_name]);
+  }
+
   public function set_parameters($parameters = NULL)
   {
     if($parameters !== NULL)
@@ -44,8 +62,18 @@ class uf_http_request
   
   public function __construct()
   {
+    // TODO: parse out the language from the beginning of the string
+    
     $uri = $_SERVER['REQUEST_URI'];
-
+    $pos = strpos($uri,'?');
+    if($pos !== FALSE)
+    {
+      $uri = substr($uri,0,$pos);
+    }
+    
+    $uri_segments = explode('/',substr($uri,1));
+    //array_shift($uri_segments);
+    
     $pre_routing_file = UF_BASE.'/cache/baker'.uf_application::config('app_dir').'/'.uf_application::host().'/routing/baked.pre.routing.php';
     if(uf_application::config('always_bake') || !file_exists($pre_routing_file))
     {
@@ -53,7 +81,7 @@ class uf_http_request
     }
     if(file_exists($pre_routing_file))
     {
-      $uri = include_once($pre_routing_file);
+      include_once($pre_routing_file);
     }
 
     // NORMAL ROUTING
@@ -64,7 +92,7 @@ class uf_http_request
     }
     if(file_exists($routing_file))
     {
-      $uri = include_once($routing_file);
+      include_once($routing_file);
     }
 
     // POST ROUTING
@@ -75,29 +103,34 @@ class uf_http_request
     }
     if(file_exists($post_routing_file))
     {
-      $uri = include_once($post_routing_file);      
+      include_once($post_routing_file);
     }
 
+
+    //die(print_r(get_defined_vars(),1));
+    $uri = implode('/',$uri_segments);
     $this->uri($uri);
-    $pos = strpos($uri,'?');
-    if($pos !== FALSE)
-    {
-      $uri = substr($uri,0,$pos);
-    }
     
-    $this->_segments = explode('/',$uri);
-    array_shift($this->_segments);
+    $this->_segments = $uri_segments;//explode('/',$uri);
+    //array_shift($this->_segments);
 
     $p = array();
     for($i = 2; $i < count($this->_segments); $i += 2)
     {
       $p[$this->_segments[$i]] = @$this->_segments[$i + 1];
     }
-    $this->_is_post = count($_POST);
+
+    
     $input = array_merge($p,$_GET,$_POST);
+  
     $this->set_parameters($input);
   }
 
+  public function is_post()
+  {
+    return count($_POST) > 0;
+  }
+  
   public function controller()
   {
     return isset($this->_segments[0]) && !empty($this->_segments[0]) ? $this->_segments[0] : $this->parameter('_controller','index');
@@ -106,10 +139,6 @@ class uf_http_request
   public function action()
   {
     return isset($this->_segments[1]) ? $this->_segments[1] : $this->parameter('_action','index');
-  }
-  
-  public function is_post() {
-    return $this->_is_post;
   }
 }
 
