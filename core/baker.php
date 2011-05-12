@@ -152,7 +152,6 @@ class uf_baker
         }
       }
     }
-    $output .= '<? return $uri; ?>';
     /*$output = str_replace('?><?','',$output);*/
     return $output;
   }

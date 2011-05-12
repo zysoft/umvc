@@ -74,10 +74,10 @@ class uf_controller
   // i.e. en-GB, en-US, en-AU etc.
   //
 
-  // backend API
-
+  // to support parameter translations, define a method like this (if the action is "debug"), see umvc examples for
+  // a test case
   // parameters coming from the query string for the index action
-  public function debug_translate_param($in_parameter_name)
+  /*public function debug_translate_param($in_parameter_name)
   {
     echo 'translate-param';
     switch ($in_parameter_name)
@@ -87,6 +87,7 @@ class uf_controller
       case 'parameter2': return 'param2';
     }
   }
+  */
 
   // view API
 
@@ -96,16 +97,21 @@ class uf_controller
   {
     // include the baked file above based on module name
     //
+
+    // save the controller name for subsequent calls for action and parameter translations
+    global $uf_controller_lang_module_name_cache;
+    $uf_controller_lang_module_name_cache = $controller;
+    
     $lang = $language;
     if ($language == '') $lang = uf_application::get_language();
 
-    $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/ma_'.$controller.'.php';
+    $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/am_'.$controller.'.php';
     if(!file_exists($file))
     {
-      $file = uf_application::app_dir().'/modules/'.$controller.'/ma_'.$controller.'.php';
+      $file = uf_application::app_dir().'/modules/'.$controller.'/am_'.$controller.'.php';
     }
     $ret = include($file);
-    if ($ret == '')
+    if (!is_string($ret))
       return $controller;
     else
       return $ret;
@@ -115,10 +121,21 @@ class uf_controller
   // input:    english/code name of action
   // returns:  current language version
 
-  public function view_lang_get_action_name($action, $controller, $language = '')
+  public function view_lang_get_action_name($action, $controller = '', $language = '')
   {
     $lang = $language;
     if ($language == '') $lang = uf_application::get_language();
+
+    // deal with the cached names
+      if ($controller == '')
+      {
+        global $uf_controller_lang_module_name_cache;
+        $controller = $uf_controller_lang_module_name_cache;
+        if ($controller == '') return FALSE;
+      }
+      global $uf_controller_lang_action_name_cache;
+      $uf_controller_lang_action_name_cache = $action;
+    //------------------------
 
     $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/aa_'.$controller.'.php';
     if(!file_exists($file))
@@ -126,7 +143,7 @@ class uf_controller
       $file = uf_application::app_dir().'/modules/'.$controller.'/aa_'.$controller.'.php';
     }
     $ret = include($file);
-    if ($ret == '')
+    if (!is_string($ret))
       return $action;
     else
       return $ret;
@@ -135,10 +152,25 @@ class uf_controller
   // input:    english/code name of action
   // returns:  current language version
 
-  public function view_lang_get_parameter_name($param, $action, $controller, $language = '')
+  public function view_lang_get_parameter_name($param, $action = '', $controller = '', $language = '')
   {
     $lang = $language;
     if ($language == '') $lang = uf_application::get_language();
+
+    // deal with the cached names
+      if ($controller == '')
+      {
+        global $uf_controller_lang_module_name_cache;
+        $controller = $uf_controller_lang_module_name_cache;
+        if ($controller == '') return FALSE;
+      }
+      if ($action == '')
+      {
+        global $uf_controller_lang_action_name_cache;
+        $action = $uf_controller_lang_action_name_cache;
+        if ($action == '') return FALSE;
+      }
+    //------------------------
 
     $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/ap_'.$controller.'.php';
     if(!file_exists($file))
@@ -146,7 +178,7 @@ class uf_controller
       $file = uf_application::app_dir().'/modules/'.$controller.'/ap_'.$controller.'.php';
     }
     $ret = include($file);
-    if ($ret == '')
+    if (!is_string($ret))
       return $param;
     else
       return $ret;
@@ -214,6 +246,7 @@ class uf_controller
     return array_key_exists($name,$this->_call_stack[count($this->_call_stack) - 1]['options']) ? $this->_call_stack[count($this->_call_stack) - 1]['options'] : $default_value;
   }
 
+
   static public function execute_base($request,$response,$options = NULL)
   {
     $controller_name = self::str_to_controller($request->controller());
@@ -225,14 +258,11 @@ class uf_controller
       // Normal module action
       $controller = new $controller_class;
       $controller->_push_call_stack_frame($controller,$request,$response,$options !== NULL ? $options : array());
-
-      
       if($controller->execute_action($controller,$action_name,$request,$response,array('enable_buffering' => TRUE)) === FALSE)
       {
         // 404 missing action
         $controller->_error(404);
       }
-      $controller->_pop_call_stack_frame();
     }
     else
     {
@@ -240,7 +270,6 @@ class uf_controller
       $controller = new base_controller;
       $controller->_push_call_stack_frame($controller,$request,$response,$options !== NULL ? $options : array());
       $controller->_error(404);
-      $controller->_pop_call_stack_frame();
     }
     $controller->content = $response->data();
 
@@ -253,10 +282,11 @@ class uf_controller
     uf_include_view($controller, uf_application::app_sites_host_dir().'/base/view/v_'.$response->attribute('template').'.php');
     if(class_exists($controller_class))
     {
+      $controller->_pop_call_stack_frame();
       $controller = NULL;
     }
   }
-
+  
   public function execute_action($caller,$action,$request,&$response,$options = NULL)
   {    
     // load project/base language files
@@ -281,9 +311,11 @@ class uf_controller
     if (method_exists($this,$action.'_translate_param'))
     {
       $param_names = $request->get_parameter_names();
+      if (count($param_names))
       foreach ($param_names as $name)
       {
         $n_name = call_user_func(array($this,$action.'_translate_param'),$name);
+        if (is_string($n_name))
         $request->set_parameter_name($name, $n_name);
       }
     }

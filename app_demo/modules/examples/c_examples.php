@@ -35,6 +35,26 @@ class examples_controller extends base_controller
       'Code PHP');
   }
 
+
+  // parameters coming from the query string for the index action
+  public function language_translate_param($in_parameter_name)
+  {
+    switch ($in_parameter_name)
+    {
+      case 'parameter1': return 'param1';
+      case 'myparameter1': return 'param1';
+      case 'parameter2': return 'param2';
+      case 'antal-talare': return 'num-speakers';
+    }
+  }
+
+  public function language()
+  {
+    // here we use the internal (english) name
+    $this->num_speakers = $this->request()->parameter('num-speakers','');
+    $this->foo = $this->request()->parameter('foo','');
+  }
+
   // this action uses view: "debug"
   public function debug()
   {

@@ -7,6 +7,7 @@
 <li><a href="/routing-example-using-special-url">Routing</a></li>
 <li><a href="/examples/form-validation">Form validation</a></li>
 <li><a href="/examples/todo-list">Todo list</a></li>
+<li><a href="/examples/language">Language support / performing translations for module names, actions, parameters and routing and in views</a></li>
 <li><a href="/examples/debug">Debug</a></li>
 <li><a href="/examples/no-view">No view</a></li>
 <li><a href="/examples/other-view">Other view</a></li>
