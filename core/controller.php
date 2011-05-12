@@ -6,7 +6,7 @@ class uf_controller
   private $_buffer_ref_count;
   private $_call_stack;
 
-  public function load_view($view)
+  public function load_view($view, $data = array())
   {
     $controller = self::str_to_controller(substr(get_class($this),0,-11));
 
@@ -20,14 +20,14 @@ class uf_controller
     // try to load view from controller, else fallback to base
     if(file_exists($dir.'/view/v_'.$view.'.php'))
     {
-      uf_include_view($this,$dir.'/view/v_'.$view.'.php');
+      uf_include_view($this,$dir.'/view/v_'.$view.'.php', $data);
       if(file_exists($dir.'/view/v_'.$view.'.js'))
       {
         $this->response()->javascript(file_get_contents($dir.'/view/v_'.$view.'.js'));
       }      
     } 
     else {
-      uf_include_view($this,uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.php');
+      uf_include_view($this,uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.php', $data);
       if(file_exists(uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.js'))
       {
         $this->response()->javascript(file_get_contents(uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.js'));
@@ -208,11 +208,13 @@ class uf_controller
     // execute action
     if($this->request()->is_post())
     {
-      $this->on_post();
+      $v = new uf_validator($request, $response);
+      $this->on_post($v);
       if(method_exists($this, 'on_post_'.$action))
       {
-        call_user_func(array($this, 'on_post_'.$action));
+        call_user_func(array($this, 'on_post_'.$action), $v);
       }
+      $v = NULL;
     }
     $this->before_action();
     $view = call_user_func(array($this,$action));

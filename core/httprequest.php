@@ -36,6 +36,11 @@ class uf_http_request
   {
     return array_key_exists($name,$this->_parameters) ? $this->_parameters[$name] : $default_value;
   }
+
+  public function parameters()
+  {
+    return $this->_parameters;
+  }
   
   public function __construct()
   {

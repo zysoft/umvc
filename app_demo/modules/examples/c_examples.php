@@ -15,10 +15,13 @@ class examples_controller extends base_controller
     $this->foo = 'bar';
   }
 
-  public function on_post_form_validation()
+  public function on_post_form_validation($validator)
   {
-    $this->response()->javascript('umvc.add_validator("form", function(){alert("form validator")});');
-    $this->response()->javascript('$(function(){umvc.validate("form");});');
+    $validator->add_rule('email', 'type', 'rule');
+    $validator->add_rule('password', 'type', 'rule');
+    if(!$validator->validate())
+    {
+    }
   }
   
   public function form_validation()
@@ -58,6 +61,10 @@ class examples_controller extends base_controller
   public function other_view()
   {
     return 'debug';
+  }
+
+  public function sub_views()
+  {
   }
 
   public function javascript()
