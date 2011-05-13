@@ -15,17 +15,28 @@ class examples_controller extends base_controller
     $this->foo = 'bar';
   }
 
-  public function on_post_form_validation($validator)
-  {
-    $validator->add_rule('email', 'type', 'rule');
-    $validator->add_rule('password', 'type', 'rule');
-    if(!$validator->validate())
-    {
-    }
-  }
-  
   public function form_validation()
   {
+    $this->validator()->add_rule('email', function($value, &$message) {
+      $result = filter_var($value, FILTER_VALIDATE_EMAIL);
+      if($result === FALSE)
+      {
+        $message = 'illegal email address';
+        return FALSE;
+      }
+      return TRUE;
+    });
+
+    $this->validator()->add_rule('password', function($value, &$message) {
+      if($value != 'pw')
+      {
+        $message = 'illegal password';
+        return FALSE;
+      }
+      return TRUE;
+    });
+
+    $this->validator()->validate();
   }
 
   // this action uses view: "todo_list"

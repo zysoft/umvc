@@ -3,6 +3,7 @@
 class uf_controller
 {
   // PRIVATE DATA
+  private $_validator;
   private $_buffer_ref_count;
   private $_call_stack;
 
@@ -287,6 +288,11 @@ class uf_controller
     }
   }
   
+  public function validator()
+  {
+    return $this->_validator;
+  }
+  
   public function execute_action($caller,$action,$request,&$response,$options = NULL)
   {    
     // load project/base language files
@@ -343,20 +349,16 @@ class uf_controller
 
     $action = empty($action) ? 'index' : self::str_to_controller($action);
 
-    $this->before_action();
+    $this->_validator = new uf_validator($request, $response);
 
-    // on_post form validation
-    if($this->request()->is_post() && method_exists($this, 'on_post_'.$action))
-    {
-      $v = new uf_validator($request, $response);
-      call_user_func(array($this, 'on_post_'.$action), $v);
-      $v = NULL;
-    }
+    $this->before_action();
 
     // execute action
     $view = call_user_func(array($this,$action));
 
     $this->after_action();
+
+    $this->_validator = NULL;
 
     // default view?
     if($view === NULL)

@@ -1,5 +1,6 @@
+<p>Hint: the password is 'pw'</p>
 <form action="" method="post">
-  <input type="text" name="email" value="<?=htmlentities($uf_request->parameter('email'))?>" />
-  <input type="password" name="password" value="" />
-  <input type="submit" name="submit" />
+  <p><strong>email</strong><br /><input type="text" name="email" value="<?=htmlentities($uf_request->parameter('email'))?>" /></p>
+  <p><strong>password</strong><br /><input type="password" name="password" value="" /></p>
+  <p><input type="submit" name="submit" value="Login" /></p>
 </form>
