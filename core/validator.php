@@ -30,7 +30,7 @@ class uf_validator
       if(array_key_exists($key, $this->_rules)) {
         if($val == '')
         {
-          $this->_response->javascript('$(function(){alert("'.$key.'");});');
+          $this->_response->javascript('$(function(){umvc.trigger("umvc.validator.error",{name:"'.$key.'"});});');
           $result = FALSE;
         }        
       }

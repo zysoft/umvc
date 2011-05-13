@@ -79,3 +79,7 @@ a img {
 #menu li.selected a {
   color: #000;
 }
+
+input.error {
+  border-color: #f00;
+}
