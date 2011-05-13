@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 
 // http://www.php.net/manual/en/security.magicquotes.disabling.php
+ini_set('magic_quotes_gpc', '0');
 if (get_magic_quotes_gpc()) {
     $process = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
     while (list($key, $val) = each($process)) {
