@@ -65,6 +65,42 @@ class uf_http_request
     // TODO: parse out the language from the beginning of the string
     
     $uri = $_SERVER['REQUEST_URI'];
+
+    // URI language detection, NO module name should be shorter than 5 chars
+    // or at least have
+    $uri_lang = NULL;
+
+    
+    // /uk/
+    if (strlen($uri) > 4 && $uri[3] === '/') $uri_lang = 2;
+    else
+    // /en-us/
+    if (strlen($uri) > 7 && $uri[6] === '/') $uri_lang = 5;
+
+    if (NULL !== $uri_lang) // we got ourselves a language
+    {
+      // validate the language against the language file
+      $test_string = substr($uri,1,$uri_lang);
+      
+      $languages_file = UF_BASE.'/config/languages.php';
+      $languages = 0;
+      if(file_exists($languages_file)) 
+      {
+	$languages = include_once($languages_file);
+      }
+      if (is_array($languages))
+      {
+        foreach ($languages as $lang)
+	{
+	  if ($test_string === $lang)
+	  {
+	    uf_application::set_language($lang);
+            $uri = substr($uri,$uri_lang+1);
+	  }
+	}
+      }
+    }
+
     $pos = strpos($uri,'?');
     if($pos !== FALSE)
     {

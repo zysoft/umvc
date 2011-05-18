@@ -416,6 +416,7 @@ class uf_controller
           $file = uf_application::app_dir().'/modules/'.$controller.'/c_'.$controller.'.php';
         }
       }
+      if (file_exists($file))
       include_once($file);
     }
   }  
