@@ -5,12 +5,12 @@ uf_application::init();
 
 header('Content-Type: text/javascript');
 
-$js_file = UF_BASE.'/web/data/baker'.uf_application::config('app_dir').'/'.uf_application::host().'/js/baked.js';
-if(uf_application::config('always_bake') || !file_exists($js_file))
+$js_file = UF_BASE.'/web/data/baker'.uf_application::app_name().'/'.uf_application::host().'/js/baked.js';
+if(uf_application::get_config('always_bake') || !file_exists($js_file))
 {
   uf_baker::bake('js');
 }
 echo @file_get_contents($js_file)."\n";
 
-@include_once(UF_BASE.'/cache/baker'.uf_application::config('app_dir').'/'.uf_application::host().'/js/baked.js.php');
+@include_once(UF_BASE.'/cache/baker'.uf_application::app_name().'/'.uf_application::host().'/js/baked.js.php');
 ?>

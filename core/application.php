@@ -25,12 +25,12 @@ class uf_application
       else
         self::$_app_sites_host_dir = $dirb.$n;
 
-      if(self::config('always_bake'))
+      if(self::get_config('always_bake'))
       {
         uf_baker::bake_all();
       }
       
-      if(uf_application::config('load_propel'))
+      if(uf_application::get_config('load_propel'))
       {
         // Initialize Propel with the runtime configuration
         require_once UF_BASE.'/propel/propel-1.5.6/runtime/lib/logger/BasicLogger.php';
@@ -40,7 +40,7 @@ class uf_application
         Propel::setLogger($logger);
 
         $propel_initial_conf = include(uf_application::propel_app_dir().'/data/build/conf/umvc-conf.php');
-        $propel_initial_conf['datasources']['umvc']['connection'] = self::config('propel_db');
+        $propel_initial_conf['datasources']['umvc']['connection'] = self::get_config('propel_db');
         Propel::setConfiguration($propel_initial_conf);
         Propel::initialize();
         
@@ -67,7 +67,7 @@ class uf_application
 
   public static function clear_log()
   {
-    if(self::config('log'))
+    if(self::get_config('log'))
     {
       file_put_contents(UF_BASE.'/log/log.txt', '');
     }
@@ -75,28 +75,40 @@ class uf_application
 
   public static function log($message)
   {
-    if(self::config('log'))
+    if(self::get_config('log'))
     {
       date_default_timezone_set('UTC'); //temp hack
       $fp = fopen(UF_BASE.'/log/log.txt', 'a');
       fwrite($fp, date('Y-m-d h:i:s').' '.$message."\n");
-      fclose($fp);      
+      fclose($fp);
     }
   }
 
   public static function get_language()
   {
-    return uf_session::get('language',self::config('language','en_US'));
+    return self::get_config('language','en-us');
+  }
+
+  public static function set_language($new_language)
+  {
+    return uf_session::set($new_language);
   }
   
   public static function app_dir()
   {
-    return UF_BASE.self::config('app_dir');
+    return UF_BASE.self::get_config('app_dir');
   }
+
+  public static function app_name()
+  {
+    return self::get_config('app_dir');
+  }
+
   public static function propel_app_dir()
   {
-    return UF_BASE.self::config('propel_app_dir');
+    return UF_BASE.self::get_config('propel_app_dir');
   }
+
   public static function app_sites_host_dir()
   {
     return self::$_app_sites_host_dir;
@@ -107,9 +119,14 @@ class uf_application
     return substr(strrchr(self::$_app_sites_host_dir, '/hosts/'),1);
   }
   
-  public static function config($name,$default_value = '')
+  public static function get_config($name,$default_value = '')
   {
     return isset(self::$_config[$name]) ? self::$_config[$name] : $default_value;
+  }
+
+  public static function set_config($name,$value = '')
+  {
+    self::$_config[$name] = $value;
   }
   
   public static function controller_exists($controller)

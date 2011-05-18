@@ -1,0 +1,11 @@
+
+An url can look like:
+
+http://www.site.com/en/main/index/parameter1/value1/parameter2/value2
+
+or
+
+http://www.site.com/main/index/parameter1/value1/parameter2/value2
+
+In the case of the first, the 2-character designation for language from
+ISO 639-1 is used. 

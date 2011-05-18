@@ -17,7 +17,7 @@ class examples_controller extends base_controller
 
   public function form_validation()
   {
-    $this->validator()->add_rule('email', function($value, &$message) {
+    function email($value, &$message) {
       $result = filter_var($value, FILTER_VALIDATE_EMAIL);
       if($result === FALSE)
       {
@@ -25,16 +25,18 @@ class examples_controller extends base_controller
         return FALSE;
       }
       return TRUE;
-    });
+    }
+    $this->validator()->add_rule('email', 'email');
 
-    $this->validator()->add_rule('password', function($value, &$message) {
+    function password($value, &$message) {
       if($value != 'pw')
       {
         $message = 'illegal password';
         return FALSE;
       }
       return TRUE;
-    });
+    }
+    $this->validator()->add_rule('password', 'password');
 
     $this->validator()->validate();
   }

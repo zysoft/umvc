@@ -109,7 +109,7 @@ class uf_baker
 
       $dir = 
         $mp !== FALSE
-          ? uf_application::config('app_dir').substr($source_file, $mp)
+          ? uf_application::get_config('app_dir').substr($source_file, $mp)
           : $dir = substr($source_file, strlen(UF_BASE));
 
       $file = substr($dir, strrpos($dir,'/') + 1);
@@ -164,8 +164,8 @@ class uf_baker
       foreach($files as $file)
       {
         $data = file_get_contents($file);
-        $data = str_replace('[uf_module]', '/data/baker'.uf_application::config('app_dir').'/modules', $data);
-        $data = str_replace('[uf_lib]', '/data/baker'.uf_application::config('app_dir').'/lib', $data);
+        $data = str_replace('[uf_module]', '/data/baker'.uf_application::app_name().'/modules', $data);
+        $data = str_replace('[uf_lib]', '/data/baker'.uf_application::app_name().'/lib', $data);
         $output .= $data."\n";
       }
     }
@@ -216,7 +216,7 @@ class uf_baker
       $bake_base = UF_BASE.'/'.($place == 'dynamic' ? 'cache' : 'web/data');
 
       $host = uf_application::host();
-      $dir = $bake_base.'/baker'.uf_application::config('app_dir').'/'.$host.'/'.$type;
+      $dir = $bake_base.'/baker'.uf_application::get_config('app_dir').'/'.$host.'/'.$type;
 
       if(/*test !($type == 'routing' && $place == 'static') &&*/ !is_dir($dir))
       {
