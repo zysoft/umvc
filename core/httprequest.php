@@ -6,6 +6,11 @@ class uf_http_request
   private $_parameters;
   private $_uri;
   private $_lang_tag;
+  // state after routing:
+  private $_controller;
+  private $_action;
+  private $_uri_parameters;
+  // --------------------
   
   public function uri($uri = NULL)
   {
@@ -35,7 +40,10 @@ class uf_http_request
     if ($old_name == $new_name) return;
     
     $this->_parameters[$new_name] = $this->_parameters[$old_name];
+    $this->_uri_parameters[$new_name] = $this->_uri_parameters[$old_name];
+
     unset($this->_parameters[$old_name]);
+    unset($this->_uri_parameters[$old_name]);
   }
 
   public function set_parameters($parameters = NULL)
@@ -68,19 +76,18 @@ class uf_http_request
 
     // URI language detection, NO module name should be shorter than 5 chars
     // or at least have
-    $uri_lang = NULL;
-
+    $uri_lang_len = NULL;
     
     // /uk/
-    if (strlen($uri) > 4 && $uri[3] === '/') $uri_lang = 2;
+    if (strlen($uri) > 4 && $uri[3] === '/') $uri_lang_len = 2;
     else
     // /en-us/
-    if (strlen($uri) > 7 && $uri[6] === '/') $uri_lang = 5;
+    if (strlen($uri) >= 7 && $uri[6] === '/') $uri_lang_len = 5;
 
-    if (NULL !== $uri_lang) // we got ourselves a language
+    if (NULL !== $uri_lang_len) // we got ourselves a language
     {
       // validate the language against the language file
-      $test_string = substr($uri,1,$uri_lang);
+      $test_string = substr($uri,1,$uri_lang_len);
       
       $languages_file = UF_BASE.'/config/languages.php';
       $languages = 0;
@@ -95,7 +102,7 @@ class uf_http_request
 	  if ($test_string === $lang)
 	  {
 	    uf_application::set_language($lang);
-            $uri = substr($uri,$uri_lang+1);
+            $uri = substr($uri,$uri_lang_len+1);
 	  }
 	}
       }
@@ -145,23 +152,51 @@ class uf_http_request
       include_once($post_routing_file);
     }
 
-    //die(print_r(get_defined_vars(),1));
-    $uri = implode('/',$uri_segments);
-    $this->uri($uri);
+    // we can now assume that:
+    //   - the routing has translated the uri to internal controller names
+    // and the uri_segments contain:
+    // - module
+    // - action
+    // - parameters (if any)
+    $this->_controller = @$uri_segments[0];
+    $this->_action     = @$uri_segments[1]; // might be empty
     
-    $this->_segments = $uri_segments;//explode('/',$uri);
-    //array_shift($this->_segments);
+    // bake the uri string
+    $this->uri(implode('/',$uri_segments));
+    
+    $this->_segments = $uri_segments;
 
-    $p = array();
+    // generate parameter array from uri
+    $parameters = array();
     for($i = 2; $i < count($this->_segments); $i += 2)
     {
-      $p[$this->_segments[$i]] = @$this->_segments[$i + 1];
+      $parameters[$this->_segments[$i]] = @$this->_segments[$i + 1];
     }
+    $this->_uri_parameters = $parameters;
 
-    
-    $input = array_merge($p,$_GET,$_POST);
+    $input = array_merge($parameters, $_GET, $_POST);
   
     $this->set_parameters($input);
+  }
+
+  public function get_controller()
+  {
+    return $this->_controller;
+  }
+
+  public function get_action()
+  {
+    return $this->_action;
+  }
+
+  public function get_uri_segments()
+  {
+    return $this->_segments;
+  }
+
+  public function get_uri_parameters()
+  {
+    return $this->_uri_parameters;
   }
 
   public function is_post()

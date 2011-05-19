@@ -15,6 +15,10 @@ generate_url($values = NULL, $lang = 'en-us');
 
 generate_url();
 
+OM den inte får nåt tillbaka på aktuellt språk, kroka på 
+en override-prefix - /sv-se ; annars förlita sig på att routingen
+sätter språket.
+
 
 
 Exempel:

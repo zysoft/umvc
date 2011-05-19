@@ -22,7 +22,6 @@ class uf_controller
   
   private function _load_base($view)
   {
-
     // try to load view from controller, else fallback to base
     if(file_exists($dir.'/view/v_'.$view.'.php'))
     {
@@ -94,10 +93,14 @@ class uf_controller
 
   // input:    english name
   // returns:  translated name into current language (overridable)
-  public function view_lang_get_module_name($controller, $language = '')
+  public function view_lang_get_module_name($controller = '', $language = '')
   {
     // include the baked file above based on module name
     //
+    if (empty($controller))
+    {
+      $controller = $this->request()->get_controller();
+    }
 
     // save the controller name for subsequent calls for action and parameter translations
     global $uf_controller_lang_module_name_cache;
@@ -112,6 +115,8 @@ class uf_controller
     {
       $file = uf_application::app_dir().'/modules/'.$controller.'/am_'.$controller.'.php';
     }
+    $ret = NULL;
+    if(file_exists($file))
     $ret = include($file);
     if (!is_string($ret))
       return $controller;
@@ -144,7 +149,10 @@ class uf_controller
     {
       $file = uf_application::app_dir().'/modules/'.$controller.'/aa_'.$controller.'.php';
     }
+    $ret = NULL;
+    if (file_exists($file))
     $ret = include($file);
+    
     if (!is_string($ret))
       return $action;
     else
@@ -186,7 +194,6 @@ class uf_controller
       return $ret;
   }
   
-
   // PUBLIC METHODS
 
   static public function str_to_controller($str)
@@ -422,15 +429,143 @@ class uf_controller
   }  
 }
 
-function uf_include_view($uf_controller,$uf_view)
+
+class uf_view
+{
+  var $controller = NULL;
+  public function set_controller($new_controller)
+  {
+    $this->controller = $new_controller;
+  }
+
+  public function lang_build_uri_module($module, $values = NULL, $override_language = '')
+  {
+    // TODO
+  }
+
+  // grabs all existing parameters and merges with new values from $values
+  public function cap($controller_name, $action_name = NULL, $parameters = NULL, $override_language = '')
+  {
+    $language = uf_application::get_language();
+    $internal_language_override = 0;
+
+    if (!empty($override_language))
+    {
+      if ($override_language != $language)
+      {
+        $language = $override_language;
+        $internal_language_override = 1;
+      }
+    }
+
+    $new_uri = '';
+
+
+    $controller = NULL;
+    if (empty($controller_name))
+    {
+      $controller = '';
+    }
+    else
+    {
+      $controller = $this->controller->view_lang_get_module_name($controller_name, $language);
+    }
+    $action = '';
+    if (!empty($action_name))
+    {
+      $action = $this->controller->view_lang_get_action_name($action_name, $controller_name, $language);
+    }
+
+
+    if ($internal_language_override || uf_application::is_language_overridden())
+    {
+      // add language prefix
+      $new_uri = '/'.$language;
+    }
+
+    $new_uri .= '/'.$controller;
+    if (!empty($action))
+    {
+      $new_uri .= '/'.$action;
+    }
+
+    if (is_array($parameters))
+    while (list($key, $val) = each($parameters))
+    {
+      $new_uri .= '/'.$this->controller->view_lang_get_parameter_name($key, $request->get_action(), $request->get_controller(), $language)
+          .'/'.$val;
+    }
+    
+    return $new_uri;
+  }
+  
+  public function lpm_uri($override_parameters = NULL, $override_language = '') { return $this->local_parameter_merge_uri($override_parameters,$override_language); }
+  private function local_parameter_merge_uri($override_parameters = NULL, $override_language = '')
+  {
+    $language = uf_application::get_language();
+    $internal_language_override = 0;
+
+    if (!empty($override_language))
+    {
+      if ($override_language != $language)
+      {
+        $language = $override_language;
+        $internal_language_override = 1;
+      }
+    }
+
+    $new_uri = '';
+
+    $request = $this->controller->request();
+
+    $controller = $this->controller->view_lang_get_module_name($request->get_controller(),$language);
+    $action = $this->controller->view_lang_get_action_name($request->get_action(), $request->get_controller(), $language);
+
+    $parameters = $request->get_uri_parameters();
+
+    if (!empty($override_parameters))
+    while (list($key, $val) = each($override_parameters))
+    {
+      $parameters[$key] = $val;
+    }
+    
+    if ($internal_language_override || uf_application::is_language_overridden())
+    {
+      // add language prefix
+      $new_uri = '/'.$language;
+    }
+
+    $new_uri .= '/'.$controller;
+    if (!empty($action))
+    {
+      $new_uri .= '/'.$action;
+    }
+
+    if (is_array($parameters))
+    while (list($key, $val) = each($parameters))
+    {
+      $new_uri .= '/'.$this->controller->view_lang_get_parameter_name($key, $request->get_action(), $request->get_controller(), $language)
+          .'/'.$val;
+    }
+    return $new_uri;
+
+  }
+}
+
+function uf_include_view($uf_controller,$view)
 {
   // This function is used to create a clean symbol table
   extract(get_object_vars($uf_controller));
   extract(array('uf_dir_web_lib' => '/data/baker'.uf_application::app_name().'/lib'));
 
+  // init view class
+  $uf_view = new uf_view();
+  $uf_view->set_controller($uf_controller);
+
   $uf_request  = $uf_controller->request();
   $uf_response = $uf_controller->response();
-  require($uf_view);    
+  
+  require($view);
 }
 
 function uf_include_language($uf_controller,$language_file)

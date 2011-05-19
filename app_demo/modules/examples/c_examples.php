@@ -55,6 +55,7 @@ class examples_controller extends base_controller
   // parameters coming from the query string for the index action
   public function language_translate_param($in_parameter_name)
   {
+    //var_dump(debug_backtrace());
     switch ($in_parameter_name)
     {
       case 'parameter1': return 'param1';

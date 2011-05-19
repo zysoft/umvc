@@ -15,6 +15,7 @@ switch ($lang)
         {
           case 'num-speakers': return 'antal-talare';
           case 'word-count': return 'antal-ord';
+          case 'muu': return 'kossa';
         }
       }
       case 'todo_list':

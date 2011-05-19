@@ -4,7 +4,8 @@ class uf_application
 {  
   private static $_is_initialized;
   private static $_app_sites_host_dir;
-  private static $_config;  
+  private static $_config;
+  private static $_language_overridden;
   
   public static function init()
   {
@@ -91,7 +92,26 @@ class uf_application
 
   public static function set_language($new_language)
   {
+    // either a language prefix or routing can 
+    if (empty(self::$_language_overridden))
+    {
+      if (self::get_config('language','') != $new_language)
+      {
+        self::set_language_overridden();
+      }
+    }
     return self::set_config('language',$new_language);
+  }
+
+  public static function set_language_overridden()
+  {
+    // denote that the language has been overridden by a URI prefix
+    self::$_language_overridden = 1;
+  }
+
+  public static function is_language_overridden()
+  {
+    return self::$_language_overridden;
   }
   
   public static function app_dir()
