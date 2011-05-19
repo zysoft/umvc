@@ -26,6 +26,12 @@ class uf_application
       else
         self::$_app_sites_host_dir = $dirb.$n;
 
+      // look for site-specific override configuration
+      if (is_file(self::$_app_sites_host_dir.'/config.php'))
+      {
+        include_once(self::$_app_sites_host_dir.'/config.php');
+      }
+
       if(self::get_config('always_bake'))
       {
         uf_baker::bake_all();
