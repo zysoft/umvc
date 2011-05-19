@@ -1,4 +1,25 @@
 <?
+/**
+ * Project: umvc: A Mode View Controller framework
+ *
+ * @author David Brännvall, Jonatan Wallmander, HR North Sweden AB http://hrnorth.se, Copyright (C) 2011.
+ * @see The GNU Public License (GPL)
+ */
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 
 class uf_controller
 {
@@ -60,8 +81,8 @@ class uf_controller
 
   // BASE METHODS
   
-  public function before_action() {}
-  public function after_action() {}
+  public function before_action() { return TRUE; }
+  public function after_action() { return TRUE; }
 
 
 
@@ -359,26 +380,38 @@ class uf_controller
 
     $this->_validator = new uf_validator($request, $response);
 
-    $this->before_action();
-
-    // execute action
-    $view = call_user_func(array($this,$action));
-
-    $this->after_action();
-
-    $this->_validator = NULL;
-
-    // default view?
-    if($view === NULL)
+    $before_action_ret = $this->before_action();
+    if ($before_action_ret === TRUE)
     {
-      $view = $action;
-    }
+      // execute action
+      $view = call_user_func(array($this,$action));
 
-    // no view?
-    if($view !== FALSE)
+      $this->after_action();
+
+      $this->_validator = NULL;
+
+      if (is_integer($view))
+      {
+        $this->_error($view);
+      } else
+      {
+        // default view?
+        if($view === NULL)
+        {
+          $view = $action;
+        }
+
+        // no view?
+        if($view !== FALSE)
+        {
+          $this->load_view($view);
+        }
+      }
+    } else
+    if ($before_action_ret === FALSE)
     {
-      $this->load_view($view);
-    }
+    } else
+    $this->_error($before_action_ret);
 
     // stop buffering?
     if($this->option('enable_buffering'))
@@ -400,7 +433,7 @@ class uf_controller
       uf_include_view($this,uf_application::app_dir().'/errors/v_'.$code.'.php');
       $this->response()->data(ob_get_contents());
     ob_end_clean();
-    $this->response()->header404();
+    if ($code == 404) $this->response()->header404();
     return FALSE;
   }
   
