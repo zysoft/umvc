@@ -249,6 +249,11 @@ class uf_http_request
     return $this->_is_post;
   }
   
+  public function is_ajax()
+  {
+    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+  }
+
   public function controller()
   {
     return isset($this->_segments[0]) && !empty($this->_segments[0]) ? $this->_segments[0] : $this->parameter('_controller','index');
@@ -258,6 +263,7 @@ class uf_http_request
   {
     return isset($this->_segments[1]) ? $this->_segments[1] : $this->parameter('_action','index');
   }
+  
 }
 
 ?>
