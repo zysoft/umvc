@@ -46,6 +46,11 @@ class uf_session
     return $value;
   }
 
+  static public function has_namespace($namespace)
+  {
+    return isset($_SESSION[$namespace]);
+  }
+
   static public function clear_namespace($namespace)
   {
     unset($_SESSION[$namespace]);
