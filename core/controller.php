@@ -279,16 +279,14 @@ class uf_controller
 
   static public function execute_base($request,$response,$options = NULL)
   {
-    $controller_name = self::str_to_controller($request->controller());
-    $action_name     = self::str_to_controller($request->action());
-    $controller_class = $controller_name.'_controller';
+    $controller_class = self::str_to_controller($request->controller()).'_controller';
 
     if(class_exists($controller_class))
     {
       // Normal module action
       $controller = new $controller_class;
       $controller->_push_call_stack_frame($controller,$request,$response,$options !== NULL ? $options : array());
-      if($controller->execute_action($controller,$action_name,$request,$response,array('enable_buffering' => TRUE)) === FALSE)
+      if($controller->execute_action($controller,$request->action(),$request,$response,array('enable_buffering' => TRUE)) === FALSE)
       {
         // 404 missing action
         $controller->_error(404);
@@ -324,8 +322,15 @@ class uf_controller
   
   public function execute_action($caller,$action,$request,&$response,$options = NULL)
   {
+    if ($action == '')
+    {
+      $action = 'index';
+    } else {
+      $action = uf_controller::str_to_controller($action);
+    }
+
     // load project/base language files
-    uf_include_language($this,uf_application::app_sites_host_dir().'/language/l_base.'.uf_application::get_language().'.php');
+    uf_include_language($this, uf_application::app_sites_host_dir().'/language/l_base.'.uf_application::get_language().'.php');
 
     // load module/controller local language file
     $controller = substr(get_class($this),0,-11);
@@ -344,7 +349,6 @@ class uf_controller
 
     // 404 action?
     // handle  www.foo.com/index/
-    if ($action == '') $action = 'index';
 
     // loop the request parameters and translate them
     if (method_exists($this,$action.'_translate_param'))
@@ -360,9 +364,9 @@ class uf_controller
     }
     
     // handle nonexistent controller functions
-    if(!method_exists($this,$action))
+    if(!method_exists($this, $action))
     {
-      if (!method_exists($this,'error'))
+      if (!method_exists($this, 'error'))
       {
         return FALSE;
       }
@@ -380,15 +384,13 @@ class uf_controller
       $this->start_buffering();
     }
 
-    $action = empty($action) ? 'index' : self::str_to_controller($action);
-
     $this->_validator = new uf_validator($request, $response);
 
     $before_action_ret = $this->before_action();
     if ($before_action_ret === TRUE || $before_action_ret === NULL)
     {
       // execute action
-      $view = call_user_func(array($this,$action));
+      $view = call_user_func(array($this, $action));
 
       $this->after_action();
 
@@ -461,7 +463,9 @@ class uf_controller
         }
       }
       if (file_exists($file))
-      include_once($file);
+      {
+        include_once($file);        
+      }
     }
   }  
 }
