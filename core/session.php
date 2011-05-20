@@ -23,29 +23,33 @@
 
 class uf_session
 {
-  static public function has($name)
+  static public function has($name, $namespace = 'global')
   {
-    return isset($_SESSION[$name]);
+    return isset($_SESSION[$namespace][$name]);
   }
   
-  static public function get($name, $default_value = '')
+  static public function get($name, $default_value = '', $namespace = 'global')
   {
-    return isset($_SESSION[$name]) ? $_SESSION[$name] : $default_value;
+    return isset($_SESSION[$namespace][$name]) ? $_SESSION[$namespace][$name] : $default_value;
   }
 
-  static public function set($name, $value = NULL)
+  static public function set($name, $value = NULL, $namespace = 'global')
   {
     if($value === NULL)
     {
-      unset($_SESSION[$name]);
+      unset($_SESSION[$namespace][$name]);
     }
     else
     {
-      $_SESSION[$name] = $value;
+      $_SESSION[$namespace][$name] = $value;
     }
     return $value;
   }
 
+  static public function clear_namespace($namespace)
+  {
+    unset($_SESSION[$namespace]);
+  }
 
   // Value for both saving, getting and checking existence of values in the session.
   // Try to only use strings.
@@ -57,13 +61,13 @@ class uf_session
   // NOTE(!):
   //   Since 0xFFFFFFFF is used as a key, use '4294967295' or (string)0xFFFFFFFF
   //   when setting this particular value into the session.
-  static public function value($name, $value = 0xFFFFFFFF)
+  static public function value($name, $value = 0xFFFFFFFF, $namespace = 'global')
   {
     if ($value === 0xFFFFFFFF)
     {
-      if (isset($_SESSION[$name]))
+      if (isset($_SESSION[$namespace][$name]))
       {
-        return $_SESSION[$name];
+        return $_SESSION[$namespace][$name];
       } else
       {
         return NULL;
@@ -72,16 +76,17 @@ class uf_session
     if ($value === NULL)
     {
       //
-      if (isset($_SESSION[$name]))
+      if (isset($_SESSION[$namespace][$name]))
       {
-        unset($_SESSION[$name]);
+        unset($_SESSION[$namespace][$name]);
       }
     } else
     {
-      $_SESSION[$name] = $value;
+      $_SESSION[$namespace][$name] = $value;
     }
   }
 }
 
 session_start();
-?>
+
+/* EOF */
