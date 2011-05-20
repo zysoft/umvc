@@ -23,14 +23,17 @@
 
 class uf_http_request
 {
+  private $_is_post;
   private $_segments;
   private $_parameters;
+  private $_uri_parameters;
+  private $_get_parameters;
+  private $_post_parameters;
   private $_uri;
   private $_lang_tag;
   // state after routing:
   private $_controller;
   private $_action;
-  private $_uri_parameters;
   // --------------------
   
   public function uri($uri = NULL)
@@ -62,26 +65,33 @@ class uf_http_request
     
     $this->_parameters[$new_name] = $this->_parameters[$old_name];
     $this->_uri_parameters[$new_name] = $this->_uri_parameters[$old_name];
+    $this->_get_parameters[$new_name] = $this->_get_parameters[$old_name];
+    $this->_post_parameters[$new_name] = $this->_post_parameters[$old_name];
 
     unset($this->_parameters[$old_name]);
     unset($this->_uri_parameters[$old_name]);
+    unset($this->_get_parameters[$old_name]);
+    unset($this->_post_parameters[$old_name]);
   }
 
-  public function set_parameters($parameters = NULL)
-  {
-    if($parameters !== NULL)
-    {
-      $this->_parameters = $parameters;
-    }
-    else
-    {
-      return $this->_parameters;
-    }
-  }
-  
   public function parameter($name,$default_value = NULL)
   {
     return array_key_exists($name,$this->_parameters) ? $this->_parameters[$name] : $default_value;
+  }
+
+  public function get_uri_parameter($name,$default_value = NULL)
+  {
+    return array_key_exists($name,$this->_uri_parameters) ? $this->_uri_parameters[$name] : $default_value;
+  }
+
+  public function get_get_parameter($name,$default_value = NULL)
+  {
+    return array_key_exists($name,$this->_get_parameters) ? $this->_get_parameters[$name] : $default_value;
+  }
+
+  public function get_post_parameter($name,$default_value = NULL)
+  {
+    return array_key_exists($name,$this->_post_parameters) ? $this->_post_parameters[$name] : $default_value;
   }
 
   public function parameters()
@@ -91,8 +101,10 @@ class uf_http_request
   
   public function __construct()
   {
+    $this->_is_post = count($_POST) > 0;
+
     // TODO: parse out the language from the beginning of the string
-    
+
     $uri = $_SERVER['REQUEST_URI'];
 
     // URI language detection, NO module name should be shorter than 5 chars
@@ -194,10 +206,12 @@ class uf_http_request
       $parameters[$this->_segments[$i]] = @$this->_segments[$i + 1];
     }
     $this->_uri_parameters = $parameters;
+    $this->_get_parameters = $_GET;
+    $this->_post_parameters = $_POST;
 
     $input = array_merge($parameters, $_GET, $_POST);
   
-    $this->set_parameters($input);
+    $this->_parameters = $input;
   }
 
   public function get_controller()
@@ -220,9 +234,19 @@ class uf_http_request
     return $this->_uri_parameters;
   }
 
+  public function get_get_parameters()
+  {
+    return $this->_get_parameters;
+  }
+
+  public function get_post_parameters()
+  {
+    return $this->_post_parameters;
+  }
+
   public function is_post()
   {
-    return count($_POST) > 0;
+    return $this->_is_post;
   }
   
   public function controller()
