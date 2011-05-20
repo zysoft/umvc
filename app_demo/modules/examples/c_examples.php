@@ -27,7 +27,10 @@ class examples_controller extends base_controller
   public function before_action()
   {
     parent::before_action();
-    $this->caller()->mainmenu = 'examples';
+
+    $this->mainmenu = 'examples';
+
+    // very ugly hack
     if ($this->request()->get_action() == 'before-action')
     {
       ?>
@@ -42,7 +45,6 @@ class examples_controller extends base_controller
       <?
       return FALSE;
     }
-    return TRUE;
   }
 
   // This action uses view: "index"

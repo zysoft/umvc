@@ -27,6 +27,8 @@ class uf_application
   private static $_app_sites_host_dir;
   private static $_config;
   private static $_language_overridden;
+  private static $_request;
+  private static $_response;
   
   public static function init()
   {
@@ -83,14 +85,14 @@ class uf_application
     self::init();
     
     // PRE ROUTING
-    $request  = new uf_http_request;
-    $response = new uf_response;
+    self::$_request  = new uf_http_request;
+    self::$_response = new uf_response;
 
     /// CREATE AND EXECUTE CONTROLLER
-    uf_controller::execute_base($request,$response,array('enable_buffering' => TRUE));
+    uf_controller::execute_base(self::$_request,self::$_response,array('enable_buffering' => TRUE));
 
-    $response = NULL;
-    $request  = NULL;
+    self::$_response = NULL;
+    self::$_request  = NULL;
   }
 
   public static function clear_log()
@@ -111,6 +113,17 @@ class uf_application
       fclose($fp);
     }
   }
+
+  public static function get_request()
+  {
+    return self::$_request;
+  }
+
+  public static function get_response()
+  {
+    return self::$_response;
+  }
+
 
   public static function get_language()
   {
@@ -174,37 +187,6 @@ class uf_application
   public static function set_config($name,$value = '')
   {
     self::$_config[$name] = $value;
-  }
-  
-  public static function controller_exists($controller)
-  {
-    $file = 
-      uf_application::app_sites_host_dir().
-      '/modules/'.
-      $controller.
-      '/c_'.$controller.'.php';
-      
-    if(file_exists($file))
-    {
-      return TRUE;
-    }
-    
-    $file = 
-      uf_application::app_dir().
-      '/modules/'.
-      $controller.
-      '/c_'.$controller.'.php';
-      
-    return file_exists($file);
-  }
-
-  public static function is_global_controller($controller)
-  {
-    return file_exists(
-      uf_application::app_sites_host_dir().
-      '/modules/'.
-      $controller.
-      '/c_'.$controller.'.php');
   }
 }
 

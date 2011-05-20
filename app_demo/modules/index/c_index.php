@@ -27,7 +27,6 @@ class index_controller extends base_controller
   {
     parent::before_action();
     $this->mainmenu = 'start';
-    return TRUE;
   }
   public function index()
   {

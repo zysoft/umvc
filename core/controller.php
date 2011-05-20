@@ -323,13 +323,17 @@ class uf_controller
   }
   
   public function execute_action($caller,$action,$request,&$response,$options = NULL)
-  {    
+  {
     // load project/base language files
     uf_include_language($this,uf_application::app_sites_host_dir().'/language/l_base.'.uf_application::get_language().'.php');
 
     // load module/controller local language file
     $controller = substr(get_class($this),0,-11);
-    if(uf_application::is_global_controller($controller))
+    if(file_exists(
+      uf_application::app_sites_host_dir().
+      '/modules/'.
+      $controller.
+      '/c_'.$controller.'.php'))
     {
       uf_include_language($this,uf_application::app_sites_host_dir().'/modules/'.$controller.'/language/l_'.$controller.'.'.uf_application::get_language().'.php');      
     }
@@ -381,7 +385,7 @@ class uf_controller
     $this->_validator = new uf_validator($request, $response);
 
     $before_action_ret = $this->before_action();
-    if ($before_action_ret === TRUE)
+    if ($before_action_ret === TRUE || $before_action_ret === NULL)
     {
       // execute action
       $view = call_user_func(array($this,$action));
@@ -396,7 +400,7 @@ class uf_controller
       } else
       {
         // default view?
-        if($view === NULL)
+        if($view === NULL || $view === TRUE)
         {
           $view = $action;
         }
