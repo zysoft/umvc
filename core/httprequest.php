@@ -79,6 +79,11 @@ class uf_http_request
     return array_key_exists($name,$this->_parameters) ? $this->_parameters[$name] : $default_value;
   }
 
+  public function has_parameter($name)
+  {
+    return array_key_exists($name,$this->_parameters);
+  }
+
   public function get_uri_parameter($name,$default_value = NULL)
   {
     return array_key_exists($name,$this->_uri_parameters) ? $this->_uri_parameters[$name] : $default_value;
