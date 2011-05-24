@@ -38,6 +38,12 @@ class uf_controller
     {
       $dir = uf_application::app_dir().'/modules/'.$controller;
     }
+
+    if(!is_file($dir.'/view/v_'.$view.'.php'))
+    {
+      $dir = uf_application::app_dir().'/lib';
+    }
+    
     uf_include_view($this,$dir.'/view/v_'.$view.'.php');
   }
   
