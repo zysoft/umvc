@@ -30,7 +30,7 @@ class uf_controller
 
   public function load_view($view, $data = array())
   {
-    $controller = self::str_to_controller(substr(get_class($this),0,-11));
+    $controller = uf_controller::str_to_controller(substr(get_class($this),0,-11));
 
     // include the view
     $dir = uf_application::app_sites_host_dir().'/modules/'.$controller;
@@ -136,11 +136,11 @@ class uf_controller
     $lang = $language;
     if ($language == '') $lang = uf_application::get_language();
 
-
-    $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/am_'.$controller.'.php';
+    $controller_identifier = uf_controller::str_to_controller($controller);
+    $file = uf_application::app_sites_host_dir().'/modules/'.$controller_identifier.'/am_'.$controller_identifier.'.php';
     if(!file_exists($file))
     {
-      $file = uf_application::app_dir().'/modules/'.$controller.'/am_'.$controller.'.php';
+      $file = uf_application::app_dir().'/modules/'.$controller_identifier.'/am_'.$controller_identifier.'.php';
     }
     $ret = NULL;
     if(file_exists($file))
@@ -171,7 +171,8 @@ class uf_controller
       $uf_controller_lang_action_name_cache = $action;
     //------------------------
 
-    $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/aa_'.$controller.'.php';
+    $controller_identifier = uf_controller::str_to_controller($controller);
+    $file = uf_application::app_sites_host_dir().'/modules/'.$controller_identifier.'/aa_'.$controller_identifier.'.php';
     if(!file_exists($file))
     {
       $file = uf_application::app_dir().'/modules/'.$controller.'/aa_'.$controller.'.php';
@@ -209,7 +210,8 @@ class uf_controller
       }
     //------------------------
 
-    $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/ap_'.$controller.'.php';
+    $controller_identifier = uf_controller::str_to_controller($controller);
+    $file = uf_application::app_sites_host_dir().'/modules/'.$controller_identifier.'/ap_'.$controller_identifier.'.php';
     if(!file_exists($file))
     {
       $file = uf_application::app_dir().'/modules/'.$controller.'/ap_'.$controller.'.php';
