@@ -16,6 +16,11 @@
     // this is in a specific language
     uf_application::set_language('sv-se');
     $uri_segments[0] = 'examples';
+    if (@$uri_segments[1] == 'att-gora-lista')
+    {
+      $uri_segments[1] = 'todo-list';
+      // parameters are then handled in the controller.
+    } else
     if (@$uri_segments[1] == 'sprak')
     {
       $uri_segments[1] = 'language';
