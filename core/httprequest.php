@@ -63,10 +63,14 @@ class uf_http_request
   {
     if ($old_name == $new_name) return;
     
-    $this->_parameters[$new_name] = $this->_parameters[$old_name];
-    $this->_uri_parameters[$new_name] = $this->_uri_parameters[$old_name];
-    $this->_get_parameters[$new_name] = $this->_get_parameters[$old_name];
-    $this->_post_parameters[$new_name] = $this->_post_parameters[$old_name];
+    if(array_key_exists($old_name, $this->_parameters))
+      $this->_parameters[$new_name] = $this->_parameters[$old_name];
+    if(array_key_exists($old_name, $this->_uri_parameters))
+      $this->_uri_parameters[$new_name] = $this->_uri_parameters[$old_name];
+    if(array_key_exists($old_name, $this->_get_parameters))
+      $this->_get_parameters[$new_name] = $this->_get_parameters[$old_name];
+    if(array_key_exists($old_name, $this->_post_parameters))
+      $this->_post_parameters[$new_name] = $this->_post_parameters[$old_name];
 
     unset($this->_parameters[$old_name]);
     unset($this->_uri_parameters[$old_name]);
