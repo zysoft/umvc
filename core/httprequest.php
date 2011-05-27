@@ -62,11 +62,15 @@ class uf_http_request
   public function set_parameter_name($old_name, $new_name)
   {
     if ($old_name == $new_name) return;
-    
-    $this->_parameters[$new_name] = $this->_parameters[$old_name];
-    $this->_uri_parameters[$new_name] = $this->_uri_parameters[$old_name];
-    $this->_get_parameters[$new_name] = $this->_get_parameters[$old_name];
-    $this->_post_parameters[$new_name] = $this->_post_parameters[$old_name];
+
+    if(array_key_exists($old_name, $this->_parameters))
+      $this->_parameters[$new_name] = $this->_parameters[$old_name];
+    if(array_key_exists($old_name, $this->_uri_parameters))
+      $this->_uri_parameters[$new_name] = $this->_uri_parameters[$old_name];
+    if(array_key_exists($old_name, $this->_get_parameters))
+      $this->_get_parameters[$new_name] = $this->_get_parameters[$old_name];
+    if(array_key_exists($old_name, $this->_post_parameters))
+      $this->_post_parameters[$new_name] = $this->_post_parameters[$old_name];
 
     unset($this->_parameters[$old_name]);
     unset($this->_uri_parameters[$old_name]);
@@ -126,18 +130,18 @@ class uf_http_request
       $languages = 0;
       if(file_exists($languages_file)) 
       {
-	$languages = include_once($languages_file);
+        $languages = include_once($languages_file);
       }
       if (is_array($languages))
       {
         foreach ($languages as $lang)
-	{
-	  if ($test_string === $lang)
-	  {
-	    uf_application::set_language($lang);
-            $uri = substr($uri,$uri_lang_len+1);
-	  }
-	}
+        {
+          if ($test_string === $lang)
+          {
+            uf_application::set_language($lang);
+                  $uri = substr($uri,$uri_lang_len+1);
+          }
+        }
       }
     }
 
@@ -146,7 +150,8 @@ class uf_http_request
     {
       $uri = substr($uri,0,$pos);
     }
-    if ($uri[strlen($uri)-1] == '/') $uri = substr($uri,0,-1);
+
+    //if ($uri[strlen($uri)-1] == '/') $uri = substr($uri,0,-1);
     
     $uri_segments = explode('/',substr($uri,1));
     //array_shift($uri_segments);
@@ -217,12 +222,12 @@ class uf_http_request
 
   public function get_controller()
   {
-    return $this->_controller;
+    return isset($this->_segments[0]) && !empty($this->_segments[0]) ? $this->_segments[0] : $this->parameter('_controller','index');
   }
 
   public function get_action()
   {
-    return $this->_action;
+    return isset($this->_segments[1]) ? $this->_segments[1] : $this->parameter('_action','index');
   }
 
   public function get_uri_segments()
@@ -248,16 +253,6 @@ class uf_http_request
   public function is_post()
   {
     return $this->_is_post;
-  }
-  
-  public function controller()
-  {
-    return isset($this->_segments[0]) && !empty($this->_segments[0]) ? $this->_segments[0] : $this->parameter('_controller','index');
-  }
-
-  public function action()
-  {
-    return isset($this->_segments[1]) ? $this->_segments[1] : $this->parameter('_action','index');
   }
 }
 
