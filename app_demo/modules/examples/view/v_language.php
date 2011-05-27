@@ -2,7 +2,7 @@
 
 
 <h2>Test case (backwards) for forwards parameter translation:</h2>
-<a href="/exempel/sprak/antal-talare/10000000?foo=bar">Click here to load a fully language-dependent URL, module and action translateion taken care of in the routing and in the per-action parameter translation method in the examples controller with a swedish target</a><br/>
+<a href="/sv-se/exempel/sprak/antal-talare/10000000?foo=bar">Click here to load a fully language-dependent URL, module and action translateion taken care of in the routing and in the per-action parameter translation method in the examples controller with a swedish target</a><br/>
 <a href="/examples/language/num-speakers/10000000?foo=bar">Click here to load a fully language-dependent URL, module and action translateion taken care of in the routing and in the per-action parameter translation method in the examples controller with a english target</a>
 
 <br/><br/><br/><br/><br/>

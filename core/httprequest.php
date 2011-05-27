@@ -63,10 +63,14 @@ class uf_http_request
   {
     if ($old_name == $new_name) return;
     
-    $this->_parameters[$new_name] = $this->_parameters[$old_name];
-    $this->_uri_parameters[$new_name] = $this->_uri_parameters[$old_name];
-    $this->_get_parameters[$new_name] = $this->_get_parameters[$old_name];
-    $this->_post_parameters[$new_name] = $this->_post_parameters[$old_name];
+    if(array_key_exists($old_name, $this->_parameters))
+      $this->_parameters[$new_name] = $this->_parameters[$old_name];
+    if(array_key_exists($old_name, $this->_uri_parameters))
+      $this->_uri_parameters[$new_name] = $this->_uri_parameters[$old_name];
+    if(array_key_exists($old_name, $this->_get_parameters))
+      $this->_get_parameters[$new_name] = $this->_get_parameters[$old_name];
+    if(array_key_exists($old_name, $this->_post_parameters))
+      $this->_post_parameters[$new_name] = $this->_post_parameters[$old_name];
 
     unset($this->_parameters[$old_name]);
     unset($this->_uri_parameters[$old_name]);
@@ -77,6 +81,11 @@ class uf_http_request
   public function parameter($name,$default_value = NULL)
   {
     return array_key_exists($name,$this->_parameters) ? $this->_parameters[$name] : $default_value;
+  }
+
+  public function has_parameter($name)
+  {
+    return array_key_exists($name,$this->_parameters);
   }
 
   public function get_uri_parameter($name,$default_value = NULL)
@@ -110,9 +119,9 @@ class uf_http_request
     // URI language detection, NO module name should be shorter than 5 chars
     // or at least have
     $uri_lang_len = NULL;
-    
+
     // /uk/
-    if (strlen($uri) > 4 && $uri[3] === '/') $uri_lang_len = 2;
+    if (strlen($uri) >= 4 && $uri[3] === '/') $uri_lang_len = 2;
     else
     // /en-us/
     if (strlen($uri) >= 7 && $uri[6] === '/') $uri_lang_len = 5;
@@ -121,23 +130,22 @@ class uf_http_request
     {
       // validate the language against the language file
       $test_string = substr($uri,1,$uri_lang_len);
-      
       $languages_file = UF_BASE.'/config/languages.php';
       $languages = 0;
       if(file_exists($languages_file)) 
       {
-	$languages = include_once($languages_file);
+        $languages = include_once($languages_file);
       }
       if (is_array($languages))
       {
         foreach ($languages as $lang)
-	{
-	  if ($test_string === $lang)
-	  {
-	    uf_application::set_language($lang);
+        {
+          if ($test_string === $lang)
+          {
+            uf_application::set_language($lang);
             $uri = substr($uri,$uri_lang_len+1);
-	  }
-	}
+          }
+        }
       }
     }
 
@@ -154,7 +162,7 @@ class uf_http_request
     $always_bake = 1;// uf_application::get_config('always_bake');
 
     $pre_routing_file = UF_BASE.'/cache/baker'.uf_application::app_name().'/'.uf_application::host().'/routing/baked.pre.routing.php';
-//echo $pre_routing_file;
+    //echo $pre_routing_file;
     if($always_bake || !file_exists($pre_routing_file))
     {
       uf_baker::bake('pre_routing');
@@ -193,7 +201,9 @@ class uf_http_request
     // - action
     // - parameters (if any)
     $this->_controller = @$uri_segments[0];
+    if($this->_controller == '') $this->_controller = 'index';
     $this->_action     = @$uri_segments[1]; // might be empty
+    if($this->_action == '') $this->_action = 'index';
     
     // bake the uri string
     $this->uri(implode('/',$uri_segments));
@@ -250,14 +260,9 @@ class uf_http_request
     return $this->_is_post;
   }
   
-  public function controller()
+  public function is_ajax()
   {
-    return isset($this->_segments[0]) && !empty($this->_segments[0]) ? $this->_segments[0] : $this->parameter('_controller','index');
-  }
-
-  public function action()
-  {
-    return isset($this->_segments[1]) ? $this->_segments[1] : $this->parameter('_action','index');
+    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
   }
 }
 

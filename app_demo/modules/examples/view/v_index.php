@@ -17,6 +17,7 @@
   <li><a href="<?=$uf_view->cap('examples','no-view')?>">No view</a></li>
   <li><a href="<?=$uf_view->cap('examples','other-view')?>">Other view</a></li>
   <li><a href="<?=$uf_view->cap('examples','javascript')?>">JavaScript</a></li>
+  <li><a href="<?=$uf_view->cap('examples','lightbox')?>">Lightbox</a></li>
 </ul>
 
 <p>Foo: <?=$foo?></p>

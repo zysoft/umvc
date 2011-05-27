@@ -1,4 +1,4 @@
-<?
+<?php
 
 // one-to-one names for this module in various languages
 
@@ -9,3 +9,5 @@ switch ($lang)
   case 'en-us': return 'examples';
   case 'sv-se': return 'exempel';
 }
+
+/* EOF */

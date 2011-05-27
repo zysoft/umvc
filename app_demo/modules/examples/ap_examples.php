@@ -1,4 +1,4 @@
-<?
+<?php
 // one-to-one aliases for action parameter names
 
 // used by the view of another controller to determine a link to this module
@@ -18,7 +18,7 @@ switch ($lang)
           case 'muu': return 'kossa';
         }
       }
-      case 'todo_list':
+      case 'todo-list':
       {
         switch ($param)
         {
@@ -29,3 +29,4 @@ switch ($lang)
   }
 }
 
+/* EOF */
