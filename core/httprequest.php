@@ -146,6 +146,7 @@ class uf_http_request
     {
       $uri = substr($uri,0,$pos);
     }
+    if ($uri[count($uri)-1] == '/') $uri = substr($uri,0,-1);
     
     $uri_segments = explode('/',substr($uri,1));
     //array_shift($uri_segments);
