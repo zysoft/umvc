@@ -210,11 +210,13 @@ class uf_controller
     }
     //------------------------
 
+
     $controller_identifier = uf_controller::str_to_controller($controller);
     $file = uf_application::app_sites_host_dir().'/modules/'.$controller_identifier.'/ap_'.$controller_identifier.'.php';
+
     if(!file_exists($file))
     {
-      $file = uf_application::app_dir().'/modules/'.$controller.'/ap_'.$controller.'.php';
+      $file = uf_application::app_dir().'/modules/'.$controller_identifier.'/ap_'.$controller_identifier.'.php';
     }
     $ret = include($file);
     if (!is_string($ret))
