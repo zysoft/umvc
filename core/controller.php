@@ -549,7 +549,41 @@ class uf_view
     
     return $new_uri;
   }
-  
+
+  public function lpm_req($override_parameters = NULL, $override_get_parameters = NULL, $override_language = '') {
+    $request = $this->controller->request();
+    $get_parameters = $request->get_get_parameters();
+    reset($override_get_parameters);
+    if (!empty($override_get_parameters))
+    {
+      while (list($key, $val) = each($override_get_parameters))
+      {
+        if ($val === NULL)
+        {
+          unset($get_parameters[$key]);
+        }
+        else
+        {
+          $get_parameters[$key] = $val;
+        }
+      }
+    }
+    reset($get_parameters);
+    $combined_get = array();
+    while (list($key, $val) = each($get_parameters))
+    {
+      array_push($combined_get, $key.'='.$val);
+    }
+    
+    
+    $uri = $this->local_parameter_merge_uri($override_parameters,$override_language);
+    if (!empty($get_parameters) && count($get_parameters))
+    {
+      return $uri.'?'.implode('&',$combined_get);
+    }
+    return $uri;
+  }
+
   public function lpm_uri($override_parameters = NULL, $override_language = '') { return $this->local_parameter_merge_uri($override_parameters,$override_language); }
   private function local_parameter_merge_uri($override_parameters = NULL, $override_language = '')
   {
@@ -577,7 +611,14 @@ class uf_view
     if (!empty($override_parameters))
     while (list($key, $val) = each($override_parameters))
     {
-      $parameters[$key] = $val;
+      if ($val === NULL)
+      {
+        unset($get_parameters[$key]);
+      }
+      else
+      {
+        $parameters[$key] = $val;
+      }
     }
     
     if ($internal_language_override || uf_application::is_language_overridden())
