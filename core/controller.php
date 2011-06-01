@@ -553,9 +553,9 @@ class uf_view
   public function lpm_req($override_parameters = NULL, $override_get_parameters = NULL, $override_language = '') {
     $request = $this->controller->request();
     $get_parameters = $request->get_get_parameters();
-    reset($override_get_parameters);
     if (!empty($override_get_parameters))
     {
+      reset($override_get_parameters);
       while (list($key, $val) = each($override_get_parameters))
       {
         if ($val === NULL)
@@ -609,15 +609,18 @@ class uf_view
     $parameters = $request->get_uri_parameters();
 
     if (!empty($override_parameters))
-    while (list($key, $val) = each($override_parameters))
     {
-      if ($val === NULL)
+      reset($override_parameters);
+      while (list($key, $val) = each($override_parameters))
       {
-        unset($get_parameters[$key]);
-      }
-      else
-      {
-        $parameters[$key] = $val;
+        if ($val === NULL)
+        {
+          unset($get_parameters[$key]);
+        }
+        else
+        {
+          $parameters[$key] = $val;
+        }
       }
     }
     
