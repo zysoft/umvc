@@ -497,6 +497,7 @@ class uf_view
   // grabs all existing parameters and merges with new values from $values
   public function cap($controller_name, $action_name = NULL, $parameters = NULL, $override_language = '')
   {
+    $request = $this->controller->request();
     $language = uf_application::get_language();
     $internal_language_override = 0;
 
