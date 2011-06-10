@@ -64,7 +64,7 @@ class examples_controller extends base_controller
       }
       return TRUE;
     }
-    $this->validator()->add_rule('email', 'email');
+    $this->validator('validator_form')->add_rule('email', 'email');
 
     function password($value, &$message) {
       if($value != 'pw')
@@ -74,9 +74,9 @@ class examples_controller extends base_controller
       }
       return TRUE;
     }
-    $this->validator()->add_rule('password', 'password');
+    $this->validator('validator_form')->add_rule('password', 'password');
 
-    $this->validator()->validate();
+    $this->validator('validator_form')->validate();
   }
 
   // this action uses view: "todo_list"

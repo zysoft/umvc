@@ -23,13 +23,15 @@
 
 class uf_validator
 {
+  private $_form_id;
   private $_rules;
   private $_request;
   private $_response;
   private $_result;
 
-  public function __construct($request, $response)
+  public function __construct($form_id, $request, $response)
   {
+    $this->_form_id = $form_id;
     $this->_rules = array();
     $this->_request = $request;
     $this->_response = $response;
@@ -56,7 +58,10 @@ class uf_validator
           $r = $this->_rules[$key]['callback']($val, $message);
           if(!$r)
           {
-            $data = json_encode(array('name' => $key, 'message' => $message));
+            $data = json_encode(array(
+              'form_id' => $this->_form_id,
+              'name' => $key,
+              'message' => $message));
             $this->_response->javascript('$(function(){umvc.trigger("umvc.validator.error",'.$data.');});');
             $result = FALSE;
           }

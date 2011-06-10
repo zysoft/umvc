@@ -22,8 +22,8 @@
   var is_init = false;
   var is_active = false;
   var instance = 0;
-  var overlay;
-  var content;
+  var $overlay;
+  var $content;
 
   var methods = {
     init: function(options) {
@@ -61,10 +61,10 @@
           '<div class="content"></div>' +
         '</div>');
 
-      overlay = $('.'+options.overlay_class);
-      content = $('.'+options.content_class);
+      $overlay = $('.'+options.overlay_class);
+      $content = $('.'+options.content_class);
 
-      overlay.css({
+      $overlay.css({
         display: 'none',
         position: 'fixed',
         left: 0,
@@ -76,27 +76,27 @@
         zIndex: 10000
       });
 
-      content.css({
+      $content.css({
         display: 'none',
         position: 'fixed',
         left: '50%',
         top: '50%',
-        zIndex: 10001
+        zIndex: '10001'
       });
       
       $.post(this.href, function(data) {
-        content.html(data);
+        $content.html(data);
 
-        if(options.width) content.width(options.width);
-        if(options.height) content.height(options.height);
+        if(options.width) $content.width(options.width);
+        if(options.height) $content.height(options.height);
 
-        content.css({
-          marginLeft: -(content.outerWidth() / 2)+'px',
-          marginTop: -(content.outerHeight() / 2)+'px'
+        $content.css({
+          marginLeft: -($content.outerWidth() / 2)+'px',
+          marginTop: -($content.outerHeight() / 2)+'px'
         });
 
-        overlay.fadeIn('fast');
-        content.fadeIn('fast');
+        $overlay.fadeIn('fast');
+        $content.fadeIn('fast');
 
         is_active = true;
       });
@@ -108,11 +108,11 @@
     
     close: function() {
       is_active = false;
-      overlay.fadeOut('fast', function() {
-        overlay.remove();
+      $overlay.fadeOut('fast', function() {
+        $overlay.remove();
       });
-      content.fadeOut('fast', function() {
-        content.remove();
+      $content.fadeOut('fast', function() {
+        $content.remove();
       });
     }
   };
