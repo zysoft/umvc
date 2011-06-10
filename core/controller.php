@@ -175,8 +175,10 @@ class uf_controller
     $file = uf_application::app_sites_host_dir().'/modules/'.$controller_identifier.'/aa_'.$controller_identifier.'.php';
     if(!file_exists($file))
     {
-      $file = uf_application::app_dir().'/modules/'.$controller.'/aa_'.$controller.'.php';
+      $file = uf_application::app_dir().'/modules/'.$controller_identifier.'/aa_'.$controller_identifier.'.php';
     }
+
+
     $ret = NULL;
     if (file_exists($file))
       $ret = include($file);
@@ -592,6 +594,7 @@ class uf_view
   public function lpm_uri($override_parameters = NULL, $override_language = '') { return $this->local_parameter_merge_uri($override_parameters,$override_language); }
   private function local_parameter_merge_uri($override_parameters = NULL, $override_language = '')
   {
+    
     $language = uf_application::get_language();
     $internal_language_override = 0;
 
@@ -609,6 +612,7 @@ class uf_view
     $request = $this->controller->request();
 
     $controller = $this->controller->view_lang_get_module_name($request->get_controller(),$language);
+    
     $action = $this->controller->view_lang_get_action_name($request->get_action(), $request->get_controller(), $language);
 
     $parameters = $request->get_uri_parameters();
