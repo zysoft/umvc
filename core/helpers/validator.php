@@ -55,7 +55,13 @@ class uf_validator
         $key = uf_controller::str_to_controller($key);
         if(array_key_exists($key, $this->_rules)) {
           $message = '';
-          $r = $this->_rules[$key]['callback']($val, $message);
+          
+          $callback = $this->_rules[$key]['callback'];
+          
+          $r = is_array($callback)
+            ? call_user_func($callback, $val, $message)
+            : $callback($val, $message);
+
           if(!$r)
           {
             $data = json_encode(array(
