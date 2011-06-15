@@ -46,44 +46,40 @@ class uf_validator
 
   public function validate()
   {
-    // Only validate on post
-    if($this->_request->is_post()) {
-      $this->_result = array();
-      $result = TRUE;
-      foreach($this->_request->parameters() as $key => $val)
-      {
-        $key = uf_controller::str_to_controller($key);
-        if(array_key_exists($key, $this->_rules)) {
-          $message = '';
-          
-          $callback = $this->_rules[$key]['callback'];
-          
-          $r = is_array($callback)
-            ? call_user_func($callback, $val, $message)
-            : $callback($val, $message);
+    $this->_result = array();
+    $result = TRUE;
+    foreach($this->_request->parameters() as $key => $val)
+    {
+      $key = uf_controller::str_to_controller($key);
+      if(array_key_exists($key, $this->_rules)) {
+        $message = '';
+        
+        $callback = $this->_rules[$key]['callback'];
+        
+        $r = is_array($callback)
+          ? call_user_func($callback, $val, $message)
+          : $callback($val, $message);
 
-          if(!$r)
-          {
-            $data = json_encode(array(
-              'form_id' => $this->_form_id,
-              'name' => $key,
-              'message' => $message));
-            $this->_response->javascript('$(function(){umvc.trigger("umvc.validator.error",'.$data.');});');
-            $result = FALSE;
-          }
-          $this->_result[$key] = $r;
+        if(!$r)
+        {
+          $data = json_encode(array(
+            'form_id' => $this->_form_id,
+            'name' => $key,
+            'message' => $message));
+          $this->_response->javascript('$(function(){umvc.trigger("umvc.validator.error",'.$data.');});');
+          $result = FALSE;
         }
+        $this->_result[$key] = $r;
       }
-
-      if($result && count($this->_rules))
-      {
-        $data = json_encode(array('message' => 'success'));
-        $this->_response->javascript('$(function(){umvc.trigger("umvc.validator.success",'.$data.');});');      
-      }
-
-      return $result;
     }
-    return TRUE;
+
+    if($result && count($this->_rules))
+    {
+      $data = json_encode(array('message' => 'success'));
+      $this->_response->javascript('$(function(){umvc.trigger("umvc.validator.success",'.$data.');});');      
+    }
+
+    return $result;
   }
   
   public function result($name)

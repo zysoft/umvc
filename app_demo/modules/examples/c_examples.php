@@ -76,7 +76,10 @@ class examples_controller extends base_controller
     }
     $this->validator('validator_form')->add_rule('password', 'password');
 
-    $this->validator('validator_form')->validate();
+    if($this->request()->is_post())
+    {
+      $this->validator('validator_form')->validate();      
+    }
   }
 
   // this action uses view: "todo_list"
