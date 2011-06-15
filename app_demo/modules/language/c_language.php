@@ -30,7 +30,7 @@ class language_controller extends base_controller
 
   public function set()
   {
-    uf_session::set('language',$this->request()->parameter('language','en_US'));
+    uf_session::set('language',$this->request()->parameter('language','en-us'));
     $this->response()->redirect('/');
     return FALSE;
   }
