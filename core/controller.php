@@ -426,7 +426,7 @@ class uf_controller
         // no view?
         if($view !== FALSE)
         {
-          $this->load_view($view);
+          $this->load_view($view);            
         }
       }
     } else
@@ -684,5 +684,13 @@ function uf_include_language($uf_controller,$language_file)
 
 # register our controller factory
 spl_autoload_register('uf_controller::autoload_controller');
+
+register_shutdown_function('handleShutdown');
+function handleShutdown() {
+  $error = error_get_last();
+  if($error !== NULL){
+    @undefined_dummy_function();
+  }
+}
 
 /* EOF */
