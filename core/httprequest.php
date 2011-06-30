@@ -78,9 +78,19 @@ class uf_http_request
     unset($this->_post_parameters[$old_name]);
   }
 
+  public function has_parameter($name)
+  {
+    return array_key_exists($name,$this->_parameters);
+  }
+
   public function parameter($name,$default_value = NULL)
   {
     return array_key_exists($name,$this->_parameters) ? $this->_parameters[$name] : $default_value;
+  }
+
+  public function has_uri_parameter($name)
+  {
+    return array_key_exists($name,$this->_uri_parameters);
   }
 
   public function get_uri_parameter($name,$default_value = NULL)
@@ -88,9 +98,19 @@ class uf_http_request
     return array_key_exists($name,$this->_uri_parameters) ? $this->_uri_parameters[$name] : $default_value;
   }
 
+  public function has_get_parameter($name)
+  {
+    return array_key_exists($name,$this->_get_parameters);
+  }
+
   public function get_get_parameter($name,$default_value = NULL)
   {
     return array_key_exists($name,$this->_get_parameters) ? $this->_get_parameters[$name] : $default_value;
+  }
+
+  public function has_post_parameter($name)
+  {
+    return array_key_exists($name,$this->_post_parameters);
   }
 
   public function get_post_parameter($name,$default_value = NULL)
