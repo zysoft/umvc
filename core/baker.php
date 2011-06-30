@@ -131,8 +131,12 @@ class uf_baker
 
       $dir = 
         $mp !== FALSE
-          ? uf_application::get_config('app_dir').substr($source_file, $mp)
+            ? uf_application::get_config('app_dir').substr($source_file, $mp)
           : $dir = substr($source_file, strlen(UF_BASE));
+
+      //$a = explode('/', $source_file);
+      //echo print_r($a[count($a) - 2], 1).'<br />';
+      //echo '<hr />';
 
       $file = substr($dir, strrpos($dir,'/') + 1);
       $dir = $bake_base.'/baker'.substr($dir, 0, strrpos($dir,'/'));
@@ -143,6 +147,7 @@ class uf_baker
       }
       copy($source_file, $dir.'/'.$file);
     }
+    //die();
   }
 
   private static function _bake_routing($files,$prefix='')
