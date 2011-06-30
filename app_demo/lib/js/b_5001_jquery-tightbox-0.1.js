@@ -114,6 +114,8 @@
       $content.fadeOut('fast', function() {
         $content.remove();
       });
+      
+      return false;
     }
   };
 
