@@ -52,6 +52,28 @@ class uf_baker
     }
   }
   
+  private static function delete_directry_content($dir)
+  {
+    $files = scandir(UF_BASE.$dir); 
+    foreach($files as $file)
+    {
+      if(strpos($file, '.') === 0) continue;
+      
+      $current = UF_BASE.$dir.'/'.$file;
+
+      if(is_dir($current))
+      {
+        uf_baker::delete_directry_content($dir.'/'.$file);
+        rmdir($current);
+      }
+
+      if(is_file($current))
+      {
+        unlink($current);
+      }
+    }
+  }
+
   private static function _scan_dir_recursive($dir)
   {
     $a = scandir($dir);
@@ -259,6 +281,8 @@ class uf_baker
 
   public static function bake_all()
   {
+    self::delete_directry_content('/web/data');
+    self::delete_directry_content('/cache');
     self::bake('images');
     self::bake('js');
     self::bake('css');
