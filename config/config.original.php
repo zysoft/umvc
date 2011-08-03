@@ -3,7 +3,7 @@
 $uf_config = array(
   'log'            => FALSE,
   'language'       => 'sv-se',
-  'always_bake'    => FALSE,
+  'always_bake'    => TRUE,
   'load_propel'    => TRUE,
   'app_dir'        => '/app_demo',
   'propel_app_dir' => '/app_demo',
