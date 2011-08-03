@@ -28,7 +28,7 @@ class uf_controller
   private $_buffer_ref_count;
   private $_call_stack;
 
-  public function load_view($view, $data = array())
+  public function load_view($view, $data = NULL)
   {
     $controller_identifier = substr(get_class($this),0,-11);
 
@@ -44,7 +44,7 @@ class uf_controller
       $dir = uf_application::app_dir().'/lib';
     }
     
-    uf_include_view($this,$dir.'/view/v_'.$view.'.php');
+    uf_include_view($this,$dir.'/view/v_'.$view.'.php', $data);
   }
   
   private function _load_base($view)
@@ -656,7 +656,7 @@ class uf_view
   }
 }
 
-function uf_include_view($uf_controller,$view)
+function uf_include_view($uf_controller,$view,$data = NULL)
 {
   // This function is used to create a clean symbol table
   extract(get_object_vars($uf_controller));
@@ -685,6 +685,7 @@ function uf_include_language($uf_controller,$language_file)
 # register our controller factory
 spl_autoload_register('uf_controller::autoload_controller');
 
+// tempory hack for error output
 register_shutdown_function('handleShutdown');
 function handleShutdown() {
   $error = error_get_last();
