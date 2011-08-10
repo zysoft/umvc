@@ -64,7 +64,7 @@ class examples_controller extends base_controller
       }
       return TRUE;
     }
-    $this->validator('validator_form')->add_rule('email', 'email');
+    $this->get_plugin('validator')->validator('validator_form')->add_rule('email', 'email');
 
     function password($value, &$message) {
       if($value != 'pw')
@@ -74,11 +74,11 @@ class examples_controller extends base_controller
       }
       return TRUE;
     }
-    $this->validator('validator_form')->add_rule('password', 'password');
+    $this->get_plugin('validator')->validator('validator_form')->add_rule('password', 'password');
 
     if($this->request()->is_post())
     {
-      $this->validator('validator_form')->validate();      
+      $this->get_plugin('validator')->validator('validator_form')->validate();      
     }
   }
 

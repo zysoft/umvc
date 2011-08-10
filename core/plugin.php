@@ -1,4 +1,4 @@
-<?php
+<??><?php
 
 class uf_plugin
 {
@@ -18,16 +18,15 @@ class uf_plugin
       return $controller->$plugin_name;
     }
 
-    $plugin_file = uf_application::app_dir().'/lib/plugin/'.$plugin_name.'.php';
+    $plugin_file = uf_application::app_dir().'/lib/plugins/'.$plugin_name.'.php';
     if(!file_exists($plugin_file))
     {
-      $plugin_file = UF_BASE.'/core/plugin/'.$plugin_name.'.php';
+      $plugin_file = UF_BASE.'/core/plugins/'.$plugin_name.'.php';
       if(!file_exists($plugin_file))
       {
         trigger_error('Missing plugin: '.$plugin_name, E_USER_ERROR);      
       }
     }
-
     require($plugin_file);
     
     $plugin_class = $plugin_name.'_plugin';

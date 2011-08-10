@@ -21,7 +21,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-class uf_validator
+class validator_helper
 {
   private $_form_id;
   private $_rules;
@@ -85,6 +85,25 @@ class uf_validator
   public function result($name)
   {
     return isset($this->_result[$name]) ? $this->_result[$name] : FALSE;
+  }
+}
+
+class validator_plugin extends uf_plugin
+{
+  private $_validators;  
+
+  public function __construct()
+  {
+    $this->_validators = array();    
+  }
+
+  public function validator($id)
+  {
+    if(!isset($this->_validators[$id]))
+    {
+      $this->_validators[$id] = new validator_helper($id, $this->get_controller()->request(), $this->get_controller()->response());
+    }
+    return  $this->_validators[$id];
   }
 }
 

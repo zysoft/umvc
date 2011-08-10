@@ -24,7 +24,6 @@
 class uf_controller
 {
   // PRIVATE DATA
-  private $_validators;
   private $_buffer_ref_count;
   private $_call_stack;
 
@@ -335,15 +334,6 @@ class uf_controller
     }
   }
   
-  public function validator($id)
-  {
-    if(!isset($this->_validators[$id]))
-    {
-      $this->_validators[$id] = new uf_validator($id, $this->request(), $this->response());
-    }
-    return  $this->_validators[$id];
-  }
-  
   public function execute_action($caller,$action,$request,&$response,$options = NULL)
   {
     if ($action == '')
@@ -408,7 +398,7 @@ class uf_controller
       $this->start_buffering();
     }
 
-    $this->_validators = array();
+    //$this->_validators = array();
 
     $before_action_ret = $this->before_action();
     if ($before_action_ret === TRUE || $before_action_ret === NULL)
@@ -418,7 +408,7 @@ class uf_controller
 
       $this->after_action();
 
-      $this->_validator = array();
+      //$this->_validator = array();
 
       if (is_integer($view))
       {
