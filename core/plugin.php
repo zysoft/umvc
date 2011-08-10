@@ -3,7 +3,7 @@
 class uf_plugin
 {
   private $controller;
-  
+
   public function get_controller()
   {
     return $this->controller;
