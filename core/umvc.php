@@ -49,5 +49,6 @@ require_once(UF_BASE.'/core/response.php');
 require_once(UF_BASE.'/core/httprequest.php');
 require_once(UF_BASE.'/core/controller.php');
 require_once(UF_BASE.'/core/helpers/validator.php');
+require_once(UF_BASE.'/core/plugin.php');
 
 /* EOF */

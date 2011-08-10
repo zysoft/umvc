@@ -41,8 +41,8 @@ class uf_application
       self::$_config =& $uf_config;
 
       $n = str_replace('www.','',$_SERVER['SERVER_NAME'],$c);
-      $dirb = self::app_dir().'/sites/hosts/';
-      if (!is_dir($dirb.$n))
+      $dirb = self::app_dir(FALSE).'/sites/hosts/';
+      if (!is_dir(UF_BASE.$dirb.$n))
       {
         self::$_app_sites_host_dir = $dirb.'FALLBACK';
       }
@@ -50,9 +50,9 @@ class uf_application
         self::$_app_sites_host_dir = $dirb.$n;
 
       // look for site-specific override configuration
-      if (is_file(self::$_app_sites_host_dir.'/config.php'))
+      if (is_file(UF_BASE.self::$_app_sites_host_dir.'/config.php'))
       {
-        include_once(self::$_app_sites_host_dir.'/config.php');
+        include_once(UF_BASE.self::$_app_sites_host_dir.'/config.php');
       }
 
       if(self::get_config('always_bake'))
@@ -154,9 +154,9 @@ class uf_application
     return self::$_language_overridden;
   }
   
-  public static function app_dir()
+  public static function app_dir($return_full_path = TRUE)
   {
-    return UF_BASE.self::get_config('app_dir');
+    return ($return_full_path ? UF_BASE : '').self::get_config('app_dir');
   }
 
   public static function app_name()
@@ -164,14 +164,14 @@ class uf_application
     return self::get_config('app_dir');
   }
 
-  public static function propel_app_dir()
+  public static function propel_app_dir($return_full_path = TRUE)
   {
-    return UF_BASE.self::get_config('propel_app_dir');
+    return  ($return_full_path ? UF_BASE : '').self::get_config('propel_app_dir');
   }
 
-  public static function app_sites_host_dir()
+  public static function app_sites_host_dir($return_full_path = TRUE)
   {
-    return self::$_app_sites_host_dir;
+    return ($return_full_path ? UF_BASE : '').self::$_app_sites_host_dir;
   }
 
   public static function host()

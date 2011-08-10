@@ -30,7 +30,8 @@ class index_controller extends base_controller
   }
   public function index()
   {
-    $this->foo = 'bar';
+    $this->foo = $this->get_plugin('test')->reverse('HEJ').'<hr />';
+    ;
   }
 
   // local 404 error handler

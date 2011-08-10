@@ -76,13 +76,13 @@ class uf_baker
 
   private static function _scan_dir_recursive($dir)
   {
-    $a = scandir($dir);
+    $a = scandir(UF_BASE.$dir);
     array_splice($a,0,2);
     $out = array();
     foreach($a as $f)
     {
       $fp = $dir.'/'.$f;
-      if(is_dir($fp))
+      if(is_dir(UF_BASE.$fp))
       {
         $sub = self::_scan_dir_recursive($fp);
         $out = array_merge_recursive($out,$sub);
@@ -119,9 +119,9 @@ class uf_baker
   {
     if(!is_array(self::$_files))
     {
-      $lib = self::_scan_dir_recursive(uf_application::app_dir().'/lib');
-      $modules = self::_scan_dir_recursive(uf_application::app_dir().'/modules');
-      $hosts   = self::_scan_dir_recursive(uf_application::app_sites_host_dir());
+      $lib = self::_scan_dir_recursive(uf_application::app_dir(FALSE).'/lib');
+      $modules = self::_scan_dir_recursive(uf_application::app_dir(FALSE).'/modules');
+      $hosts   = self::_scan_dir_recursive(uf_application::app_sites_host_dir(FALSE));
       self::$_files = array_merge_recursive($lib,$modules,$hosts);
 
       if(isset(self::$_files['static']))
@@ -146,19 +146,17 @@ class uf_baker
     sort($files, SORT_STRING);
     foreach($files as $source_file)
     {
+
       $bake_base = UF_BASE.'/web/data';
       $host = uf_application::host();
       $file = substr(strrchr($source_file, '/'), 1);
+      $file = $source_file;
       $mp = strpos($source_file, '/modules/');
 
       $dir = 
         $mp !== FALSE
             ? uf_application::get_config('app_dir').substr($source_file, $mp)
-          : $dir = substr($source_file, strlen(UF_BASE));
-
-      //$a = explode('/', $source_file);
-      //echo print_r($a[count($a) - 2], 1).'<br />';
-      //echo '<hr />';
+          : $dir = $source_file;
 
       $file = substr($dir, strrpos($dir,'/') + 1);
       $dir = $bake_base.'/baker'.substr($dir, 0, strrpos($dir,'/'));
@@ -167,9 +165,8 @@ class uf_baker
       {
         mkdir($dir, 0777, TRUE);
       }
-      copy($source_file, $dir.'/'.$file);
+      copy(UF_BASE.$source_file, $dir.'/'.$file);
     }
-    //die();
   }
 
   private static function _bake_routing($files,$prefix='')
@@ -195,7 +192,7 @@ class uf_baker
           // Only unprefixed files
           if(strpos($f,'routing_pre_') !== 0 && strpos($f,'routing_post_') !== 0)
           {
-            $data = file_get_contents($file);
+            $data = file_get_contents(UF_BASE.$file);
             $output .= trim($data);
           }
         }
@@ -212,7 +209,7 @@ class uf_baker
     {
       foreach($files as $file)
       {
-        $data = file_get_contents($file);
+        $data = file_get_contents(UF_BASE.$file);
         $data = str_replace('[uf_module]', '/data/baker'.uf_application::app_name().'/modules', $data);
         $data = str_replace('[uf_lib]', '/data/baker'.uf_application::app_name().'/lib', $data);
         $output .= $data."\n";
