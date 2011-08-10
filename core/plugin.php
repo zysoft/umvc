@@ -1,4 +1,4 @@
-<??><?php
+<?php
 
 class uf_plugin
 {

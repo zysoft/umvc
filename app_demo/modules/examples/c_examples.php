@@ -35,12 +35,12 @@ class examples_controller extends base_controller
     {
       ?>
         examples_controller->before_action trigs and takes over. It has run the following code:
-        <br/>
+        <br />
         <ul>
           if ($this->request()->get_action() == 'before-action')
         </ul>
         it can also return an integer to load an error page.
-        <br/><br/>
+        <br /><br />
         It is now returning FALSE to tell the controller to break here - just like a regular action.
       <?
       return FALSE;
