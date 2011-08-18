@@ -25,6 +25,7 @@ class about_controller extends base_controller
 {
   public function index() 
   {
+    echo $this->get_plugin('language')->translate('Hej');
     $this->mainmenu = 'about';
     $this->meta_description = 'About UMVC';
     $this->meta_keywords = 'php, mvc, framework, web development';

@@ -236,6 +236,11 @@ class uf_controller
     return preg_replace('/_+/','_',$result);
   }
 
+  public function load_plugin($plugin_name)
+  {
+    $this->get_plugin($plugin_name);
+  }
+
   public function get_plugin($plugin_name)
   {
     if(!isset($this->$plugin_name))
