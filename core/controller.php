@@ -26,24 +26,22 @@ class uf_controller
   // PRIVATE DATA
   private $_buffer_ref_count;
   private $_call_stack;
-
+  
   public function load_view($view, $data = NULL)
   {
     $controller_identifier = substr(get_class($this),0,-11);
 
     // include the view
-    $dir = uf_application::app_sites_host_dir().'/modules/'.$controller_identifier;
-    if(!is_dir($dir))
+    $file = uf_application::app_sites_host_dir().'/modules/'.$controller_identifier.'/view/v_'.$view.'.php';
+    if(!is_file($file))
     {
-      $dir = uf_application::app_dir().'/modules/'.$controller_identifier;
-    }
-
-    if(!is_file($dir.'/view/v_'.$view.'.php'))
-    {
-      $dir = uf_application::app_dir().'/lib';
-    }
-    
-    uf_include_view($this,$dir.'/view/v_'.$view.'.php', $data);
+      $file = uf_application::app_dir().'/modules/'.$controller_identifier.'/view/v_'.$view.'.php';
+      if(!is_file($file))
+      {
+	$file = uf_application::app_dir().'/lib/view/v_'.$view.'.php';
+      }
+    }    
+    uf_include_view($this,$file, $data);
   }
   
   private function _load_base($view)
@@ -544,7 +542,7 @@ class uf_view
     {
       $new_uri .= '/'.$action;
     }
-
+    
     if (is_array($parameters))
     while (list($key, $val) = each($parameters))
     {
@@ -651,6 +649,27 @@ class uf_view
     }
     return $new_uri;
 
+  }
+
+  // includes a file from the view directory
+  //   these files can be overridden in the hosts directories.
+  //   parameters:
+  //     $controller     the internal (english) name of a valid controller
+  //     $path           the relative path to the file you want to include.
+  //                     Examples: 'view/sub_views/static_list.html'
+  //                               'view/footer.php'
+  public function include_partial($controller, $path)
+  {
+    $controller_identifier = uf_controller::str_to_controller($controller);
+    $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/'.$path;
+    if (file_exists($file)) 
+    {
+      include($file);
+    }
+    else
+    {
+      include(uf_application::app_dir().'/modules/'.$controller.'/'.$path);
+    }
   }
 }
 
