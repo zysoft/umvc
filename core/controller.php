@@ -347,7 +347,7 @@ class uf_controller
     }
 
     // auto load plugins, there might be a better place to do this
-    $plugins = uf_application::get_config('load_plugins')
+    $plugins = uf_application::get_config('load_plugins');
     if(is_array($plugins))
     {
       foreach($plugins as $plugin)
