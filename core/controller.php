@@ -341,6 +341,17 @@ class uf_controller
       $action_identifier = uf_controller::str_to_controller($action);
     }
 
+    // auto load plugins, there might be a better place to do this
+    $plugins = uf_application::get_config('load_plugins');
+    if(is_array($plugins))
+    {
+      foreach($plugins as $plugin)
+      {
+        $this->load_plugin($plugin);
+      }      
+    }
+    
+    
     // load project/base language files
     uf_include_language($this, uf_application::app_sites_host_dir().'/language/l_base.'.uf_application::get_language().'.php');
 
