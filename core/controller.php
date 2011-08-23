@@ -234,11 +234,6 @@ class uf_controller
     return preg_replace('/_+/','_',$result);
   }
 
-  public function load_plugin($plugin_name)
-  {
-    $this->get_plugin($plugin_name);
-  }
-
   public function get_plugin($plugin_name)
   {
     if(!isset($this->$plugin_name))
@@ -529,6 +524,12 @@ class uf_view
     }
 
     $new_uri = '';
+    
+    global $routing_persist_base_uri;
+    if (strlen($routing_persist_base_uri))
+    {
+      $new_uri = $routing_persist_base_uri;
+    }
 
 
     $controller = NULL;
@@ -546,14 +547,13 @@ class uf_view
       $action = $this->controller->view_lang_get_action_name($action_name, $controller_name, $language);
     }
 
-
     if ($internal_language_override || uf_application::is_language_overridden())
     {
       // add language prefix
-      $new_uri = '/'.$language;
+      $new_uri = '/'.$language.$new_uri;
     }
 
-    $new_uri .= '/'.$controller;
+    if (strlen($controller)) $new_uri .= '/'.$controller;
     if (!empty($action))
     {
       $new_uri .= '/'.$action;
@@ -562,8 +562,9 @@ class uf_view
     if (is_array($parameters))
     while (list($key, $val) = each($parameters))
     {
-      $new_uri .= '/'.$this->controller->view_lang_get_parameter_name($key, $request->get_action(), $request->get_controller(), $language)
-          .'/'.$val;
+      $pname = $this->controller->view_lang_get_parameter_name($key, $action_name, $controller_name, $language);
+      if (!empty($pname)) $new_uri .= '/'.$pname;
+      $new_uri .= '/'.$val;
     }
     
     return $new_uri;
