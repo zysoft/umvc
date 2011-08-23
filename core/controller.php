@@ -347,10 +347,9 @@ class uf_controller
     {
       foreach($plugins as $plugin)
       {
-        $this->load_plugin($plugin);
+        $this->get_plugin($plugin);
       }      
     }
-    
     
     // load project/base language files
     uf_include_language($this, uf_application::app_sites_host_dir().'/language/l_base.'.uf_application::get_language().'.php');
