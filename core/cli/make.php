@@ -59,7 +59,7 @@ function merge_namespaces($a, $b)
   return $b;
 }
 
-function pretty_print($namespaces)
+function pretty_print_namespace($namespaces)
 {
   if(count($namespaces) == 0) return;
   foreach($namespaces as $name => $namespace)
@@ -89,6 +89,6 @@ $site_modules = scan_namespaces('app_demo/sites/hosts/FALLBACK/modules');
 $namespaces = merge_namespaces($lib, $modules);
 $namespaces = merge_namespaces($namespaces, $site_modules);
 $namespaces = merge_namespaces($namespaces, $site_base);
-pretty_print($namespaces);
+pretty_print_namespace($namespaces);
 
 /* EOF */
