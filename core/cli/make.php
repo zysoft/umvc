@@ -46,6 +46,19 @@ function scan_namespaces($dir)
   return $namespaces;
 }
 
+function merge_namespaces($a, $b)
+{
+  foreach($a as $name => $afiles)
+  {
+    if(!isset($b[$name])) $b[$name] = array(array('filename' => $name, 'ids' => array()));
+    $bfiles =& $b[$name];
+    foreach($afiles as $afile) foreach($bfiles as &$bfile) {
+      $bfile['ids'] = array_unique(array_merge($afile['ids'], $bfile['ids']));
+    }
+  }
+  return $b;
+}
+
 function pretty_print($namespaces)
 {
   if(count($namespaces) == 0) return;
@@ -72,7 +85,10 @@ $lib = scan_namespace('app_demo/lib');
 $modules = scan_namespaces('app_demo/modules');
 $site_base = scan_namespaces('app_demo/sites/hosts/FALLBACK/base');
 $site_modules = scan_namespaces('app_demo/sites/hosts/FALLBACK/modules');
-$namespaces = array_merge($lib, $modules, $site_modules, $site_base);
+
+$namespaces = merge_namespaces($lib, $modules);
+$namespaces = merge_namespaces($namespaces, $site_modules);
+$namespaces = merge_namespaces($namespaces, $site_base);
 pretty_print($namespaces);
 
 /* EOF */
