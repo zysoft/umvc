@@ -15,17 +15,18 @@ function scan_namespace($dir)
   
   foreach($files as &$file)
   {
-    $file = array_slice($file, $index + 1);
+    $file = implode('/', array_slice($file, $index + 1));
   }
+  $files = array_flip($files);
 
-  foreach($files as &$file)
+  foreach($files as $key => &$file)
   {
-    $filename = UF_BASE.'/'.$dir.'/'.implode('/', $file);
+    $filename = UF_BASE.'/'.$dir.'/'.$key;
     $code = file_get_contents($filename);
-    $file = array('filename' => implode('/', $file), 'ids' => array());
+    $file = array();
     if(preg_match_all('/_\(["\'](.*?)["\']\)/msi', $code, $matches))
     {
-      $file['ids'][] = $matches[1][0];
+      $file[] = $matches[1][0];
     }
   }
   return array($dir => $files);
@@ -50,11 +51,7 @@ function merge_namespaces($a, $b)
 {
   foreach($a as $name => $afiles)
   {
-    if(!isset($b[$name])) $b[$name] = array(array('filename' => $name, 'ids' => array()));
-    $bfiles =& $b[$name];
-    foreach($afiles as $afile) foreach($bfiles as &$bfile) {
-      $bfile['ids'] = array_unique(array_merge($afile['ids'], $bfile['ids']));
-    }
+    $b[$name] = isset($b[$name]) ? array_merge($b[$name], $afiles) : $afiles;
   }
   return $b;
 }
@@ -66,12 +63,12 @@ function pretty_print_namespace($namespaces)
   {
     $files =& $namespace;
     echo 'namespace='.$name."\n";
-    foreach($files as $file)
+    foreach($files as $key => $file)
     {
-      $ids =& $file['ids'];
+      $ids =& $file;
       if(count($ids) > 0)
       {
-        echo "\n".'#'.$file['filename']."\n";
+        echo "\n".'#'.$name.'/'.$key."\n";
         foreach($ids as $id)
         {
           echo $id.'='."\n";
@@ -81,6 +78,7 @@ function pretty_print_namespace($namespaces)
     echo "\n";      
   }  
 }
+
 $lib = scan_namespace('app_demo/lib');
 $modules = scan_namespaces('app_demo/modules');
 $site_base = scan_namespaces('app_demo/sites/hosts/FALLBACK/base');
@@ -89,6 +87,7 @@ $site_modules = scan_namespaces('app_demo/sites/hosts/FALLBACK/modules');
 $namespaces = merge_namespaces($lib, $modules);
 $namespaces = merge_namespaces($namespaces, $site_modules);
 $namespaces = merge_namespaces($namespaces, $site_base);
+
 pretty_print_namespace($namespaces);
 
 /* EOF */
