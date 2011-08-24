@@ -19,14 +19,14 @@ function scan_namespace($dir)
   }
   $files = array_flip($files);
 
-  foreach($files as $key => &$file)
+  foreach($files as $file => &$ids)
   {
-    $filename = UF_BASE.'/'.$dir.'/'.$key;
+    $filename = UF_BASE.'/'.$dir.'/'.$file;
     $code = file_get_contents($filename);
-    $file = array();
+    $ids = array();
     if(preg_match_all('/_\(["\'](.*?)["\']\)/msi', $code, $matches))
     {
-      $file[] = $matches[1][0];
+      $ids[] = $matches[1][0];
     }
   }
   return array($dir => $files);
@@ -61,14 +61,12 @@ function pretty_print_namespace($namespaces)
   if(count($namespaces) == 0) return;
   foreach($namespaces as $name => $namespace)
   {
-    $files =& $namespace;
     echo 'namespace='.$name."\n";
-    foreach($files as $key => $file)
+    foreach($namespace as $file => $ids)
     {
-      $ids =& $file;
       if(count($ids) > 0)
       {
-        echo "\n".'#'.$name.'/'.$key."\n";
+        echo "\n".'#'.$name.'/'.$file."\n";
         foreach($ids as $id)
         {
           echo $id.'='."\n";
