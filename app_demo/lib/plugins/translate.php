@@ -13,6 +13,7 @@ class translate_plugin extends uf_plugin
     //$controller->_ = function($id) use ($t) { return $t->_($id); };    
     return array('_' => array('plugins', 'translate', '_'));
   }
+  
   public function _($str)
   {
     return strrev($str);
