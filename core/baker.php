@@ -1,6 +1,6 @@
 <?
 /**
- * Project: umvc: A Mode View Controller framework
+ * Project: umvc: A Model View Controller framework
  *
  * @author David Brännvall, Jonatan Wallmander, HR North Sweden AB http://hrnorth.se, Copyright (C) 2011.
  * @see The GNU Public License (GPL)
@@ -153,20 +153,48 @@ class uf_baker
       $file = $source_file;
       $mp = strpos($source_file, '/modules/');
 
-      $dir = 
+      $dir =
         $mp !== FALSE
             ? uf_application::get_config('app_dir').substr($source_file, $mp)
           : $dir = $source_file;
+          
+      $mpb = strpos($source_file, '/base/');
+      if ($mpb !== FALSE)
+      {
+        $file = substr($dir, strrpos($source_file,'/') + 1);
+        if ($file[0] == '/') $file = substr($file,1);
+        //echo 'file is: '.$file.'<br />';
+        
+        $dir_t = substr($source_file,$mpb);
+        $dir_t = substr($dir_t, 0, strrpos($dir_t,'/'));
+        //echo 'dir_t: &nbsp; '.$dir_t."<br />";
+        //echo 'dir_t: &nbsp; '.substr($dir_t, 0, strrpos($dir_t,'/'))."<br />";
 
-      $file = substr($dir, strrpos($dir,'/') + 1);
-      $dir = $bake_base.'/baker'.substr($dir, 0, strrpos($dir,'/'));
+        $dir = $bake_base.'/baker/'.$host.uf_application::get_config('app_dir').$dir_t;
+      } else
+      {
+        $file = substr($dir, strrpos($dir,'/') + 1);
+        //echo 'file is: '.$file.'<br />';
+        $dir = $bake_base.'/baker/'.$host.substr($dir, 0, strrpos($dir,'/'));
+      }
 
       if(!is_dir($dir))
       {
         mkdir($dir, 0777, TRUE);
       }
+      /*
+       * Debug output:
+      echo 'dir is: '.$dir.'<br /><br />';
+      echo 'host is:'.$host.'<br />';
+      echo 'bake base is: '.$bake_base.'<br /><br />';
+      echo 'uf base is: '.UF_BASE.'<br /><br />';
+      echo 'copy from: '.UF_BASE.$source_file."<br />";
+      echo 'copy to: '.$dir.'/'.$file."<br/><br/><br />";
+      echo '**********************************<br />';*/
       copy(UF_BASE.$source_file, $dir.'/'.$file);
+      
     }
+    //die();
   }
 
   private static function _bake_routing($files,$prefix='')
@@ -210,8 +238,8 @@ class uf_baker
       foreach($files as $file)
       {
         $data = file_get_contents(UF_BASE.$file);
-        $data = str_replace('[uf_module]', '/data/baker'.uf_application::app_name().'/modules', $data);
-        $data = str_replace('[uf_lib]', '/data/baker'.uf_application::app_name().'/lib', $data);
+        $data = str_replace('[uf_module]', self::get_baked_modules_dir(), $data);
+        $data = str_replace('[uf_lib]', self::get_baked_dir().'/lib', $data);
         $output .= $data."\n";
       }
     }
@@ -274,6 +302,16 @@ class uf_baker
         file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type.($place == 'dynamic' ? '.php' : ''),$output);
       }
     }
+  }
+  
+  public static function get_baked_dir()
+  {
+    return '/data/baker/'.uf_application::host().'/'.uf_application::app_name();
+  }
+
+  public static function get_baked_modules_dir()
+  {
+    return '/data/baker/'.uf_application::host().''.uf_application::app_name().'/modules';
   }
 
   public static function bake_all()

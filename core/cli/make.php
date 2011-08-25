@@ -26,6 +26,7 @@ function scan_namespace($dir)
     {
       foreach($matches[1] as $match) $ids[] = $match;
     }    
+    $ids = array_unique($ids);
     if(count($ids) == 0) unset($files[$file]);
   }
   return array($dir => $files);
