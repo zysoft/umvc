@@ -1,6 +1,6 @@
 <?php
 /**
- * Project: umvc: A Mode View Controller framework
+ * Project: umvc: A Model View Controller framework
  *
  * @author David Brännvall, Jonatan Wallmander, HR North Sweden AB http://hrnorth.se, Copyright (C) 2011.
  * @see The GNU Public License (GPL)
@@ -509,6 +509,8 @@ class uf_view
   // grabs all existing parameters and merges with new values from $values
   public function cap($controller_name, $action_name = NULL, $parameters = NULL, $override_language = '')
   {
+    if ($controller_name == '') return '/';
+    
     $request = $this->controller->request();
     $language = uf_application::get_language();
     $internal_language_override = 0;
@@ -693,7 +695,7 @@ function uf_include_view($uf_controller,$view,$data = NULL)
 {
   // This function is used to create a clean symbol table
   extract(get_object_vars($uf_controller));
-  extract(array('uf_dir_web_lib' => '/data/baker'.uf_application::app_name().'/lib'));
+  extract(array('uf_dir_web_lib' => uf_baker::get_baked_dir().'/lib'));
 
   // init view class
   $uf_view = new uf_view();

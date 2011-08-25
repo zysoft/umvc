@@ -1,6 +1,6 @@
 <?
 /**
- * Project: umvc: A Mode View Controller framework
+ * Project: umvc: A Model View Controller framework
  *
  * @author David Brännvall, Jonatan Wallmander, HR North Sweden AB http://hrnorth.se, Copyright (C) 2011.
  * @see The GNU Public License (GPL)
