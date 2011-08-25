@@ -24,11 +24,10 @@ function scan_namespace($dir)
     $ids = array();
     if(preg_match_all('/_\(["\'](.*?)["\']\)/msi', $code, $matches))
     {
-      $ids[] = $matches[1][0];
+      foreach($matches[1] as $match) $ids[] = $match;
     }    
     if(count($ids) == 0) unset($files[$file]);
   }
-
   return array($dir => $files);
 }
 
@@ -118,8 +117,6 @@ function namespaces_to_array($str)
   }
   return $result;
 }
-/*
-*/
 $lib = scan_namespace('app_demo/lib');
 $modules = scan_namespaces('app_demo/modules');
 $site_base = scan_namespaces('app_demo/sites/hosts/FALLBACK/base');
