@@ -27,13 +27,17 @@ class uf_plugin
         trigger_error('Missing plugin: '.$plugin_name, E_USER_ERROR);      
       }
     }
+   
     require($plugin_file);
     
     $plugin_class = $plugin_name.'_plugin';
     $plugin = new $plugin_class($controller);
-    $plugin->controller = $controller;
 
     return $plugin;
+  }
+  
+  public function get_magic_methods()
+  {
   }
 }
 

@@ -26,6 +26,7 @@ class uf_controller
   // PRIVATE DATA
   private $_buffer_ref_count;
   private $_call_stack;
+  public $_magic_methods;
   
   public function load_view($view, $data = NULL)
   {
@@ -234,11 +235,21 @@ class uf_controller
     return preg_replace('/_+/','_',$result);
   }
 
+  public function load_plugin($plugin_name)
+  {
+    return $this->get_plugin($plugin_name);
+  }
+  
   public function get_plugin($plugin_name)
   {
     if(!isset($this->$plugin_name))
     {
       $this->$plugin_name = uf_plugin::load_plugin($this, $plugin_name);      
+
+      $this->_magic_methods = 
+        array_merge(
+          $this->$plugin_name->get_magic_methods(),
+          $this->_magic_methods);
     }
     return $this->$plugin_name;
   }
@@ -247,6 +258,7 @@ class uf_controller
   {
     $this->_call_stack = array();
     $this->_buffer_ref_count = 0;    
+    $this->_magic_methods = array();
   }
 
   public function __destruct()
@@ -257,6 +269,25 @@ class uf_controller
     }
   }
 
+  public function __call($method, $args)
+  {
+    if(isset($this->_magic_methods[$method]))
+    {
+      $m = $this->_magic_methods[$method];
+      if(count($m) > 0)
+      {
+        switch($m[0])
+        {
+          case 'plugins':
+            if(count($m) >= 3)
+            {
+              return call_user_func_array(array($this->get_plugin($m[1]), $m[2]), $args);            
+            }
+        }        
+      }
+    }
+  }
+  
   public function caller()
   {
     if (!count($this->_call_stack)) return NULL;
