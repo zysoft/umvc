@@ -306,7 +306,7 @@ class uf_baker
   
   public static function get_baked_dir()
   {
-    return '/data/baker/'.uf_application::host().'/'.uf_application::app_name();
+    return '/data/baker/'.uf_application::host().uf_application::app_name();
   }
 
   public static function get_baked_modules_dir()
