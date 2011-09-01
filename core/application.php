@@ -196,28 +196,28 @@ class uf_application
      * @param string $lib_file Name of the particular lib file
      */
     public static function load_lib($lib_name, $lib_file = null) {
-        $lib_name = uf_controller::str_to_controller($lib_name);
+      $lib_name = uf_controller::str_to_controller($lib_name);
 
-        $lib_dir = uf_application::app_dir() . '/lib/'.$lib_name;
-        if (!is_dir($lib_dir)) {
-            trigger_error('Missing lib: ' . $lib_name, E_USER_ERROR);
-        }
+      $lib_dir = uf_application::app_dir() . '/lib/'.$lib_name;
+      if (!is_dir($lib_dir)) {
+        trigger_error('Missing lib: ' . $lib_name, E_USER_ERROR);
+      }
 
-        if ($lib_file) {
-            $lib_script_file = $lib_dir.'/'.$lib_file.'.php';
-            if (!is_file($lib_script_file)) {
-                trigger_error("Lib $lib_name found, but doesn't contain $lib_file", E_USER_ERROR);
-            }
-            require_once $lib_script_file;
-            return;
+      if ($lib_file) {
+        $lib_script_file = $lib_dir.'/'.$lib_file.'.php';
+        if (!is_file($lib_script_file)) {
+          trigger_error("Lib $lib_name found, but doesn't contain $lib_file", E_USER_ERROR);
         }
-        
-        $d = opendir($lib_dir);
-        while ($file = readdir($d)) {
-            if (is_file($lib_dir.'/'.$file) && strpos($file, '.php') !== FALSE) {
-                require_once $lib_dir.'/'.$file;
-            }
+        require_once $lib_script_file;
+        return;
+      }
+
+      $d = opendir($lib_dir);
+      while ($file = readdir($d)) {
+        if (is_file($lib_dir.'/'.$file) && strpos($file, '.php') !== FALSE) {
+          require_once $lib_dir.'/'.$file;
         }
+      }
     }
 
 }
