@@ -59,6 +59,15 @@ class uf_response
       return array_key_exists($name,$this->_headers) ? $this->_headers[$name] : $value;
     }
   }
+  
+  public function expires_in_hours($hours = 12)
+  {
+    $expires = 60*60*$hours;
+    $this->header('Pragma','public');
+    $this->header('Cache-Control',"public, max-age=".$expires);
+    $this->header('Expires', gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
+    
+  }
 
   public function header404()
   {
