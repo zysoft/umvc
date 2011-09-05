@@ -40,6 +40,10 @@ class uf_controller
       if(!is_file($file))
       {
 	$file = uf_application::app_dir().'/lib/view/v_'.$view.'.php';
+        if(!is_file($file))
+        {
+          $file = uf_application::app_dir().'/errors/v_'.$view.'.php';
+        }
       }
     }    
     uf_include_view($this,$file, $data);
