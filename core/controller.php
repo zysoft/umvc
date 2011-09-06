@@ -636,8 +636,35 @@ class uf_view
     return $uri;
   }
 
-  public function lpm_uri($override_parameters = NULL, $override_language = '') { return $this->local_parameter_merge_uri($override_parameters,$override_language); }
-  private function local_parameter_merge_uri($override_parameters = NULL, $override_language = '')
+
+  public function lpm_ca_uri(
+    $override_controller = NULL,
+    $override_action = NULL,
+    $override_parameters = NULL,
+    $override_language = ''
+    )
+  {
+    return $this->local_parameter_merge_uri(
+      $override_parameters,
+      $override_language,
+      $override_controller,
+      $override_action
+    );
+  }
+
+  public function lpm_uri(
+    $override_parameters = NULL,
+    $override_language = ''
+  )
+  {
+    return $this->local_parameter_merge_uri($override_parameters,$override_language,NULL,NULL);
+  }
+  private function local_parameter_merge_uri(
+    $override_parameters = NULL,
+    $override_language = '',
+    $override_controller = NULL,
+    $override_action = NULL
+  )
   {
     
     $language = uf_application::get_language();
@@ -655,10 +682,24 @@ class uf_view
     $new_uri = '';
 
     $request = $this->controller->request();
-
-    $controller = $this->controller->view_lang_get_module_name($request->get_controller(),$language);
     
-    $action = $this->controller->view_lang_get_action_name($request->get_action(), $request->get_controller(), $language);
+    $controller = '';
+    if (empty($override_controller))
+    {
+    $controller = $this->controller->view_lang_get_module_name($request->get_controller(),$language);
+    } else
+    {
+      $controller = $this->controller->view_lang_get_module_name($override_controller,$language);
+    }
+    
+    $action = '';
+    if (empty($override_action))
+    {
+      $action = $this->controller->view_lang_get_action_name($request->get_action(), $request->get_controller(), $language);
+    } else
+    {
+      $action = $this->controller->view_lang_get_action_name($override_action, $request->get_controller(), $language);
+    }
 
     $parameters = $request->get_uri_parameters();
 
