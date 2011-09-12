@@ -39,11 +39,7 @@ class uf_controller
       $file = uf_application::app_dir().'/modules/'.$controller_identifier.'/view/v_'.$view.'.php';
       if(!is_file($file))
       {
-	$file = uf_application::app_dir().'/lib/view/v_'.$view.'.php';
-        if(!is_file($file))
-        {
-          $file = uf_application::app_dir().'/errors/v_'.$view.'.php';
-        }
+        $file = uf_application::app_dir().'/lib/view/v_'.$view.'.php';
       }
     }    
     uf_include_view($this,$file, $data);
@@ -92,6 +88,52 @@ class uf_controller
   public function before_action() { return TRUE; }
   public function after_action() { return TRUE; }
 
+  // PUBLIC METHODS
+
+  // Error logging
+  public function die_log_error($string)
+  {
+    $controller_identifier = substr(get_class($this),0,-11);
+    // look for config file.
+    if (is_file(UF_BASE.'/config/log_error.conf'))
+    {
+      include(UF_BASE.'/config/log_error.conf');
+    } else
+    {
+      global $log_error_values;
+      $log_error_values = array();
+      array_push($log_error_values,'HTTP_HOST');
+      array_push($log_error_values,'REMOTE_ADDR');
+      array_push($log_error_values,'HTTP_X_FORWARDED_FOR');
+      array_push($log_error_values,'SCRIPT_NAME');
+      array_push($log_error_values,'REQUEST_URI');
+      array_push($log_error_values,'HTTP_USER_AGENT');
+      array_push($log_error_values,'HTTP_COOKIE');
+      array_push($log_error_values,'REQUEST_TIME');
+    }
+    global $log_error_values;
+    $trace=debug_backtrace();
+    $caller=array_shift($trace);
+    $line = $caller['line'];
+    $file = $caller['file'];
+    $caller=array_shift($trace);
+    
+    $error_string = "\n******* UMVC ERROR *******\n";
+    $error_string .= 'Controller: '.$controller_identifier."\n";
+    $error_string .= 'Action: '.$caller['function']."\n";
+    $error_string .= 'File: '.$file."\n";
+    $error_string .= 'Line: '.$line."\n";
+    $error_string .= 'Message: '.$string."\n";
+    $error_string .= "******* HTTP VARIABLES *******\n";
+
+    foreach ($log_error_values as $lev)
+    {
+      if (isset($_SERVER[$lev])) $error_string .= $lev.' = '.$_SERVER[$lev]."\n";
+    }
+    $error_string .= '******* END *******'."\n";
+    error_log($error_string);
+    die();
+  }
 
 
   // Language/translation support in UMVC
@@ -228,8 +270,6 @@ class uf_controller
     else
       return $ret;
   }
-
-  // PUBLIC METHODS
 
   static public function str_to_controller($str)
   {
@@ -524,7 +564,7 @@ class uf_controller
         include_once($file);        
       }
     }
-  }  
+  }
 }
 
 
@@ -686,7 +726,7 @@ class uf_view
     $new_uri = '';
 
     $request = $this->controller->request();
-    
+        
     $controller = '';
     if (empty($override_controller))
     {
