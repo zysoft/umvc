@@ -83,8 +83,13 @@
         top: '50%',
         zIndex: '10001'
       });
+
+      if (options.url == undefined)
+      {
+        options.url = this.href;
+      }
       
-      $.post(this.href, function(data) {
+      $.post(options.url, function(data) {
         $content.html(data);
 
         if(options.width) $content.width(options.width);
@@ -128,4 +133,5 @@
       $.error('Method '+method+' does not exist on jQuery.tightbox' );
     }
   };
+  
 })();
