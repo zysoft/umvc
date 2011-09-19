@@ -176,7 +176,7 @@ class uf_http_request
     $uri_segments = explode('/',substr($uri,1));
     //array_shift($uri_segments);
     
-    $always_bake = 1;// uf_application::get_config('always_bake');
+    $always_bake = uf_application::get_config('always_bake');
 
     $pre_routing_file = UF_BASE.'/cache/baker'.uf_application::app_name().'/'.uf_application::host().'/routing/baked.pre.routing.php';
 //echo $pre_routing_file;
