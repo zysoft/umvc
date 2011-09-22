@@ -372,7 +372,6 @@ class uf_controller
   static public function execute_base($request,$response,$options = NULL)
   {
     $controller_class = self::str_to_controller($request->get_controller()).'_controller';
-
     if(class_exists($controller_class))
     {
       // Normal module action
@@ -798,11 +797,11 @@ class uf_view
     $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/'.$path;
     if (file_exists($file)) 
     {
-      include($file);
+      return include($file);
     }
     else
     {
-      include(uf_application::app_dir().'/modules/'.$controller.'/'.$path);
+      return include(uf_application::app_dir().'/modules/'.$controller.'/'.$path);
     }
   }
 }
