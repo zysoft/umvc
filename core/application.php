@@ -173,6 +173,11 @@ class uf_application
   {
     return ($return_full_path ? UF_BASE : '').self::$_app_sites_host_dir;
   }
+  
+  public static function get_app_sites_host_dir($return_full_path = TRUE)
+  {
+    return self::app_sites_host_dir($return_full_path);
+  }
 
   public static function host()
   {
