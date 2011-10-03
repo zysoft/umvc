@@ -26,6 +26,13 @@ require_once(UF_BASE.'/core/umvc.php');
 uf_application::init();
 
 header('Content-Type: text/css');
+if (!uf_application::get_config('dev',0))
+{
+  $expires = 60*60*24*14;
+  header("Pragma: public");
+  header("Cache-Control: public, max-age=".$expires);
+  header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
+}
 
 $css_file = UF_BASE.'/web/data/baker'.uf_application::app_name().'/'.uf_application::host().'/css/baked.css';
 if(uf_application::get_config('always_bake') || !file_exists($css_file))
