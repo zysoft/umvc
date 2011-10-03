@@ -777,8 +777,9 @@ class uf_view
     if (is_array($parameters))
     while (list($key, $val) = each($parameters))
     {
-      $new_uri .= '/'.$this->controller->view_lang_get_parameter_name($key, $request->get_action(), $request->get_controller(), $language)
-          .'/'.$val;
+      $param_name = $this->controller->view_lang_get_parameter_name($key, $request->get_action(), $request->get_controller(), $language);
+      if (!empty($param_name)) $new_uri .= '/'.$param_name;
+      $new_uri .= '/'.$val;
     }
     return $new_uri;
 
