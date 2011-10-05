@@ -372,7 +372,6 @@ class uf_controller
   static public function execute_base($request,$response,$options = NULL)
   {
     $controller_class = self::str_to_controller($request->get_controller()).'_controller';
-
     if(class_exists($controller_class))
     {
       // Normal module action
@@ -778,8 +777,9 @@ class uf_view
     if (is_array($parameters))
     while (list($key, $val) = each($parameters))
     {
-      $new_uri .= '/'.$this->controller->view_lang_get_parameter_name($key, $request->get_action(), $request->get_controller(), $language)
-          .'/'.$val;
+      $param_name = $this->controller->view_lang_get_parameter_name($key, $request->get_action(), $request->get_controller(), $language);
+      if (!empty($param_name)) $new_uri .= '/'.$param_name;
+      $new_uri .= '/'.$val;
     }
     return $new_uri;
 
@@ -798,11 +798,11 @@ class uf_view
     $file = uf_application::app_sites_host_dir().'/modules/'.$controller.'/'.$path;
     if (file_exists($file)) 
     {
-      include($file);
+      return include($file);
     }
     else
     {
-      include(uf_application::app_dir().'/modules/'.$controller.'/'.$path);
+      return include(uf_application::app_dir().'/modules/'.$controller.'/'.$path);
     }
   }
 }
