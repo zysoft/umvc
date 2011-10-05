@@ -93,10 +93,15 @@ class uf_baker
         $is_image     = in_array($ext, array('gif', 'png', 'jpg', 'jpeg'));
         $is_recursive = substr($f,0,2) == 'b_' || $is_image;
         $is_route     = substr($f,0,2) == 'r_';
+        $is_language  = in_array($ext, array('lang'));
 
+        if($is_language)
+        {
+          $out['dynamic']['language'][] = $fp;
+        }
         if($is_image)
         {
-          $out['static']['images'][] = $fp;          
+          $out['static']['images'][] = $fp;       
         }
         else if($is_recursive || $is_route)
         {
@@ -128,8 +133,8 @@ class uf_baker
       {
         foreach(self::$_files['static'] as &$type)
         {
-          usort($type,array('uf_baker','_sort_files'));            
-        }        
+          usort($type,array('uf_baker','_sort_files')); 
+        }
       }
       if(isset(self::$_files['dynamic']))
       {
@@ -226,8 +231,47 @@ class uf_baker
         }
       }
     }
-    /*$output = str_replace('?><?','',$output);*/
     return $output;
+  }
+
+  private static function _bake_language($files)
+  {
+    if (!isset($files))
+    {
+      return NULL;
+    }
+    require_once(UF_BASE.'/app/lib/plugins/array_translate_plugin.php');
+
+    $output = '<?php' . "\n";
+    $output .= 'return array('. "\n";
+    $bake_output_directory = UF_BASE.'/cache/baker'.uf_application::app_name().'/'.uf_application::host().'/language';
+    foreach ($files as $file)
+    {
+      $strings = parse_ini_file(UF_BASE.$file, TRUE);
+
+      if (!isset($strings['locale']))
+      {
+        // TODO: Alert here, locale must be set in translation files.
+        // If not locale is set in translation file, continue.
+        continue;
+      }
+
+      $locale = $strings['locale']; unset($strings['locale']);
+      foreach ($strings as $namespace => $sections)
+      {
+        foreach ($sections as $skey => $section)
+        {
+          $output .= "'".addslashes($namespace.'.'.$locale.'.'.$skey)."' => '".addslashes($section)."',". "\n";
+        }
+      }
+    }
+    $output .= ');' . "\n\n";
+    $output .= '?>';
+    if (!is_dir($bake_output_directory))
+    {
+      mkdir($bake_output_directory, 0777, TRUE);
+    }
+    file_put_contents($bake_output_directory.'/language.php', $output);
   }
 
   private static function _bake_default($files)
@@ -283,6 +327,9 @@ class uf_baker
             }
             $output .= self::_bake_default(self::$_files[$place][$type]);
             break;
+          case 'language':
+            $output .= self::_bake_language(self::$_files[$place][$type]);
+            break;
           default:
             $output .= self::_bake_default(self::$_files[$place][$type]);
         }      
@@ -299,8 +346,8 @@ class uf_baker
 
       if($output != '')
       {
-        file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type.($place == 'dynamic' ? '.php' : ''),$output);
-      }
+      file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type.($place == 'dynamic' ? '.php' : ''),$output);
+    }
     }
   }
   
@@ -321,6 +368,7 @@ class uf_baker
     self::bake('images');
     self::bake('js');
     self::bake('css');
+    self::bake('language');
     self::bake('pre_routing');
     self::bake('routing');
     self::bake('post_routing');

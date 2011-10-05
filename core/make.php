@@ -21,6 +21,11 @@ class Make
   {
     return strtolower(strrchr(end($f), '.')) === '.css';
   }
+  
+  public static function filter_lang_file($f)
+  {
+    return strtolower(strrchr(end($f), '.')) === '.lang';
+  }
 
   public static function filter($file_list, $filter = NULL)
   {
