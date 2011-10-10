@@ -240,7 +240,7 @@ class uf_baker
     {
       return NULL;
     }
-    require_once(UF_BASE.'/app/lib/plugins/array_translate_plugin.php');
+    require_once(UF_BASE.'/umvc/core/plugins/array_translate_plugin.php');
 
     $output = '<?php' . "\n";
     $output .= 'return array('. "\n";
