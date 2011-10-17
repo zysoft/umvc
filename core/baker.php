@@ -52,18 +52,18 @@ class uf_baker
     }
   }
   
-  private static function delete_directry_content($dir)
+  private static function _delete_directry_content($dir)
   {
-    $files = scandir(UF_BASE.$dir); 
+    $files = scandir($dir);
     foreach($files as $file)
     {
       if(strpos($file, '.') === 0) continue;
       
-      $current = UF_BASE.$dir.'/'.$file;
+      $current = $dir.'/'.$file;
 
       if(is_dir($current))
       {
-        uf_baker::delete_directry_content($dir.'/'.$file);
+        uf_baker::_delete_directry_content($dir.'/'.$file);
         rmdir($current);
       }
 
@@ -133,7 +133,7 @@ class uf_baker
       {
         foreach(self::$_files['static'] as &$type)
         {
-          usort($type,array('uf_baker','_sort_files')); 
+          usort($type,array('uf_baker','_sort_files'));
         }
       }
       if(isset(self::$_files['dynamic']))
@@ -282,8 +282,8 @@ class uf_baker
       foreach($files as $file)
       {
         $data = file_get_contents(UF_BASE.$file);
-        $data = str_replace('[uf_module]', self::get_baked_modules_dir(), $data);
-        $data = str_replace('[uf_lib]', self::get_baked_dir().'/lib', $data);
+        $data = str_replace('[uf_module]', self::view_get_baked_modules_dir(), $data);
+        $data = str_replace('[uf_lib]', self::view_get_baked_dir().'/lib', $data);
         $output .= $data."\n";
       }
     }
@@ -337,8 +337,8 @@ class uf_baker
       $bake_base = UF_BASE.'/'.($place == 'dynamic' ? 'cache' : 'web/data');
 
       $host = uf_application::host();
-      $dir = $bake_base.'/baker'.uf_application::get_config('app_dir').'/'.$host.'/'.$type;
-
+      $dir = $bake_base.'/baker'.'/'.$host.uf_application::app_name().'/'.$type;
+      
       if(/*test !($type == 'routing' && $place == 'static') &&*/ !is_dir($dir))
       {
         mkdir($dir,0777,TRUE);
@@ -346,25 +346,47 @@ class uf_baker
 
       if($output != '')
       {
-      file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type.($place == 'dynamic' ? '.php' : ''),$output);
-    }
+        file_put_contents($dir.'/baked.'.($prefix!='' ? $prefix.'.' : '').$type.($place == 'dynamic' ? '.php' : ''),$output);
+      }
     }
   }
-  
-  public static function get_baked_dir()
+
+  // ************************************************
+  // PATHS RELATIVE TO THE SYSTEM ROOT FOR USE IN PHP
+  // ************************************************
+  // get the current cache dir
+  public static function get_baked_cache_dir()
+  {
+    return UF_BASE.'/cache/baker/'.uf_application::host().uf_application::app_name();
+  }
+
+  // get the current static dir
+  public static function get_baked_static_dir()
+  {
+    return UF_BASE.'/web/data/baker/'.uf_application::host().uf_application::app_name();
+  }
+
+  // **********************************************
+  // PATHS RELATIVE TO THE WEB ROOT FOR USE IN HTML
+  // **********************************************
+
+  // get the baked dir for views - images etc
+  public static function view_get_baked_dir()
   {
     return '/data/baker/'.uf_application::host().uf_application::app_name();
   }
-
-  public static function get_baked_modules_dir()
+  // get the baked modules dir for views - images etc
+  public static function view_get_baked_modules_dir()
   {
     return '/data/baker/'.uf_application::host().''.uf_application::app_name().'/modules';
   }
 
   public static function bake_all()
   {
-    self::delete_directry_content('/web/data');
-    self::delete_directry_content('/cache');
+    ///error_log(self::get_baked_cache_dir());
+    ///error_log(self::get_baked_static_dir());
+    self::_delete_directry_content(self::get_baked_cache_dir());
+    self::_delete_directry_content(self::get_baked_static_dir());
     self::bake('images');
     self::bake('js');
     self::bake('css');

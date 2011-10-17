@@ -811,7 +811,7 @@ function uf_include_view($uf_controller,$view,$data = NULL)
 {
   // This function is used to create a clean symbol table
   extract(get_object_vars($uf_controller));
-  extract(array('uf_dir_web_lib' => uf_baker::get_baked_dir().'/lib'));
+  extract(array('uf_dir_web_lib' => uf_baker::view_get_baked_dir().'/lib'));
 
   // init view class
   $uf_view = new uf_view();

@@ -178,7 +178,8 @@ class uf_http_request
     
     $always_bake = uf_application::get_config('always_bake');
 
-    $pre_routing_file = UF_BASE.'/cache/baker'.uf_application::app_name().'/'.uf_application::host().'/routing/baked.pre.routing.php';
+    $pre_routing_file = uf_baker::get_baked_cache_dir().'/routing/baked.pre.routing.php';
+    ///error_log('pre routing file: '.$pre_routing_file);
 //echo $pre_routing_file;
     if($always_bake || !file_exists($pre_routing_file))
     {
@@ -190,7 +191,8 @@ class uf_http_request
     }
 
     // NORMAL ROUTING
-    $routing_file = UF_BASE.'/cache/baker'.uf_application::app_name().'/'.uf_application::host().'/routing/baked.routing.php';
+    $routing_file = uf_baker::get_baked_cache_dir().'/routing/baked.routing.php';
+    ///error_log('normal routing file: '.$routing_file);
     if($always_bake || !file_exists($routing_file))
     {
       uf_baker::bake('routing');
@@ -201,7 +203,8 @@ class uf_http_request
     }
 
     // POST ROUTING
-    $post_routing_file = UF_BASE.'/cache/baker/'.uf_application::app_name().'/'.uf_application::host().'/routing/baked.post.routing.php';
+    $post_routing_file = uf_baker::get_baked_cache_dir().'/routing/baked.post.routing.php';
+    ///error_log('post routing file: '.$post_routing_file);
     if($always_bake || !file_exists($post_routing_file))
     {
       uf_baker::bake('post_routing');
