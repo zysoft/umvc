@@ -120,18 +120,21 @@ class uf_response
     }
   }
 
-  public function slot($name, $data = NULL)
+  // slots should be used to send data to the base controller view/template.
+  public function get_slot($name)
   {
-    if($data !== NULL)
-    {
-      //isset($this->_slots[$name])
-      //    ? $this->_slots[$name]
-      // .= $data;
-    }
-    else
-    {
-      return $this->_slots[$name];
-    }
+    if (!isset($this->_slots[$name])) return NULL;
+    return $this->_slots[$name];
+  }
+  
+  public function set_slot($name, $data = NULL)
+  {
+    $this->_slots[$name] = $data;
+  }
+
+  public function append_slot($name, $data = NULL)
+  {
+    $this->_slots[$name] .= $data;
   }
 }
 
