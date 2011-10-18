@@ -1,6 +1,6 @@
 <?php
 
-require_once(UF_BASE.'/umvc/core/plugins/translate.php');
+require_once(UF_BASE.'/core/plugins/translate.php');
 require_once(UF_BASE.'/core/application.php');
 
 class array_translate_plugin extends translate_plugin
@@ -21,7 +21,13 @@ class array_translate_plugin extends translate_plugin
       $this->namespace = $namespace;
     }
 
-    $language = require(UF_BASE.'/cache/baker'.uf_application::app_name().'/'.uf_application::host().'/language/language.php');
+    $filepath = UF_BASE.'/cache/baker'.uf_application::app_name().'/'.uf_application::host().'/language/language.php';
+    if (!is_file($filepath))
+    {
+      return FALSE;
+    }
+
+    $language = require($filepath);
     if (is_array($language))
     {
       $key = $this->namespace.'.'.$this->locale.'.'.$str;
