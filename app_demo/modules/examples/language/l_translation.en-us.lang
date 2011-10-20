@@ -1,0 +1,15 @@
+; Locale, required
+locale=en-us
+
+; Namespace
+[.modules.examples.view.v_translation.php]
+ID_01="Hello World"
+
+; Argument can be passed to the string. t(ID, array(KEY => VALUE)). 
+; Prefix @ to the key and the string will be filtered.
+; Prefix ! to the key and the string will be inserted as it is.
+ID_02="Hello @name, I can code html: !code"
+
+; Override the namespace. t(ID, ARGS, NAMESPACE). E.g. t(ID, ARGS, 'override_hello');
+[override_hello]
+ID_01="Hello World, namespace: override_hello"

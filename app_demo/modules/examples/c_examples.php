@@ -113,6 +113,10 @@ class examples_controller extends base_controller
     $this->foo = $this->request()->parameter('foo','');
   }
 
+  public function translation()
+  {
+  }
+
   // this action uses view: "debug"
   public function debug()
   {

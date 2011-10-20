@@ -1,0 +1,15 @@
+; Locale, required.
+locale=sv-se
+
+; Namespace, corresponds file path.
+[.modules.examples.view.v_translation.php]
+ID_01="Hej Världen"
+
+; Argument can be passed to the string. t(ID, array(KEY => VALUE)). 
+; Prefix @ to the key and the string will be filtered.
+; Prefix ! to the key and the string will be inserted as it is.
+ID_02="Inte html: @name, html: !code"
+
+; Override the namespace. t(ID, ARGS, NAMESPACE). E.g. t(ID, ARGS, 'override_hello');
+[override_hello]
+ID_01="Hej Världen, namespace: override_hello"
