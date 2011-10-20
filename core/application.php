@@ -21,6 +21,9 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+require_once(UF_BASE.'/core/plugin.php');
+require_once(UF_BASE.'/core/plugins/array_translate_plugin.php');
+
 class uf_application
 {  
   private static $_is_initialized;

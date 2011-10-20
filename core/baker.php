@@ -240,11 +240,11 @@ class uf_baker
     {
       return NULL;
     }
-    require_once(UF_BASE.'/core/plugins/array_translate_plugin.php');
 
     $output = '<?php' . "\n";
     $output .= 'return array('. "\n";
-    $bake_output_directory = UF_BASE.'/cache/baker'.uf_application::app_name().'/'.uf_application::host().'/language';
+    $bake_output_directory = self::get_baked_cache_dir().'/'.uf_application::host().'/language';
+    
     foreach ($files as $file)
     {
       $strings = parse_ini_file(UF_BASE.$file, TRUE);

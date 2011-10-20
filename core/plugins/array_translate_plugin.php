@@ -2,6 +2,7 @@
 
 require_once(UF_BASE.'/core/plugins/translate.php');
 require_once(UF_BASE.'/core/application.php');
+require_once(UF_BASE.'/core/baker.php');
 
 class array_translate_plugin extends translate_plugin
 {
@@ -21,7 +22,7 @@ class array_translate_plugin extends translate_plugin
       $this->namespace = $namespace;
     }
 
-    $filepath = UF_BASE.'/cache/baker'.uf_application::app_name().'/'.uf_application::host().'/language/language.php';
+    $filepath = uf_baker::get_baked_cache_dir().'/'.uf_application::host().'/language/language.php';
     if (!is_file($filepath))
     {
       return FALSE;

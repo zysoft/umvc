@@ -27,7 +27,7 @@ class translate_plugin extends uf_plugin
       }
       return strtr($str, $args);
     }
-    return htmlentities($str, ENT_QUOTES, 'UTF-8');
+    return $str;
   }
 
   public function set_namespace($namespace) 
