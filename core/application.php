@@ -43,7 +43,7 @@ class uf_application
       require_once(UF_BASE.'/config/config.php');
       self::$_config =& $uf_config;
 
-      $n = str_replace('www.','',$_SERVER['SERVER_NAME'],$c);
+      $n = preg_replace('/www[0-9]*\./','',$_SERVER['SERVER_NAME']);
       $dirb = self::app_dir(FALSE).'/sites/hosts/';
       if (!is_dir(UF_BASE.$dirb.$n))
       {
