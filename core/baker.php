@@ -267,11 +267,8 @@ class uf_baker
     }
     $output .= ');' . "\n\n";
     $output .= '?>';
-    if (!is_dir($bake_output_directory))
-    {
-      mkdir($bake_output_directory, 0777, TRUE);
-    }
-    file_put_contents($bake_output_directory.'/language.php', $output);
+    
+    return $output;
   }
 
   private static function _bake_default($files)
