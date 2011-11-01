@@ -39,7 +39,11 @@ class uf_controller
       $file = uf_application::app_dir().'/modules/'.$controller_identifier.'/view/v_'.$view.'.php';
       if(!is_file($file))
       {
-        $file = uf_application::app_dir().'/lib/view/v_'.$view.'.php';
+        $file = uf_application::app_sites_host_dir().'/base/view/v_'.$view.'.php';
+        if(!is_file($file))
+        {
+          $file = uf_application::app_dir().'/lib/view/v_'.$view.'.php';
+        }        
       }
     }    
     uf_include_view($this,$file, $data);
