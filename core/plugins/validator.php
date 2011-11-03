@@ -28,6 +28,7 @@ class validator_helper
   private $_request;
   private $_response;
   private $_result;
+  private $_translate_callback;
 
   public function __construct($form_id, $request, $response)
   {
@@ -36,6 +37,11 @@ class validator_helper
     $this->_request = $request;
     $this->_response = $response;
     $this->_result = array();
+  }
+
+  public function set_translate_callback($callback)
+  {
+    $this->_translate_callback = $callback;    
   }
 
   public function add_rule($name, $callback)
@@ -52,21 +58,24 @@ class validator_helper
     {
       $key = uf_controller::str_to_controller($key);
       if(array_key_exists($key, $this->_rules)) {
-        $message = '';
+        $message_id = '';
         
         $callback = $this->_rules[$key]['callback'];
         
         $r = is_array($callback)
-          ? call_user_func($callback, $val, $message)
-          : $callback($val, $message);
+          ? call_user_func($callback, $val, $message_id)
+          : $callback($val, $message_id);
 
         if(!$r)
         {
-          $data = json_encode(array(
+          $message = !is_null($this->_translate_callback)
+            ? call_user_func($this->_translate_callback, $message_id)
+            : $message_id; 
+          $data = array(
             'form_id' => $this->_form_id,
             'name' => $key,
-            'message' => $message));
-          $this->_response->javascript('$(function(){umvc.trigger("umvc.validator.error",'.$data.');});');
+            'message' => $message);
+          $this->_response->javascript('$(function(){umvc.trigger("umvc.validator.error",'.json_encode($data).');});');
           $result = FALSE;
         }
         $this->_result[$key] = $r;
@@ -75,8 +84,8 @@ class validator_helper
 
     if($result && count($this->_rules))
     {
-      $data = json_encode(array('message' => 'success'));
-      $this->_response->javascript('$(function(){umvc.trigger("umvc.validator.success",'.$data.');});');      
+      $data = array('message' => 'success');
+      $this->_response->javascript('$(function(){umvc.trigger("umvc.validator.success",'.json_encode($data).');});');
     }
 
     return $result;
